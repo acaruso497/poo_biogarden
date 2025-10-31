@@ -1,7 +1,6 @@
 package gui;
 
 import java.awt.EventQueue;
-
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,8 +11,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-
-import controller.ControllerLogin;
+import utils.method;
+import controller.Controller;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -28,10 +27,10 @@ public class Login extends JFrame {
 	private JPasswordField FieldPassword;
 	private JLabel Logo;
 	private JButton ButtonLogin;
-	public static String usernameGlobale;
-	public static String CFProprietario;
-	registraUtente registraUtente = new registraUtente();
-	ControllerLogin cl = new ControllerLogin();
+//	public static String usernameGlobale;
+//	public static String CFProprietario;
+//	registraUtente registraUtente = new registraUtente();
+	Controller controller = new Controller();
 	private JButton buttonRegistra;
 	public static void main(String[] args) {
 		
@@ -86,7 +85,7 @@ public class Login extends JFrame {
 		    buttonRegistra.addActionListener(new ActionListener() {
 		    	public void actionPerformed(ActionEvent e) {
 		    		Login.this.setVisible(false);
-		    		registraUtente.setVisible(true);
+//		    		registraUtente.setVisible(true);
 		    		
 		    	}
 		    });
@@ -98,11 +97,11 @@ public class Login extends JFrame {
 			@SuppressWarnings("deprecation")
 			public void actionPerformed(ActionEvent e) {			
 				//tramite questa variabile troveremo il codice fiscale da passare al metodo getLottiByProprietario 
-				usernameGlobale = FieldUsername.getText(); 
+				method.setUsernameGlobale(FieldUsername.getText()); 
 				String psw = FieldPassword.getText();
-				CFProprietario = ControllerLogin.getCodiceFiscaleByUsername(usernameGlobale);
-				boolean[] check = cl.login(usernameGlobale, psw);	
-				cl.LoginResult(Login.this, check);
+//				CFProprietario = Controller.getCodiceFiscaleByUsername(usernameGlobale);
+				boolean[] check = controller.login(method.getUsernameGlobale(), psw);	
+				controller.LoginResult(Login.this, check);
 			}				
 		   }); 
 		    
