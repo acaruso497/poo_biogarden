@@ -26,10 +26,9 @@ public class Controller {
         lista[0] = true;                  // campi ok
         utente logUser = new utente(username, password);
         
-        //riconosce il tipo di utente 
-        if(lista[1]== true) {
-        	lista[1] = LoginD.authP(logUser);
-        }
+        
+      //riconosce il tipo di utente 
+        lista[1] = LoginD.authP(logUser);
         if (lista[1]== false) {
             lista[2] = LoginD.authC(logUser);
         }

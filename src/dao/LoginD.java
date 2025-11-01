@@ -22,9 +22,12 @@ public class LoginD {
 						stmt.setString(1, User.getUsername());
 						stmt.setString(2, User.getPassword());
 						risultato = stmt.executeQuery();
+						
 						if(risultato.next()) {
+							System.out.println(" ACCESSO CONSENTITO: PROPRIETARIO");
 							return true;
 						}else {
+							System.out.println(" ACCESSO NON CONSENTITO: PROPRIETARIO");
 							return false;
 						}
 				   } catch(SQLException ex) {
@@ -51,9 +54,10 @@ public class LoginD {
 						stmt.setString(2, User.getPassword());
 						risultato = stmt.executeQuery();
 						if(risultato.next()) {
-							System.out.println(" ACCESSO CONSENTITO");
+							System.out.println(" ACCESSO CONSENTITO: COLTIVATORE");
 							return true;
 						}else {
+							System.out.println(" ACCESSO NON CONSENTITO: COLTIVATORE");
 							return false;
 						}
 				   } catch(SQLException ex) {

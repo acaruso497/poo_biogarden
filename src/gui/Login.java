@@ -100,7 +100,7 @@ public class Login extends JFrame {
 				method.setUsernameGlobale(FieldUsername.getText()); 
 				String psw = FieldPassword.getText();
 //				CFProprietario = Controller.getCodiceFiscaleByUsername(usernameGlobale);
-				boolean[] check = controller.login(method.getUsernameGlobale(), psw);	
+				boolean[] check = controller.login(method.getUsernameGlobale(), psw);
 				controller.LoginResult(Login.this, check);
 			}				
 		   }); 
