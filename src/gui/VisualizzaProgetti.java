@@ -11,11 +11,8 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.basic.BasicArrowButton;
 
-import controller.ControllerLogin;
-import controller.ControllerVisualizzaP;
-import dao.daoVisualizzaP;
 import net.miginfocom.swing.MigLayout;
-
+import utils.*;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;

@@ -7,7 +7,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.net.URL;
 import java.sql.Date;
-
+import utils.*;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -24,8 +24,9 @@ import javax.swing.JTextField;
 import javax.swing.JTextArea;
 import javax.swing.JButton;
 import javax.swing.plaf.basic.BasicArrowButton;
-import controller.ControllerCreaN;
-import controller.ControllerLogin;
+
+import controller.Controller;
+
 import java.util.ArrayList;
 
 import javax.swing.JComboBox;
@@ -39,8 +40,9 @@ public class CreaNotifica extends JFrame {
 	private JTextField FieldTitolo;
 	private boolean tutti;
 	HomePageProprietario home;
-	private String usernameP = ControllerLogin.getUsernameGlobale();
+	String usernameP = method.getUsernameGlobale();
 	JComboBox<String> ComboColtivatori = new JComboBox<String>();
+	Controller controller = new Controller();
 
 	public CreaNotifica(HomePageProprietario home) {
 			setTitle("Crea Notifica");
@@ -114,12 +116,13 @@ public class CreaNotifica extends JFrame {
 					//reset dei campi quando viene cliccato il pulsante per andare indietro
 					FieldData.setText("");
 					FieldUsernameC.setText("");
+					FieldUsernameC.setEditable(true);
+					FieldUsernameC.setBackground(Color.WHITE);
 					FieldTitolo.setText("");
 					TxtDescrizione.setText("");
 					ComboColtivatori.setEnabled(false);
-					CheckTuttiColtivatori.setSelected(false);
-					FieldUsernameC.setBackground(Color.WHITE);
 					ComboColtivatori.setSelectedIndex(-1);
+					CheckTuttiColtivatori.setSelected(false);
 				}
 			});
 		    
@@ -156,8 +159,7 @@ public class CreaNotifica extends JFrame {
 					    							  "Errore", JOptionPane.ERROR_MESSAGE);
 					    return; 
 					} else if (tutti == false) {
-			            ControllerCreaN CreaN = new ControllerCreaN();
-			            boolean checkUser = CreaN.controllaUsername(usernameC); //flag per controllare l'esistenza dell'username
+			            boolean checkUser = controller.controllaUsername(usernameC); //flag per controllare l'esistenza dell'username
 			            if (checkUser == false) { //se l'username non è presente nel database, stampa un errore
 			                JOptionPane.showMessageDialog(CreaNotifica.this, 
 			                							  "L'username non esiste !!", 
@@ -181,12 +183,11 @@ public class CreaNotifica extends JFrame {
 			            return;
 			        }
 					
-					ControllerCreaN CreaN = new ControllerCreaN();
 					LocalDate datalocal = LocalDate.parse(DataInserita, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 					Date data = Date.valueOf(datalocal);
 					
 					if (tutti == false) {
-						boolean controlloUsername = CreaN.dividiUsername(usernameP, usernameC, data, titolo, descrizione);
+						boolean controlloUsername = controller.dividiUsername(usernameP, usernameC, data, titolo, descrizione);
 							if(controlloUsername==true) { //se l'username inserito corrisponde ai coltivatori del proprietario invia la notifica
 								JOptionPane.showMessageDialog(CreaNotifica.this, 
 															  "Notifica inviata con successo!");
@@ -198,7 +199,7 @@ public class CreaNotifica extends JFrame {
 								FieldUsernameC.setBackground(Color.RED);
 							}
 			            } else {
-						CreaN.dividiUsernameTutti(ControllerLogin.getUsernameGlobale(), data, titolo, descrizione);
+						controller.dividiUsernameTutti(usernameP, data, titolo, descrizione);
 						JOptionPane.showMessageDialog(CreaNotifica.this, "Notifica inviata con successo!");
 						
 					}
@@ -209,8 +210,7 @@ public class CreaNotifica extends JFrame {
 	}
 	
 	private void popolaComboColtivatori() { 	//popola la combobox dei coltivatori per verificare i loro username
-		ControllerCreaN CreaN = new ControllerCreaN();
-        ArrayList<String> coltivatori = CreaN.getColtivatoriByProprietario(usernameP);
+        ArrayList<String> coltivatori = controller.getColtivatoriByProprietario(usernameP);
         for (String coltivatore : coltivatori) {
             ComboColtivatori.addItem(coltivatore); 
         }

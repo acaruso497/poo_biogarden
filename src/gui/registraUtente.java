@@ -4,7 +4,6 @@ import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
-
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import java.util.ArrayList;
@@ -18,9 +17,7 @@ import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import controller.ControllerReg;
-import controller.ControllerProprietario;
-
+import controller.Controller;
 
 public class registraUtente extends JFrame {
 
@@ -28,8 +25,6 @@ public class registraUtente extends JFrame {
 	private JPanel contentPane;
 	private JTextField FieldUsername;
 	private JPasswordField FieldPassword;
-	
-	
 	@SuppressWarnings("unused")
 	private JButton buttonRegistra;
 	private JPasswordField passwordField;
@@ -46,6 +41,7 @@ public class registraUtente extends JFrame {
 	private JButton btnback;
 	private JComboBox<String> ComboProprietari;
 	private JLabel lblProprietari;
+	Controller controller = new Controller();
 
 	@SuppressWarnings("unused")
 	public registraUtente() {
@@ -104,7 +100,6 @@ public class registraUtente extends JFrame {
 		    contentPane.add(ComboProprietari, "cell 7 5,growx");
 		    
 		    ComboProprietari.setEnabled(false);
-		    ControllerReg controller = new ControllerReg();
 		    
 		    
 		    comboBox.addActionListener(new ActionListener() { 	// Popola ComboProprietari usando il controller
@@ -195,16 +190,11 @@ public class registraUtente extends JFrame {
 		             
 		                
 		            } else {
-		            	ControllerProprietario controllerP = new ControllerProprietario();//associa il primo lotto libero al proprietario registrato
-		                ControllerReg controller = new ControllerReg();
-		                
 		               if (RUOLO.equals("Coltivatore")) {
 		            	   value = controller.registra(nome, cognome, user, pass, cf, RUOLO.toString(), usernameProprietario);
 		            	   
 		               }else if (RUOLO.equals("Proprietario")) {
-		                value = controller.registra(nome, cognome, user, pass, cf, RUOLO.toString(), usernameProprietario);
-		                controllerP.aggiungiL(cf);
-		                
+		            	   value = controller.registra(nome, cognome, user, pass, cf, RUOLO.toString(), usernameProprietario);
 		                }
 		            
 		            // Messaggi di avviso stato registrazione

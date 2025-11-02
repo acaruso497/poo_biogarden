@@ -10,8 +10,7 @@ public class LoginD {
 	
 	//____________________   LOGIN     ____________________________________
 	
-			//Autenticazione proprietario
-			public static boolean authP(utente User) {
+			public static boolean authP(utente User) { //Autenticazione proprietario
 				Connection conn = null;
 				PreparedStatement stmt = null;
 				ResultSet risultato = null;
@@ -41,8 +40,7 @@ public class LoginD {
 				
 			}
 			
-			//Autenticazione coltivatore
-			public static boolean authC(utente User) {
+			public static boolean authC(utente User) { //Autenticazione coltivatore
 				Connection conn = null;
 				PreparedStatement stmt = null;
 				ResultSet risultato = null;
@@ -70,38 +68,92 @@ public class LoginD {
 				   }
 				
 			}
-		
-			public static String getCodiceFiscaleByUsername(String username) {
-			    String codiceFiscale = null;
+			
+			public static boolean usernameEsiste(utente User) { //controlla se l'username esistente
 			    Connection conn = null;
 			    PreparedStatement stmt = null;
 			    ResultSet rs = null;
-
+			    
 			    try {
-			        // Ottieni la connessione al database (assumo che Connessione sia una classe di utilità)
 			        conn = Connessione.getConnection();
-
-			        // Query SQL diretta sulla tabella Proprietario
-			        String sql = "SELECT Codice_Fiscale FROM Proprietario WHERE username = ?";
+			        
+			        // Query che cerca lo username in entrambe le tabelle
+			        String sql = "SELECT username FROM Proprietario WHERE username = ? " +
+			                     "UNION " +
+			                     "SELECT username FROM Coltivatore WHERE username = ?";
+			        
 			        stmt = conn.prepareStatement(sql);
-			        stmt.setString(1, username); // Imposta il parametro username
-
-			        // Esegui la query
+			        stmt.setString(1, User.getUsername());
+			        stmt.setString(2, User.getUsername());
+			        
 			        rs = stmt.executeQuery();
-
-			        // Recupera il risultato
-			        if (rs.next()) {
-			            codiceFiscale = rs.getString("Codice_Fiscale"); // Recupera il Codice_Fiscale
-			        }
+			        
+			        // Se il ResultSet ha almeno una riga, lo username esiste
+			        return rs.next();
+			        
 			    } catch (SQLException ex) {
-			        ex.printStackTrace(); 
+			        ex.printStackTrace();
+			        return false; // In caso di errore, assumiamo che lo username non esista
 			    } finally {
-			        // Chiudi tutte le risorse nel blocco finally
+			        // Chiudi le risorse
 			        try { if (rs != null) rs.close(); } catch (Exception e) {}
 			        try { if (stmt != null) stmt.close(); } catch (Exception e) {}
 			        try { if (conn != null) conn.close(); } catch (Exception e) {}
 			    }
-
-			    return codiceFiscale; // Restituisce il Codice_Fiscale o null se non trovato
+			}
+			
+			
+			public static Object creazioneUtente(utente User) { // crea l'oggetto proprietario/coltivatore per il login
+				Connection conn = null;
+			    PreparedStatement stmt = null;
+			    ResultSet rs = null;
+				
+			    try {
+			    	conn = Connessione.getConnection();
+			    	
+			    	String sql1 = "SELECT * FROM Proprietario WHERE username = ?";
+			    	stmt = conn.prepareStatement(sql1);
+			    	stmt.setString(1, User.getUsername());
+			    	rs = stmt.executeQuery();
+			    	
+			    	if (rs.next()) {
+			            Proprietario proprietario = new Proprietario( //restituisce tutti i campi della select e crea l'oggetto da restituire
+			                rs.getString("nome"),
+			                rs.getString("cognome"),
+			                rs.getString("username"),
+			                rs.getString("psw"),
+			                rs.getString("codice_fiscale")  
+			            );
+			            return proprietario; //restituisce l'oggetto proprietario
+			        }
+			    	
+			    	String sql2 = "SELECT * FROM Coltivatore WHERE username = ?";
+			    	stmt = conn.prepareStatement(sql2);
+			    	stmt.setString(1, User.getUsername());
+			    	rs = stmt.executeQuery();
+			    	
+			    	if (rs.next()) {
+			            Coltivatore coltivatore = new Coltivatore( 
+			            		rs.getString("nome"),
+				                rs.getString("cognome"),
+				                rs.getString("username"),
+				                rs.getString("psw"),
+				                rs.getString("codice_fiscale"),
+				                rs.getString("username_proprietario")
+			            );
+			            return coltivatore; //restituisce l'oggetto coltivatore
+			        }
+			    	
+			    	return null; //non trova nessun utente
+			    	
+			    } catch (SQLException ex) {
+			        ex.printStackTrace();
+			        return null; 
+			    } finally {
+			        try { if (rs != null) rs.close(); } catch (Exception e) {}
+			        try { if (stmt != null) stmt.close(); } catch (Exception e) {}
+			        try { if (conn != null) conn.close(); } catch (Exception e) {}
+			    }
+				
 			}
 }

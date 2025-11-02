@@ -29,7 +29,7 @@ public class Login extends JFrame {
 	private JButton ButtonLogin;
 //	public static String usernameGlobale;
 //	public static String CFProprietario;
-//	registraUtente registraUtente = new registraUtente();
+    registraUtente registraUtente = new registraUtente();
 	Controller controller = new Controller();
 	private JButton buttonRegistra;
 	public static void main(String[] args) {
@@ -85,7 +85,7 @@ public class Login extends JFrame {
 		    buttonRegistra.addActionListener(new ActionListener() {
 		    	public void actionPerformed(ActionEvent e) {
 		    		Login.this.setVisible(false);
-//		    		registraUtente.setVisible(true);
+		    		registraUtente.setVisible(true);
 		    		
 		    	}
 		    });
@@ -99,7 +99,7 @@ public class Login extends JFrame {
 				//tramite questa variabile troveremo il codice fiscale da passare al metodo getLottiByProprietario 
 				method.setUsernameGlobale(FieldUsername.getText()); 
 				String psw = FieldPassword.getText();
-//				CFProprietario = Controller.getCodiceFiscaleByUsername(usernameGlobale);
+				//CFProprietario = Controller.getCodiceFiscaleByUsername(usernameGlobale);
 				boolean[] check = controller.login(method.getUsernameGlobale(), psw);
 				controller.LoginResult(Login.this, check);
 			}				

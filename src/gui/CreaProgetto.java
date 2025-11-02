@@ -15,9 +15,8 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.basic.BasicArrowButton;
 
-import dao.DAO;
-import controller.ControllerLogin;
-import controller.CreaProgettoController;
+import controller.Controller;
+import utils.*;
 import net.miginfocom.swing.MigLayout;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -40,7 +39,7 @@ public class CreaProgetto extends JFrame {
 	Attivita attivita;
 	
     private JComboBox<String> ComboLotto = new JComboBox<String>();  //La JComboBox è un array di stringhe per contenere i lotti
-    private CreaProgettoController creaProgettoController;  
+    Controller controller = new Controller();  
     private JTextField FieldStimaRaccolto;
     private JTextField FieldTipologiaColtura;
     private Integer idProgetto;
@@ -234,8 +233,8 @@ public class CreaProgetto extends JFrame {
 		            return;
 				}
 				
-				DAO dao = new DAO(); // Crea il DAO
-		        creaProgettoController = new CreaProgettoController(dao); // Crea il controller
+//				DAO dao = new DAO(); // Crea il DAO
+//		        creaProgettoController = new CreaProgettoController(dao); // Crea il controller
 		        
 				String [] creaArr=creaProgettoController.dividiPerVirgola(FieldTipologiaColtura.getText()); // divide le colture dalle virgole per poterle salvare nel database
 				
@@ -257,7 +256,7 @@ public class CreaProgetto extends JFrame {
 					
 			    //vado a controllare se esiste già un progetto in quel lotto
 				boolean creaProgetto = creaProgettoController.creaProgetto(titolo, lotto, descrizione, stimaRaccolto, creaArr, dataIP, dataFP);
-				idProgetto = creaProgettoController.getLastIdProgetto(); //PROVAAA
+				idProgetto = creaProgettoController.getLastIdProgetto(); 
 				
 				if (progettoCompletato==false) { //se il progetto non è segnato come completato, blocca la creazione
 			        JOptionPane.showMessageDialog(CreaProgetto.this, 
@@ -343,8 +342,8 @@ public class CreaProgetto extends JFrame {
 	    });
 	    
 	    
-	    DAO dao = new DAO(); // Crea il DAO
-        creaProgettoController = new CreaProgettoController(dao); // Crea il controller
+//	    DAO dao = new DAO(); // Crea il DAO
+//        creaProgettoController = new CreaProgettoController(dao); // Crea il controller
         
         popolaComboLotto();   
 	}

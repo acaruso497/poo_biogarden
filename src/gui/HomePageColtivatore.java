@@ -11,9 +11,7 @@ import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-
-import controller.ControllerColtivatore;
-import controller.ControllerLogin;
+import utils.*;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -300,7 +298,7 @@ public class HomePageColtivatore extends JFrame {
 	    }
 	  
 	private void dropdownProg() { 	//popola la dropdown con i titoli dei progetti
-	    ControllerColtivatore controller = new ControllerColtivatore();
+	    //ControllerColtivatore controller = new ControllerColtivatore();
 	    ComboProgetti.removeAllItems();
 	    ComboProgetti.addItem("--seleziona--");
 	    for (String p : controller.popolaPrComboBox(ControllerLogin.getUsernameGlobale())) {
