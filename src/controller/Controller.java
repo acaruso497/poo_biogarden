@@ -30,18 +30,19 @@ public class Controller {
 
         lista[0] = true;  // campi ok
         
-        utente logUser = new utente(username, password);
-        lista[1] = LoginD.authP(logUser); 
-        lista[2] = LoginD.authC(logUser); 
+        UtenteDTO logUser = new UtenteDTO(username, password);
+        lista[1] = ProprietarioDAO.authP(logUser); 
+        lista[2] = ColtivatoreDAO.authC(logUser); 
         
       //riconosce il tipo di utente 
         if (lista[1]) {
-            Proprietario p = (Proprietario) LoginD.creazioneUtente(logUser);
+            ProprietarioDTO p = (ProprietarioDTO) UtenteDAO.creazioneUtente(logUser);
             method.setProprietarioLoggato(p);
         }
 
         if (lista[2]) {
-            Coltivatore c = (Coltivatore) LoginD.creazioneUtente(logUser);
+            ColtivatoreDTO c = (ColtivatoreDTO) UtenteDAO.creazioneUtente(logUser);
+            method.setColtivatoreLoggato(c);
         }
         
         return lista;
@@ -78,8 +79,8 @@ public class Controller {
 	result[2] = false; // registrazione non riuscita
 	result[3] = false; // user non esiste (inizialmente)
 
-	utente user = new utente(username);
-    result[3] = LoginD.usernameEsiste(user); // Verifica se l'username esiste
+	UtenteDTO user = new UtenteDTO(username);
+    result[3] = UtenteDAO.usernameEsiste(user); // Verifica se l'username esiste
 
 	if (result[3] == true) {
 		return result; // Esce se username esiste
@@ -87,20 +88,20 @@ public class Controller {
 
 	if (ruolo.equals("Proprietario")) {
 		result[0] = true; // è proprietario
-		Proprietario proprietario = new Proprietario(username, password, nome, cognome, cf);
-		result[2] = ProprietarioD.registraP(proprietario); // esito registrazione
-		ProprietarioD.aggiungiL(proprietario);
+		ProprietarioDTO proprietario = new ProprietarioDTO(username, password, nome, cognome, cf);
+		result[2] = ProprietarioDAO.registraP(proprietario); // esito registrazione
+		ProprietarioDAO.aggiungiL(proprietario);
 	} else if (ruolo.equals("Coltivatore")) {
 		result[1] = true; // è coltivatore
-		Coltivatore coltivatore = new Coltivatore(username, password, nome, cognome, cf, usernameProprietario);
-		result[2] = ColtivatoreD.registraC(coltivatore); // esito registrazione
+		ColtivatoreDTO coltivatore = new ColtivatoreDTO(username, password, nome, cognome, cf, usernameProprietario);
+		result[2] = ColtivatoreDAO.registraC(coltivatore); // esito registrazione
 
   }
 	return result;
 }
 
     public ArrayList<String> popolaComboProprietari() { //popola la combobox dei proprietari
-    	return ProprietarioD.popolaComboProprietari();
+    	return ProprietarioDAO.popolaComboProprietari();
 	}
    
 //                       _________________ REGISTRAZIONE UTENTE _________________
@@ -108,8 +109,8 @@ public class Controller {
     
 //                        _________________ HOMEPAGE PROPRIETARIO _________________
     
-   public boolean aggiungiL(Proprietario proprietario) { //aggiunge il primo lotto disponibile
-		return ProprietarioD.aggiungiL(proprietario);
+   public boolean aggiungiL(ProprietarioDTO proprietario) { //aggiunge il primo lotto disponibile
+		return ProprietarioDAO.aggiungiL(proprietario);
 	}
  //                       _________________ HOMEPAGE PROPRIETARIO _________________
    
@@ -128,8 +129,8 @@ public boolean dividiUsername(String usernameProprietario, String usernameConcat
 	       
 				
 				// Crea un arraylist contenenti tutti i coltivatori che appartengono al proprietario loggato
-				Proprietario proprietario = new Proprietario(usernameProprietario);
-				ArrayList<String> coltivatoriProprietario= NotificaD.getColtivatoriByProprietario(proprietario);
+				ProprietarioDTO proprietario = new ProprietarioDTO(usernameProprietario);
+				ArrayList<String> coltivatoriProprietario= ProprietarioDAO.getColtivatoriByProprietario(proprietario);
 				
 				// Verifica se i coltivatori appartengono al proprietario loggato
 				for(int i = 0; i < usernamesList.size(); i++) {
@@ -139,8 +140,8 @@ public boolean dividiUsername(String usernameProprietario, String usernameConcat
 			    }
 				
 				for(int i = 0; i < usernamesList.size(); i++) {
-					Notifica notifica = new Notifica(titolo, descrizione, data, usernamesList.get(i));
-					NotificaD.Inserisci_NotificaDB(notifica);
+					NotificaDTO notifica = new NotificaDTO(titolo, descrizione, data, usernamesList.get(i));
+					NotificaDAO.Inserisci_NotificaDB(notifica);
 				}
 				
 				return true;
@@ -149,8 +150,8 @@ public boolean dividiUsername(String usernameProprietario, String usernameConcat
 
 public void dividiUsernameTutti(String usernameProprietario, Date data, String titolo, String descrizione) { //viene chiamato se la spunta "tutti i coltivatori" è attivata		
 	
-		Proprietario proprietario = new Proprietario(usernameProprietario);
-		String usernameConcatenati=NotificaD.getDestinatariUsernamesByProprietario(proprietario);
+		ProprietarioDTO proprietario = new ProprietarioDTO(usernameProprietario);
+		String usernameConcatenati= ProprietarioDAO.getDestinatariUsernamesByProprietario(proprietario);
 		
 		// Split della stringa
 		String[] usernamesArray = usernameConcatenati.trim().split(",");	        
@@ -160,20 +161,20 @@ public void dividiUsernameTutti(String usernameProprietario, Date data, String t
 	
 		// Chiamo il dao per ogni utente
 		for(int i = 0; i < usernamesList.size(); i++) {
-			Notifica notifica = new Notifica(titolo, descrizione, data, usernamesList.get(i));
-			NotificaD.Inserisci_NotificaDB(notifica);
+			NotificaDTO notifica = new NotificaDTO(titolo, descrizione, data, usernamesList.get(i));
+			NotificaDAO.Inserisci_NotificaDB(notifica);
 		}
 
 }
 
 public ArrayList <String> getColtivatoriByProprietario(String usernameProprietario) { //restituisce i coltivatori appartenenti ad un dato proprietario
-	Proprietario proprietario = new Proprietario(usernameProprietario);
-	return NotificaD.getColtivatoriByProprietario(proprietario);
+	ProprietarioDTO proprietario = new ProprietarioDTO(usernameProprietario);
+	return ProprietarioDAO.getColtivatoriByProprietario(proprietario);
 }
 
 public boolean controllaUsername(String username) { //controlla l'esistenza di un username di un coltivatore
-	utente user = new utente(username);
-	return LoginD.usernameEsiste(user);
+	UtenteDTO user = new UtenteDTO(username);
+	return UtenteDAO.usernameEsiste(user);
 }
 
    

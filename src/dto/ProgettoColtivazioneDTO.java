@@ -2,7 +2,7 @@ package dto;
 
 import java.sql.Date;
 
-public class ProgettoColtivazione {
+public class ProgettoColtivazioneDTO {
 	private int ID_Progetto;
 	private String titolo;
 	private String descrizione;
@@ -12,7 +12,7 @@ public class ProgettoColtivazione {
 	private int idLotto;
 	private boolean done;
 	
-	public ProgettoColtivazione(int ID_Progetto, String titolo, String descrizione, double stimaRaccolto, Date dataInizio, Date dataFine, int idLotto, boolean done)  {
+	public ProgettoColtivazioneDTO(int ID_Progetto, String titolo, String descrizione, double stimaRaccolto, Date dataInizio, Date dataFine, int idLotto, boolean done)  {
 		this.ID_Progetto=ID_Progetto;
 		this.titolo=titolo;
 		this.descrizione=descrizione;

@@ -8,7 +8,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import utils.*;
-import dto.Proprietario;
+import dto.ProprietarioDTO;
 import controller.Controller;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.JLabel;
@@ -26,7 +26,7 @@ public class HomePageProprietario extends JFrame {
 	private CreaNotifica creanotifica;
 	private CreaProgetto creaprogetto;
 	Controller controller = new Controller();
-	Proprietario proprietario = method.getProprietarioLoggato(); //recupera il il Proprietario loggato
+	ProprietarioDTO proprietario = method.getProprietarioLoggato(); //recupera il il Proprietario loggato
 	
 	public HomePageProprietario() {
 		setTitle("HomePageProprietario");

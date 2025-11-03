@@ -1,6 +1,6 @@
 package dto;
 
-public class Coltura {
+public class ColturaDTO {
 	private int ID_Coltura;
 	private String varieta;
 	private int raccoltoProdotto;
@@ -10,7 +10,7 @@ public class Coltura {
 	private int counter;
 	
 	
-	public Coltura(int ID_Coltura, String varieta) {
+	public ColturaDTO(int ID_Coltura, String varieta) {
 		this.ID_Coltura=ID_Coltura;
 		this.varieta=varieta;
 	}

@@ -1,18 +1,18 @@
 package dto;
 
-public class Proprietario extends utente {
+public class ProprietarioDTO extends UtenteDTO{
 	private String nome;
 	private String cognome;
 	private String codiceFiscale;
 	
-	public Proprietario(String username, String password, String nome, String cognome, String codiceFiscale) {
+	public ProprietarioDTO(String username, String password, String nome, String cognome, String codiceFiscale) {
 		super(username, password);
 		this.nome=nome;
 		this.cognome=cognome;
 		this.codiceFiscale=codiceFiscale;
 	}
 	
-	public Proprietario(String username) {
+	public ProprietarioDTO(String username) {
 		super(username);
 	}
 

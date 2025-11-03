@@ -1,39 +1,15 @@
 package dao;
 
-import java.sql.PreparedStatement;
-
 import database.Connessione;
 import dto.*;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicInteger;
 
-public class ProgettoColtivazioneD {
+public class ProgettoColtivazioneDAO {
 
-	// controlla se esiste la coltura già su un lotto
-		public static boolean checkColtura(Lotto lotto, String[] coltureArray) {
-			String sql = "SELECT 1 FROM controllocolture " +
-			              "WHERE id_lotto = ? AND varietà = ANY(?) " +
-			              "LIMIT 1";
-		    
-		    try (Connection conn = Connessione.getConnection();
-		         PreparedStatement stmt = conn.prepareStatement(sql)) {
-		        
-		        stmt.setInt(1, lotto.getID_Lotto());
-		        stmt.setArray(2, conn.createArrayOf("VARCHAR", coltureArray));
-		        
-		        ResultSet rs = stmt.executeQuery();
-		        return rs.next(); // true se trova ALMENO una corrispondenza
-		        
-		    } catch (Exception e) {
-		        e.printStackTrace();
-		        return false;
-		    }
-		}
-		
-		//Registrazione dei dati del progetto
-		public static boolean registraProgetto(ProgettoColtivazione progetto, String[] coltureArray, AtomicInteger idProgettoOut) {
-		    //int idLotto = Integer.parseInt(idLottoStr);  //converte l'ID del lotto nella combo box in un intero
+	//____________________   CREAZIONE PROGETTO COLTIVAZIONE     ____________________________________	
+	
+	
+		public static boolean registraProgetto(ProgettoColtivazioneDTO progetto, String[] coltureArray) { //Registrazione dei dati del progetto
 		    
 		    Connection conn = null;
 		    PreparedStatement stmt = null;
@@ -80,11 +56,6 @@ public class ProgettoColtivazioneD {
 		        
 		        risultato = stmt.executeQuery();
 		        
-		        int idProgetto = 0;
-		        if (risultato.next()) {
-		            idProgetto = risultato.getInt("id_progetto");
-		            idProgettoOut.set(idProgetto);
-		        }
 		        
 		        risultato.close();
 		        stmt.close();
