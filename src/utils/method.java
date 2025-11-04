@@ -1,12 +1,14 @@
 package utils;
 
-import dto.Proprietario;
+import dto.ColtivatoreDTO;
+import dto.ProprietarioDTO;
 
 public class method {
 	
 	private static String usernameGlobale;
 	private static String CF;
-	private static Proprietario proprietarioLoggato;
+	private static ProprietarioDTO proprietarioLoggato;
+	private static ColtivatoreDTO coltivatoreLoggato;
 	
 	//Restituisce l'username del proprietario loggato
 	public static String getCF() {
@@ -29,14 +31,26 @@ public class method {
 	}
 	
 	//Restituisce il proprietario loggato
-	public static Proprietario getProprietarioLoggato() {
+	public static ProprietarioDTO getProprietarioLoggato() {
 		return proprietarioLoggato;
 	}
 
 	//Imposta il proprietario loggato
-	public static void setProprietarioLoggato(Proprietario proprietario) {
+	public static void setProprietarioLoggato(ProprietarioDTO proprietario) {
 		proprietarioLoggato = proprietario;
 	}
+
+	//Restituisce il coltivatore loggato
+	public static ColtivatoreDTO getColtivatoreLoggato() {
+		return coltivatoreLoggato;
+	}
+
+	//Imposta il coltivatore loggato
+	public static void setColtivatoreLoggato(ColtivatoreDTO coltivatoreLoggato) {
+		method.coltivatoreLoggato = coltivatoreLoggato;
+	}
+	
+	
 		
 	
 } 

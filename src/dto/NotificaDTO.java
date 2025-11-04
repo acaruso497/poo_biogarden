@@ -2,13 +2,13 @@ package dto;
 
 import java.sql.Date;
 
-public class Notifica {
+public class NotificaDTO {
 	private String titolo;
 	private String descrizione;
 	private Date dataEvento;
 	private String utentiTag;
 	
-	public Notifica(String titolo, String descrizione, Date dataEvento, String utentiTag) {
+	public NotificaDTO(String titolo, String descrizione, Date dataEvento, String utentiTag) {
 		this.titolo=titolo;
 		this.descrizione=descrizione;
 		this.dataEvento=dataEvento;

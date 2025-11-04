@@ -1,12 +1,12 @@
 package dto;
 
-public class Coltivatore extends utente{
+public class ColtivatoreDTO extends UtenteDTO{
 	private String nome;
 	private String cognome;
 	private String codiceFiscale;
 	private String usernameProprietario;
 	
-	public Coltivatore(String username, String password, String nome, String cognome, 
+	public ColtivatoreDTO(String username, String password, String nome, String cognome, 
 					   String codiceFiscale, String usernameProprietario)  {
 		super(username, password);
 		this.nome=nome;
@@ -31,6 +31,4 @@ public class Coltivatore extends utente{
 
 	public String getUsernameProprietario() { return usernameProprietario; }
 	public void setUsernameProprietario(String usernameProprietario) { this.usernameProprietario = usernameProprietario; }
-	
-	
 }

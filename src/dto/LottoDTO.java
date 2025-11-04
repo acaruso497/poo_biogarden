@@ -1,9 +1,9 @@
 package dto;
 
-public class Lotto {
+public class LottoDTO {
 	private int ID_Lotto;
 	
-	public Lotto(int ID_Lotto) {
+	public LottoDTO(int ID_Lotto) {
 		this.ID_Lotto=ID_Lotto;
 	}
 

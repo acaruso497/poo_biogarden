@@ -120,7 +120,7 @@ public class CreaNotifica extends JFrame {
 					FieldUsernameC.setBackground(Color.WHITE);
 					FieldTitolo.setText("");
 					TxtDescrizione.setText("");
-					ComboColtivatori.setEnabled(false);
+					ComboColtivatori.setEnabled(true);
 					ComboColtivatori.setSelectedIndex(-1);
 					CheckTuttiColtivatori.setSelected(false);
 				}

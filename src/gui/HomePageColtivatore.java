@@ -11,6 +11,9 @@ import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import controller.Controller;
+import dto.ColtivatoreDTO;
 import utils.*;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.JLabel;
@@ -44,6 +47,8 @@ public class HomePageColtivatore extends JFrame {
     private JComboBox<String> ComboAttivita;
     private List<String> tipiAttivita;
     private JComboBox<String> ComboTipologia;
+    Controller controller = new Controller();
+    ColtivatoreDTO coltivatore = method.getColtivatoreLoggato(); //recupera il il Coltivatore loggato
    
 	
 	@SuppressWarnings("unused")
