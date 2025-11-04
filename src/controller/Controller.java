@@ -1,6 +1,7 @@
 package controller;
 import dto.*;
 import dao.*;
+import utils.SplitUtils;
 import utils.method;
 
 import java.sql.Date;
@@ -111,59 +112,67 @@ public class Controller {
    public boolean aggiungiL(Proprietario proprietario) { //aggiunge il primo lotto disponibile
 		return ProprietarioD.aggiungiL(proprietario);
 	}
- //                       _________________ HOMEPAGE PROPRIETARIO _________________
+//                       _________________ HOMEPAGE COLTIVATORE _________________
    
+	public void legginotifiche(String usernamecoltivatore) {
+		NotificaD NotificaD = new NotificaD();
+		Coltivatore coltivatore = new Coltivatore(usernamecoltivatore);
+        NotificaD.segnaNotificheColtivatoreComeLette(coltivatore);
+    }
+	
+	public boolean checknotifiche(String usernamecoltivatore) {
+		NotificaD NotificaD = new NotificaD();
+		Coltivatore coltivatore = new Coltivatore(usernamecoltivatore);
+        return NotificaD.ciSonoNotificheNonLette(coltivatore);
+    }
+	
+	public String mostranotifiche(String usernamecoltivatore) {
+		NotificaD NotificaD = new NotificaD();
+		Coltivatore coltivatore = new Coltivatore(usernamecoltivatore);
+        return NotificaD.getNotificheNonLette(coltivatore);
+    }
    
-//                        _________________ CREAZIONE NOTIFICA _________________
+//                        __________________ CREAZIONE NOTIFICA _________________
    
 
 public boolean dividiUsername(String usernameProprietario, String usernameConcatenati, 
 							  Date data, String titolo, String descrizione) {	// viene chiamato se la spunta "tutti i coltivatori" è disattivata		
 	
-				// Split della stringa
-				String[] usernamesArray = usernameConcatenati.split(",");	        
-	        
-				// Converti l'array in ArrayList
-				ArrayList<String> usernamesList = new ArrayList<>(Arrays.asList(usernamesArray));
+    	// Split della stringa + conversione in ArrayList
+    	ArrayList<String> usernamesList = SplitUtils.splitByCommaToArrayList(usernameConcatenati);
 	       
+		// Crea un arraylist contenenti tutti i coltivatori che appartengono al proprietario loggato
+		Proprietario proprietario = new Proprietario(usernameProprietario);
+		ArrayList<String> coltivatoriProprietario= NotificaD.getColtivatoriByProprietario(proprietario);
 				
-				// Crea un arraylist contenenti tutti i coltivatori che appartengono al proprietario loggato
-				Proprietario proprietario = new Proprietario(usernameProprietario);
-				ArrayList<String> coltivatoriProprietario= NotificaD.getColtivatoriByProprietario(proprietario);
+		// Verifica se i coltivatori appartengono al proprietario loggato
+		for(int i = 0; i < usernamesList.size(); i++) {
+			if (!coltivatoriProprietario.contains(usernamesList.get(i))) {
+				return false; 
+			}
+		}
 				
-				// Verifica se i coltivatori appartengono al proprietario loggato
-				for(int i = 0; i < usernamesList.size(); i++) {
-			        if (!coltivatoriProprietario.contains(usernamesList.get(i))) {
-			            return false; 
-			        }
-			    }
+		for(int i = 0; i < usernamesList.size(); i++) {
+			Notifica notifica = new Notifica(titolo, descrizione, data, usernamesList.get(i));
+			NotificaD.Inserisci_NotificaDB(notifica);
+		}
 				
-				for(int i = 0; i < usernamesList.size(); i++) {
-					Notifica notifica = new Notifica(titolo, descrizione, data, usernamesList.get(i));
-					NotificaD.Inserisci_NotificaDB(notifica);
-				}
-				
-				return true;
-
-	    }
+		return true;
+}
 
 public void dividiUsernameTutti(String usernameProprietario, Date data, String titolo, String descrizione) { //viene chiamato se la spunta "tutti i coltivatori" è attivata		
 	
 		Proprietario proprietario = new Proprietario(usernameProprietario);
 		String usernameConcatenati=NotificaD.getDestinatariUsernamesByProprietario(proprietario);
 		
-		// Split della stringa
-		String[] usernamesArray = usernameConcatenati.trim().split(",");	        
-	
-		// Converti l'array in ArrayList
-		ArrayList<String> usernamesList = new ArrayList<>(Arrays.asList(usernamesArray));
+		// Split della stringa + conversione in ArrayList
+		ArrayList<String> usernamesList = SplitUtils.splitByCommaToArrayList(usernameConcatenati);
 	
 		// Chiamo il dao per ogni utente
 		for(int i = 0; i < usernamesList.size(); i++) {
 			Notifica notifica = new Notifica(titolo, descrizione, data, usernamesList.get(i));
 			NotificaD.Inserisci_NotificaDB(notifica);
 		}
-
 }
 
 public ArrayList <String> getColtivatoriByProprietario(String usernameProprietario) { //restituisce i coltivatori appartenenti ad un dato proprietario

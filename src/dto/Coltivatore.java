@@ -15,6 +15,10 @@ public class Coltivatore extends utente{
 		this.usernameProprietario=usernameProprietario;
 	}
 	
+	public Coltivatore(String username) {
+		super(username);
+	}
+	
 	//Getter e Setter
 	public String getNome() { return nome; }
 	public void setNome(String nome) { this.nome = nome;}
