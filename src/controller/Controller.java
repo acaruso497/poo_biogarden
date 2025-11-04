@@ -116,69 +116,54 @@ public class Controller {
 //                       _________________ HOMEPAGE COLTIVATORE _________________
    
 	public void legginotifiche(String usernamecoltivatore) {
-		NotificaD NotificaD = new NotificaD();
-		Coltivatore coltivatore = new Coltivatore(usernamecoltivatore);
-        NotificaD.segnaNotificheColtivatoreComeLette(coltivatore);
+		NotificaDAO DAO = new NotificaDAO();
+		ColtivatoreDTO coltivatore = new ColtivatoreDTO(usernamecoltivatore);
+		DAO .segnaNotificheColtivatoreComeLette(coltivatore);
     }
 	
 	public boolean checknotifiche(String usernamecoltivatore) {
-		NotificaD NotificaD = new NotificaD();
-		Coltivatore coltivatore = new Coltivatore(usernamecoltivatore);
-        return NotificaD.ciSonoNotificheNonLette(coltivatore);
+		NotificaDAO DAO = new NotificaDAO();
+		ColtivatoreDTO coltivatore = new ColtivatoreDTO(usernamecoltivatore);
+        return DAO.ciSonoNotificheNonLette(coltivatore);
     }
 	
 	public String mostranotifiche(String usernamecoltivatore) {
-		NotificaD NotificaD = new NotificaD();
-		Coltivatore coltivatore = new Coltivatore(usernamecoltivatore);
-        return NotificaD.getNotificheNonLette(coltivatore);
+		NotificaDAO DAO = new NotificaDAO();
+		ColtivatoreDTO coltivatore = new ColtivatoreDTO(usernamecoltivatore);
+        return DAO.getNotificheNonLette(coltivatore);
     }
    
 //                        __________________ CREAZIONE NOTIFICA _________________
    
 
-public boolean dividiUsername(String usernameProprietario, String usernameConcatenati, 
-							  Date data, String titolo, String descrizione) {	// viene chiamato se la spunta "tutti i coltivatori" è disattivata		
-	
-    	// Split della stringa + conversione in ArrayList
-    	ArrayList<String> usernamesList = SplitUtils.splitByCommaToArrayList(usernameConcatenati);
-	       
-		// Crea un arraylist contenenti tutti i coltivatori che appartengono al proprietario loggato
-		Proprietario proprietario = new Proprietario(usernameProprietario);
-		ArrayList<String> coltivatoriProprietario= NotificaD.getColtivatoriByProprietario(proprietario);
-				
-<<<<<<< HEAD
-		// Verifica se i coltivatori appartengono al proprietario loggato
-		for(int i = 0; i < usernamesList.size(); i++) {
+	public boolean dividiUsername(String usernameProprietario, String usernameConcatenati,
+            Date data, String titolo, String descrizione) { // viene chiamato se la spunta "tutti i coltivatori" è disattivata
+
+		// Split della stringa + conversione in ArrayList (utils)
+		ArrayList<String> usernamesList = SplitUtils.splitByCommaToArrayList(usernameConcatenati);
+
+		// Ottieni i coltivatori del proprietario (versione refactor: DTO/DAO)
+		ProprietarioDTO proprietario = new ProprietarioDTO(usernameProprietario);
+		ArrayList<String> coltivatoriProprietario = ProprietarioDAO.getColtivatoriByProprietario(proprietario);
+
+		// Verifica se i coltivatori appartengono al proprietario loggato (tuo controllo)
+		for (int i = 0; i < usernamesList.size(); i++) {
 			if (!coltivatoriProprietario.contains(usernamesList.get(i))) {
-				return false; 
+				return false;
 			}
 		}
-=======
-				// Crea un arraylist contenenti tutti i coltivatori che appartengono al proprietario loggato
-				ProprietarioDTO proprietario = new ProprietarioDTO(usernameProprietario);
-				ArrayList<String> coltivatoriProprietario= ProprietarioDAO.getColtivatoriByProprietario(proprietario);
->>>>>>> 1b0b5ed613a2788f493b90e2b4399838d924df2c
-				
-		for(int i = 0; i < usernamesList.size(); i++) {
-			Notifica notifica = new Notifica(titolo, descrizione, data, usernamesList.get(i));
-			NotificaD.Inserisci_NotificaDB(notifica);
+
+		// Inserimento notifiche (versione refactor: DTO/DAO)
+		for (int i = 0; i < usernamesList.size(); i++) {
+			NotificaDTO notifica = new NotificaDTO(titolo, descrizione, data, usernamesList.get(i));
+			NotificaDAO.Inserisci_NotificaDB(notifica);
 		}
-				
-<<<<<<< HEAD
-		return true;
-}
-=======
-				for(int i = 0; i < usernamesList.size(); i++) {
-					NotificaDTO notifica = new NotificaDTO(titolo, descrizione, data, usernamesList.get(i));
-					NotificaDAO.Inserisci_NotificaDB(notifica);
-				}
-				
-				return true;
 
-	    }
->>>>>>> 1b0b5ed613a2788f493b90e2b4399838d924df2c
+	return true;
+	}
 
-public void dividiUsernameTutti(String usernameProprietario, Date data, String titolo, String descrizione) { //viene chiamato se la spunta "tutti i coltivatori" è attivata		
+
+	public void dividiUsernameTutti(String usernameProprietario, Date data, String titolo, String descrizione) { //viene chiamato se la spunta "tutti i coltivatori" è attivata		
 	
 		ProprietarioDTO proprietario = new ProprietarioDTO(usernameProprietario);
 		String usernameConcatenati= ProprietarioDAO.getDestinatariUsernamesByProprietario(proprietario);
@@ -191,17 +176,17 @@ public void dividiUsernameTutti(String usernameProprietario, Date data, String t
 			NotificaDTO notifica = new NotificaDTO(titolo, descrizione, data, usernamesList.get(i));
 			NotificaDAO.Inserisci_NotificaDB(notifica);
 		}
-}
+	}
 
-public ArrayList <String> getColtivatoriByProprietario(String usernameProprietario) { //restituisce i coltivatori appartenenti ad un dato proprietario
-	ProprietarioDTO proprietario = new ProprietarioDTO(usernameProprietario);
-	return ProprietarioDAO.getColtivatoriByProprietario(proprietario);
-}
+	public ArrayList <String> getColtivatoriByProprietario(String usernameProprietario) { //restituisce i coltivatori appartenenti ad un dato proprietario
+		ProprietarioDTO proprietario = new ProprietarioDTO(usernameProprietario);
+		return ProprietarioDAO.getColtivatoriByProprietario(proprietario);
+	}
 
-public boolean controllaUsername(String username) { //controlla l'esistenza di un username di un coltivatore
-	UtenteDTO user = new UtenteDTO(username);
-	return UtenteDAO.usernameEsiste(user);
-}
+	public boolean controllaUsername(String username) { //controlla l'esistenza di un username di un coltivatore
+		UtenteDTO user = new UtenteDTO(username);
+		return UtenteDAO.usernameEsiste(user);
+	}
 
    
 //                         _________________ CREAZIONE NOTIFICA _________________

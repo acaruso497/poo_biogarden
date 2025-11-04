@@ -15,7 +15,7 @@ public class ColtivatoreDTO extends UtenteDTO{
 		this.usernameProprietario=usernameProprietario;
 	}
 	
-	public Coltivatore(String username) {
+	public ColtivatoreDTO(String username) {
 		super(username);
 	}
 	
