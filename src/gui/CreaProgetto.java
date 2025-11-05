@@ -21,6 +21,7 @@ import net.miginfocom.swing.MigLayout;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JComboBox;
@@ -236,7 +237,8 @@ public class CreaProgetto extends JFrame {
 //				DAO dao = new DAO(); // Crea il DAO
 //		        creaProgettoController = new CreaProgettoController(dao); // Crea il controller
 		        
-				String [] creaArr=creaProgettoController.dividiPerVirgola(FieldTipologiaColtura.getText()); // divide le colture dalle virgole per poterle salvare nel database
+				//String [] creaArr=creaProgettoController.dividiPerVirgola(FieldTipologiaColtura.getText()); // divide le colture dalle virgole per poterle salvare nel database
+				ArrayList<String> creaArr = SplitUtils.splitByCommaToArrayList(FieldTipologiaColtura.getText());
 				
 	            LocalDate datalocalIP = LocalDate.parse(dataInizioP, DateTimeFormatter.ofPattern("dd/MM/yyyy")); //converte il textfield della data inizio in tipo data di sql
 				Date dataIP = Date.valueOf(datalocalIP);
@@ -244,7 +246,8 @@ public class CreaProgetto extends JFrame {
 				LocalDate datalocalFP = LocalDate.parse(dataFineP, DateTimeFormatter.ofPattern("dd/MM/yyyy")); //converte il textfield della data fine in tipo data di sql
 				Date dataFP = Date.valueOf(datalocalFP);
 				
-				boolean controllo = creaProgettoController.checkColt(lotto, creaArr); //flag per controllare se le colture sono state piantate nel lotto
+				//boolean controllo = creaProgettoController.checkColt(lotto, creaArr); //DA VEDERE SE SERVE
+				//flag per controllare se le colture sono state piantate nel lotto
 				
 				if(controllo==true) {
 					JOptionPane.showMessageDialog(CreaProgetto.this, 
@@ -255,6 +258,10 @@ public class CreaProgetto extends JFrame {
 				boolean progettoCompletato = creaProgettoController.controlloProgettoChiuso(lotto);
 					
 			    //vado a controllare se esiste già un progetto in quel lotto
+				
+		
+				//                         !!ATTENZIONE!!
+				//QUESTO METODO VERRA' CHIAMATO NELLA GUI ATTIVITA PER EVITARE DI CREARE UN PROGETTO A META'
 				boolean creaProgetto = creaProgettoController.creaProgetto(titolo, lotto, descrizione, stimaRaccolto, creaArr, dataIP, dataFP);
 				idProgetto = creaProgettoController.getLastIdProgetto(); 
 				

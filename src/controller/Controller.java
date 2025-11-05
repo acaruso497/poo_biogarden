@@ -118,7 +118,7 @@ public class Controller {
 	public void legginotifiche(String usernamecoltivatore) {
 		NotificaDAO DAO = new NotificaDAO();
 		ColtivatoreDTO coltivatore = new ColtivatoreDTO(usernamecoltivatore);
-		DAO .segnaNotificheColtivatoreComeLette(coltivatore);
+		DAO.segnaNotificheColtivatoreComeLette(coltivatore);
     }
 	
 	public boolean checknotifiche(String usernamecoltivatore) {
@@ -192,10 +192,41 @@ public class Controller {
 //                         _________________ CREAZIONE NOTIFICA _________________
    
    
-//                          _________________ TITOLO _________________
+//                          _________________ CREAZIONE PROGETTO _________________
    
-   		//CODICE
+	 //Crea il progetto di coltivazione inserendo i parametri tramite dao 
+    public boolean creaProgetto(String titolo, String idLottoStr, String descrizione, String stimaRaccoltoStr, 
+    							ArrayList<String> coltureString, Date dataIP, Date dataFP) {
+    	
+    	//AtomicInteger idOut = new AtomicInteger();
+    	
+    	ArrayList<ColturaDTO> coltureDTOList = new ArrayList<>();
+    	
+        if (coltureString != null && !coltureString.isEmpty()) {
+        for (int i = 0; i < coltureString.size(); i++) {
+            String coltura = coltureString.get(i);
+            String colturaPulita = coltura.trim();
+            
+            ColturaDTO col = new ColturaDTO(colturaPulita);
+            coltureDTOList.add(col);
+            
+        }
+    }
+    
+        
+//	    boolean ok = daoCreaP.registraProgetto(titolo, idLottoStr, stimaRaccoltoStr, 
+//	    								 coltureString, descrizione, dataIP, dataFP, idOut);
+//	    
+//	    if(ok)	lastIdProgetto = idOut.get();
+//	    else	lastIdProgetto = null;
+//	    
+//	    return ok;
+	    
+    }
+    
+//                            _________________ CREAZIONE PROGETTO _________________
 
+    
 //                           _________________ TITOLO _________________
    
    
