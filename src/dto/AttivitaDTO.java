@@ -9,6 +9,10 @@ public class AttivitaDTO {
 		this.ID_Attivita=ID_Attivita;
 		this.codiceFiscaleCol=codiceFiscaleCol;
 	}
+	
+	public AttivitaDTO() {
+		
+    }
 
 	public int getID_Attivita() {
 		return ID_Attivita;

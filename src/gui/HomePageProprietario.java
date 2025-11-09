@@ -43,7 +43,7 @@ public class HomePageProprietario extends JFrame {
 	  
 //	    visualizza = new VisualizzaProgetti(this);
 	    creanotifica = new CreaNotifica(this);
-//	    creaprogetto = new CreaProgetto(this); 
+	    creaprogetto = new CreaProgetto(this); 
 	    
 	    JLabel LabelBenvenuto = new JLabel("Benvenuto! Sei un Proprietario");
 	    LabelBenvenuto.setFont(new Font("Tahoma", Font.BOLD, 17));
@@ -97,7 +97,7 @@ public class HomePageProprietario extends JFrame {
 	            boolean aggiuntaLotto = controller.aggiungiL(proprietario);
 	            
 	            if (aggiuntaLotto==true) {
-	            	//creaprogetto.popolaComboLotto();
+	            	creaprogetto.popolaComboLotto(proprietario);
 	                //aggiunta lotto
 	                JOptionPane.showMessageDialog(HomePageProprietario.this, 
 	                    "Lotto aggiunto con successo!", "Successo", 

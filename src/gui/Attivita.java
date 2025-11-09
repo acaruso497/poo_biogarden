@@ -6,10 +6,19 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import controller.Controller;
+import dto.ColturaDTO;
+import dto.IrrigazioneDTO;
+import dto.LottoDTO;
+import dto.ProgettoColtivazioneDTO;
+import dto.RaccoltaDTO;
+import dto.SeminaDTO;
 import utils.*;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.JLabel;
@@ -33,16 +42,16 @@ public class Attivita extends JFrame {
 	private JTextField FieldLotto;
 	private JTextField FieldDataIA;
 	private JTextField FieldDataFA;
-
-	private CreaProgettoController creaProgettoController; 
+ 
 	private JTextField FieldTipoSemina;
 	private JTextField FieldTipologia;
 	private JTextField FieldProfondita;
 	private JTextField FieldStimaRaccolto;
 	private JButton ButtonHomePage;
 	private HomePageProprietario home; 
+	Controller controller = new Controller(); 
 	
-	public Attivita(String titolo, String lotto, String stimaRaccolto, String tipologiaColtura, String dataInizioP, String dataFineP, String descrizione, Integer idProgetto) {
+	public Attivita(ProgettoColtivazioneDTO progetto, ColturaDTO coltura, LottoDTO lotto) {
 		home = new HomePageProprietario();
 		setTitle("Attività");
 	    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -186,8 +195,8 @@ public class Attivita extends JFrame {
         ButtonHomePage.setEnabled(false); 
         ButtonHomePage.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-                if (creaProgettoController != null) {
-                    creaProgettoController.resetContatori(); 			// Reset dei contatori per il nuovo ciclo di attività
+                if (controller != null) {
+                    controller.resetContatori(); 			// Reset dei contatori per il nuovo ciclo di attività
                     Attivita.this.setVisible(false);
                     home.setVisible(true);
                     
@@ -265,20 +274,23 @@ public class Attivita extends JFrame {
 		            }
 		            
 		            // Converte le date del progetto
-                    LocalDate dataInizioProgetto = LocalDate.parse(dataInizioP, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+		            LocalDate dataInizioProgetto = progetto.getDataInizio().toLocalDate();
+		            LocalDate dataFineProgetto = progetto.getDataFine().toLocalDate();
+		            
+                    //LocalDate dataInizioProgetto = LocalDate.parse(dataInizioP, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
                     if (dataInseritaIA.isBefore(dataInizioProgetto)) { // Controlla che la data inizio attività non sia precedente alla data di inizio del progetto
                         JOptionPane.showMessageDialog(Attivita.this, 
                         					"La data di inizio attività non può essere precedente alla data di inizio del progetto (" 
-                        					+ dataInizioP + ")!", "Errore", JOptionPane.ERROR_MESSAGE);
+                        					+ dataInizioProgetto + ")!", "Errore", JOptionPane.ERROR_MESSAGE);
                         FieldDataIA.setBackground(Color.RED);
                         return;
                     }
                     
-                    LocalDate dataFineProgetto = LocalDate.parse(dataFineP, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                    //LocalDate dataFineProgetto = LocalDate.parse(dataFineP, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
                     if (dataInseritaFA.isAfter(dataFineProgetto)) {  // Controlla che la data fine attività non sia successiva alla data di fine del progetto
                         JOptionPane.showMessageDialog(Attivita.this, 
                         						"La data di fine attività non può essere successiva alla data di fine del progetto (" 
-                        						+ dataFineP + ")!", "Errore", JOptionPane.ERROR_MESSAGE);
+                        						+ dataFineProgetto + ")!", "Errore", JOptionPane.ERROR_MESSAGE);
                         FieldDataFA.setBackground(Color.RED);
                         return;
                     }
@@ -297,12 +309,33 @@ public class Attivita extends JFrame {
 				LocalDate datalocalFA = LocalDate.parse(dataFineA, DateTimeFormatter.ofPattern("dd/MM/yyyy")); //converte il textfield della data fine in tipo data di sql
 				Date dataFA = Date.valueOf(datalocalFA);
 				
+				SeminaDTO semina = null;
+				IrrigazioneDTO irrigazione = null;
+				RaccoltaDTO raccolta = null;
 
-				boolean creaAttivita = creaProgettoController.creaAttivita(attivita, dataIA, dataFA, tipoIrrigazione, tipoSemina, lotto, idProgetto);
+				
+				if (attivita.equals("Semina")) {
+	                semina = new SeminaDTO(dataIA, dataFA, tipoSemina);
+	            } else if (attivita.equals("Irrigazione")) {
+	                irrigazione = new IrrigazioneDTO(dataIA, dataFA, tipoIrrigazione);
 
-				if(creaAttivita==true) { //crea l'attività
-				    JOptionPane.showMessageDialog(Attivita.this, "Attività creata con successo!");
-				    if (creaProgettoController.puoAvanzare()==true) {
+	            } else if (attivita.equals("Raccolta")) {
+	                raccolta = new RaccoltaDTO(dataIA, dataFA);
+	            }
+				
+				ArrayList<String> creaArr = SplitUtils.splitByCommaToArrayList(FieldTipologia.getText());
+
+				
+				
+			
+				boolean creaProgetto = controller.creaProgetto(progetto, creaArr, lotto);
+				
+				boolean creaAttivita = controller.creaAttivita(semina, irrigazione, raccolta, lotto, progetto);
+				
+				
+				if(creaProgetto==true && creaAttivita==true) { //crea l'attività
+				    JOptionPane.showMessageDialog(Attivita.this, "Progetto creato con successo!");
+				    if (controller.puoAvanzare()==true) {
 				        ButtonHomePage.setEnabled(true);
 				        ButtonSalva.setEnabled(false);
 				    } 
@@ -354,38 +387,40 @@ public class Attivita extends JFrame {
         contentPane.add(FieldProfondita, "cell 0 19,growx");
         
         //controlla ed imposta tutti field ottenuti tramite variabile locali (provienienti dalla GUI CreaProgetto)
-        if (titolo != null && !titolo.isEmpty()) {
-            FieldTitolo.setText(titolo);
+        if (!progetto.getTitolo().isEmpty()) {
+            FieldTitolo.setText(progetto.getTitolo());
         }
         
-        if (lotto != null && !lotto.isEmpty()) {
-            FieldLotto.setText(lotto);
+        if (!progetto.getDescrizione().isEmpty()) {
+            TextDescrizione.setText(progetto.getDescrizione());
         }
         
-        if (stimaRaccolto != null && !stimaRaccolto.isEmpty()) {
-        	FieldStimaRaccolto.setText(stimaRaccolto + " kg");
+        if (lotto.getID_Lotto() != 0) {
+        	 FieldLotto.setText(String.valueOf(lotto.getID_Lotto()));
         }
         
-        if (tipologiaColtura != null && !tipologiaColtura.isEmpty()) {
-        	FieldTipologia.setText(tipologiaColtura);
+        if (progetto.getStimaRaccolto() != 0) {
+        	FieldStimaRaccolto.setText(progetto.getStimaRaccolto() + " kg");
         }
         
-        if (dataInizioP != null && !dataInizioP.isEmpty()) {
-            FieldDataIP.setText(dataInizioP);
+        if (!coltura.getVarieta().isEmpty()) {
+        	FieldTipologia.setText(coltura.getVarieta());
         }
         
-        if (dataFineP != null && !dataFineP.isEmpty()) {
-            FieldDataFP.setText(dataFineP);
+        if (progetto.getDataInizio() != null) {
+            FieldDataIP.setText(progetto.getDataInizio().toString());
         }
         
-        if (descrizione != null && !descrizione.isEmpty()) {
-            TextDescrizione.setText(descrizione);
+        if (progetto.getDataFine() != null) {
+            FieldDataFP.setText(progetto.getDataFine().toString());
         }
+        
+        
         
        
         
-        DAO dao = new DAO();
-	    creaProgettoController = new CreaProgettoController(dao);
+//        DAO dao = new DAO();
+//	    creaProgettoController = new CreaProgettoController(dao);
 	    
         
 	}

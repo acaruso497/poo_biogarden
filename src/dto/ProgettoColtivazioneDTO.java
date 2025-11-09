@@ -12,6 +12,7 @@ public class ProgettoColtivazioneDTO {
 	private int idLotto;
 	private boolean done;
 	
+	//prelevo dati dal database (utilizzo questo costruttore)
 	public ProgettoColtivazioneDTO(int ID_Progetto, String titolo, String descrizione, double stimaRaccolto, Date dataInizio, Date dataFine, int idLotto, boolean done)  {
 		this.ID_Progetto=ID_Progetto;
 		this.titolo=titolo;
@@ -21,6 +22,15 @@ public class ProgettoColtivazioneDTO {
 		this.dataFine=dataFine;
 		this.idLotto=idLotto;
 		this.done=done;
+	}
+	
+	public ProgettoColtivazioneDTO(String titolo, String descrizione, double stimaRaccolto, Date dataInizio, Date dataFine, int idLotto)  {
+		this.titolo=titolo;
+		this.descrizione=descrizione;
+		this.stimaRaccolto=stimaRaccolto;
+		this.dataInizio=dataInizio;
+		this.dataFine=dataFine;
+		this.idLotto=idLotto;
 	}
 
 	//Getter e setter

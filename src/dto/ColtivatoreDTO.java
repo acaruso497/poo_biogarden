@@ -1,5 +1,7 @@
 package dto;
 
+import dao.ColtivatoreDAO;
+
 public class ColtivatoreDTO extends UtenteDTO{
 	private String nome;
 	private String cognome;
@@ -17,6 +19,19 @@ public class ColtivatoreDTO extends UtenteDTO{
 	
 	public ColtivatoreDTO(String username) {
 		super(username);
+	}
+	
+	public ColtivatoreDTO(String username, String password) {
+		super(username, password);
+	}
+	
+	public ColtivatoreDTO() {
+		super(null);
+	}
+	
+	@Override
+	public boolean autentica() {
+		return ColtivatoreDAO.authC(this);
 	}
 	
 	//Getter e Setter

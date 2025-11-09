@@ -6,7 +6,7 @@ import utils.method;
 
 import java.sql.Date;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -15,59 +15,61 @@ import gui.HomePageProprietario;
 
 	
 public class Controller {
+	private int countSemina = 0;
+    private int countIrrigazione = 0;
+    private int countRaccolta = 0;
+	
 //                      _________________ LOGIN _________________
 	
-    public boolean[] login(String username, String password) { //effettua l'autenticazione dell'utente
+    public boolean login(String username, String password) { //effettua l'autenticazione dell'utente
     	
     	
-        boolean[] lista = new boolean[3]; // [0]=true (user e password)campiOK, [1]=proprietario, [2]=coltivatore
+        boolean check = false; // [0]=true (user e password)campiOK, [1]=proprietario, [2]=coltivatore
 
         if (username == null || username.trim().isEmpty()
             || password == null || password.trim().isEmpty())
         {
-            lista[0] = false;            // campi non validi
-            return lista;           
-        }
-
-        lista[0] = true;  // campi ok
-        
-        UtenteDTO logUser = new UtenteDTO(username, password);
-        lista[1] = ProprietarioDAO.authP(logUser); 
-        lista[2] = ColtivatoreDAO.authC(logUser); 
-        
-      //riconosce il tipo di utente 
-        if (lista[1]) {
-            ProprietarioDTO p = (ProprietarioDTO) UtenteDAO.creazioneUtente(logUser);
-            method.setProprietarioLoggato(p);
-        }
-
-        if (lista[2]) {
-            ColtivatoreDTO c = (ColtivatoreDTO) UtenteDAO.creazioneUtente(logUser);
-            method.setColtivatoreLoggato(c);
+            check = false;            // campi non validi
+            return check;           
         }
         
-        return lista;
+        check = true;  // campi ok
+        
+        
+        return check;
     }
     
     
-    public void LoginResult(JFrame loginFrame, boolean[] check) { //controlli generici
-        if (check[0]==false) {
-            JOptionPane.showMessageDialog(loginFrame, "\n USERNAME E/O PASSWORD \n RISULTANO VUOTI O NULLI");
-        } else if (check[0] && check[1] && !check[2]) {
-            loginFrame.setVisible(false);
-			HomePageProprietario homeP = new HomePageProprietario();
-			homeP.setVisible(true);
-            
-        } else if (check[0] && !check[1] && check[2]) {
-            loginFrame.setVisible(false);
-            HomePageColtivatore homeC = new HomePageColtivatore();
-            homeC.setVisible(true);
-            
-        } else if (check[0] && !check[1] && !check[2]) {
-            JOptionPane.showMessageDialog(loginFrame, " Username o Password errati!! ");
-        }
+    public void creaUtente(boolean check, JFrame loginFrame) {
     	
+    	if(check==true) {
+    		ProprietarioDTO p = new ProprietarioDTO(method.getUsernameGlobale(), method.getPsw());
+            boolean ruolo = p.autentica();
+            if(ruolo==true) { 
+            	method.setProprietarioLoggato(p); 
+            	System.out.println(method.getUsernameGlobale() + p.getNome() + p.getCognome()); 
+            	HomePageProprietario homeP = new HomePageProprietario();
+            	homeP.setVisible(true);
+            	loginFrame.setVisible(false);
+            	
+            } 
+            
+            else if(ruolo==false) {
+            	ColtivatoreDTO c = new ColtivatoreDTO(method.getUsernameGlobale(), method.getPsw());
+            	boolean ruolo2 = c.autentica();
+            	if(ruolo2) { 
+            		method.setColtivatoreLoggato(c); 
+            		System.out.println(method.getUsernameGlobale() + c.getNome() + c.getCognome()); 
+            		HomePageColtivatore homeC = new HomePageColtivatore();
+            		homeC.setVisible(true);
+            		loginFrame.setVisible(false);
+            	}
+            }
+    	}
+          
     }
+    
+    
 //                      _________________ LOGIN _________________
     
 //                     _________________ REGISTRAZIONE UTENTE _________________
@@ -195,10 +197,8 @@ public class Controller {
 //                          _________________ CREAZIONE PROGETTO _________________
    
 	 //Crea il progetto di coltivazione inserendo i parametri tramite dao 
-    public boolean creaProgetto(String titolo, String idLottoStr, String descrizione, String stimaRaccoltoStr, 
-    							ArrayList<String> coltureString, Date dataIP, Date dataFP) {
+    public boolean creaProgetto(ProgettoColtivazioneDTO progetto, ArrayList<String> coltureString, LottoDTO lotto) {
     	
-    	//AtomicInteger idOut = new AtomicInteger();
     	
     	ArrayList<ColturaDTO> coltureDTOList = new ArrayList<>();
     	
@@ -213,16 +213,52 @@ public class Controller {
         }
     }
     
+        boolean ok = ProgettoColtivazioneDAO.registraProgetto(progetto, lotto, coltureDTOList);
         
-//	    boolean ok = daoCreaP.registraProgetto(titolo, idLottoStr, stimaRaccoltoStr, 
-//	    								 coltureString, descrizione, dataIP, dataFP, idOut);
-//	    
-//	    if(ok)	lastIdProgetto = idOut.get();
-//	    else	lastIdProgetto = null;
-//	    
-//	    return ok;
+        
+        return ok;
 	    
     }
+    
+    public boolean creaAttivita(SeminaDTO semina, IrrigazioneDTO irrigazione, RaccoltaDTO raccolta, LottoDTO lotto, ProgettoColtivazioneDTO progetto) {
+    	
+    	boolean insertAttivita = ProgettoColtivazioneDAO.insertAttivita(semina, irrigazione, raccolta, lotto, progetto);
+    	
+    	return insertAttivita;
+    	
+    }
+    
+    public List<String> getLottiByProprietario(ProprietarioDTO proprietario){ //popola la combobox dei lotti
+    	ProprietarioDAO dao = new ProprietarioDAO();
+    	return dao.getLottiByProprietario(proprietario);
+    }
+    
+    private void incrementaContatore(String tipoAttivita) {   //incrementa il contatore delle attività
+        if ("Semina".equals(tipoAttivita)) {
+            countSemina++;
+        } else if ("Irrigazione".equals(tipoAttivita)) {
+            countIrrigazione++;
+        } else if ("Raccolta".equals(tipoAttivita)) {
+            countRaccolta++;
+        }
+    }
+    
+    public boolean puoAvanzare() { // Verifica se l'utente ha completato almeno 1 semina, 1 irrigazione e 1 raccolta
+        return countSemina >= 1 && countIrrigazione >= 1 && countRaccolta >= 1;
+    }
+   
+    public void resetContatori() {     // Reset dei contatori (utile quando si va alla prossima fase)
+        countSemina = 0;
+        countIrrigazione = 0;
+        countRaccolta = 0;
+    }
+    
+    public boolean controlloProgettoChiuso(LottoDTO lotto) { //controlla se il progetto è completato
+    	ProgettoColtivazioneDAO dao = new ProgettoColtivazioneDAO();
+    	return dao.controlloProgettoChiuso(lotto);
+    	
+    }
+    
     
 //                            _________________ CREAZIONE PROGETTO _________________
 

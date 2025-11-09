@@ -1,5 +1,7 @@
 package dto;
 
+import dao.ProprietarioDAO;
+
 public class ProprietarioDTO extends UtenteDTO{
 	private String nome;
 	private String cognome;
@@ -15,7 +17,16 @@ public class ProprietarioDTO extends UtenteDTO{
 	public ProprietarioDTO(String username) {
 		super(username);
 	}
+	
+	public ProprietarioDTO(String username, String password) {
+		super(username, password);
+	}
 
+	@Override
+	public boolean autentica() {
+		return ProprietarioDAO.authP(this);
+	}
+	
 	//Getter e Setter
 	public String getNome() { return nome; }
 	public void setNome(String nome) { this.nome = nome;}

@@ -7,6 +7,14 @@ public class IrrigazioneDTO extends AttivitaDTO{
 	private Date giornoFine;
 	private String tipoIrrigazione;
 	
+	public IrrigazioneDTO() {}
+
+    public IrrigazioneDTO(Date giornoInizio, Date giornoFine, String tipoIrrigazione) {
+        this.giornoInizio = giornoInizio;
+        this.giornoFine = giornoFine;
+        this.tipoIrrigazione = tipoIrrigazione;
+    }
+	
 	public IrrigazioneDTO(int ID_Attivita, String codiceFiscaleCol, Date giornoInizio, Date giornoFine, String tipoIrrigazione) {
 		super(ID_Attivita, codiceFiscaleCol);
 		this.giornoInizio=giornoInizio;

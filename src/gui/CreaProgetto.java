@@ -16,12 +16,15 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.basic.BasicArrowButton;
 
 import controller.Controller;
+import dto.ColturaDTO;
+import dto.LottoDTO;
+import dto.ProgettoColtivazioneDTO;
+import dto.ProprietarioDTO;
 import utils.*;
 import net.miginfocom.swing.MigLayout;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JComboBox;
@@ -43,7 +46,8 @@ public class CreaProgetto extends JFrame {
     Controller controller = new Controller();  
     private JTextField FieldStimaRaccolto;
     private JTextField FieldTipologiaColtura;
-    private Integer idProgetto;
+    //ProprietarioDTO proprietario = method.getProprietarioLoggato();
+    //private Integer idProgetto;
 	
 	public CreaProgetto(HomePageProprietario home) {
 		this.home = home;
@@ -238,47 +242,38 @@ public class CreaProgetto extends JFrame {
 //		        creaProgettoController = new CreaProgettoController(dao); // Crea il controller
 		        
 				//String [] creaArr=creaProgettoController.dividiPerVirgola(FieldTipologiaColtura.getText()); // divide le colture dalle virgole per poterle salvare nel database
-				ArrayList<String> creaArr = SplitUtils.splitByCommaToArrayList(FieldTipologiaColtura.getText());
+				//ArrayList<String> creaArr = SplitUtils.splitByCommaToArrayList(FieldTipologiaColtura.getText());
 				
-	            LocalDate datalocalIP = LocalDate.parse(dataInizioP, DateTimeFormatter.ofPattern("dd/MM/yyyy")); //converte il textfield della data inizio in tipo data di sql
-				Date dataIP = Date.valueOf(datalocalIP);
+	            //LocalDate datalocalIP = LocalDate.parse(dataInizioP, DateTimeFormatter.ofPattern("dd/MM/yyyy")); //converte il textfield della data inizio in tipo data di sql
+				//Date dataIP = Date.valueOf(datalocalIP);
 				
-				LocalDate datalocalFP = LocalDate.parse(dataFineP, DateTimeFormatter.ofPattern("dd/MM/yyyy")); //converte il textfield della data fine in tipo data di sql
-				Date dataFP = Date.valueOf(datalocalFP);
+				//LocalDate datalocalFP = LocalDate.parse(dataFineP, DateTimeFormatter.ofPattern("dd/MM/yyyy")); //converte il textfield della data fine in tipo data di sql
+				//Date dataFP = Date.valueOf(datalocalFP);
 				
 				//boolean controllo = creaProgettoController.checkColt(lotto, creaArr); //DA VEDERE SE SERVE
 				//flag per controllare se le colture sono state piantate nel lotto
 				
-				if(controllo==true) {
-					JOptionPane.showMessageDialog(CreaProgetto.this, 
-												 "\n\nuna tra le colture inserite è gia stata piantata");
-				}else {
+//				if(controllo==true) {
+//					JOptionPane.showMessageDialog(CreaProgetto.this, 
+//												 "\n\nuna tra le colture inserite è gia stata piantata");
+//				}else {
 				
+				int idLotto = Integer.parseInt(lotto);
+				LottoDTO lottoDTO = new LottoDTO(idLotto);
 				//vado a controllare se il progetto è completato nel lotto
-				boolean progettoCompletato = creaProgettoController.controlloProgettoChiuso(lotto);
+				boolean progettoCompletato = controller.controlloProgettoChiuso(lottoDTO);
 					
-			    //vado a controllare se esiste già un progetto in quel lotto
 				
-		
-				//                         !!ATTENZIONE!!
-				//QUESTO METODO VERRA' CHIAMATO NELLA GUI ATTIVITA PER EVITARE DI CREARE UN PROGETTO A META'
-				boolean creaProgetto = creaProgettoController.creaProgetto(titolo, lotto, descrizione, stimaRaccolto, creaArr, dataIP, dataFP);
-				idProgetto = creaProgettoController.getLastIdProgetto(); 
+		 
 				
 				if (progettoCompletato==false) { //se il progetto non è segnato come completato, blocca la creazione
 			        JOptionPane.showMessageDialog(CreaProgetto.this, 
 									            "Questo lotto ha un progetto IN CORSO. Devi prima completare il progetto prima di crearne un altro!", 
 									            "Errore", JOptionPane.ERROR_MESSAGE);
 			    } else { 	//se c'è un progetto segnato come completato, il lotto è libero per nuovi progetti
-					if (creaProgetto == true) { 
-						JOptionPane.showMessageDialog(CreaProgetto.this, 
-													  "Progetto creato con successo!");
 					    ButtonAvanti.setEnabled(true);
 					    ButtonSalva.setEnabled(false);
-					}
-				
 				  }
-				}
 			}
    	
 		});
@@ -340,9 +335,25 @@ public class CreaProgetto extends JFrame {
 					
 				}
 	            
+	            //converte i tipi dei field per creare gli oggetti DTO
+	            double stima = Double.parseDouble(stimaRaccolto);
+	            
+	            LocalDate localDataInizio = LocalDate.parse(dataInizioP, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+	            Date dataInizio = Date.valueOf(localDataInizio);
+	            
+	            LocalDate localDataFine = LocalDate.parse(dataFineP, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+	            Date dataFine = Date.valueOf(localDataFine);
+	            int idLotto = Integer.parseInt(lotto);
+	            
+	            //creazione di oggetti DTO
+	            ProgettoColtivazioneDTO progetto = new ProgettoColtivazioneDTO(titolo, descrizione, stima, dataInizio, dataFine, idLotto);
+	            ColturaDTO coltura = new ColturaDTO(tipoColtura);
+	            LottoDTO lottoDTO = new LottoDTO(idLotto);
+	            
 	            // Passa i field già popolati alla GUI attività salvati nelle variabili locali
-	            Attivita attivita = new Attivita(titolo, lotto, stimaRaccolto, tipoColtura, dataInizioP, dataFineP, descrizione, idProgetto);
-
+	            //Attivita attivita = new Attivita(titolo, lotto, stimaRaccolto, tipoColtura, dataInizioP, dataFineP, descrizione, idProgetto);
+	            Attivita attivita = new Attivita(progetto, coltura, lottoDTO);
+	            
 	            CreaProgetto.this.setVisible(false);
 	            attivita.setVisible(true);
 	    	}
@@ -352,18 +363,21 @@ public class CreaProgetto extends JFrame {
 //	    DAO dao = new DAO(); // Crea il DAO
 //        creaProgettoController = new CreaProgettoController(dao); // Crea il controller
         
-        popolaComboLotto();   
+	    
+	    
+        popolaComboLotto(method.getProprietarioLoggato());   
+       
+	}
+	public void popolaComboLotto(ProprietarioDTO proprietario) {
+		List<String> lotti = controller.getLottiByProprietario(method.getProprietarioLoggato());
+		ComboLotto.removeAllItems();
+		for(String lotto : lotti) {
+		    ComboLotto.addItem(lotto);
+		}
+		ComboLotto.setSelectedIndex(-1);
 	}
 	
-	public void popolaComboLotto() {  	//Popola la ComboLotto con i lotti del proprietario loggato
-		ComboLotto.removeAllItems();
-        String username = ControllerLogin.getUsernameGlobale(); 	// Usa l'username globale
-        List<String> lotti = creaProgettoController.getLottiPerCombo(username);  
-        for (String lotto : lotti) { 
-            ComboLotto.addItem(lotto);  // Aggiunge ogni ID_Lotto alla ComboBox (es. "1", "2")
-        }
-        ComboLotto.setSelectedIndex(-1);
-    }
+	
 
 }
 	

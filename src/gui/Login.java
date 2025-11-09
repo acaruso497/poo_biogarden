@@ -15,6 +15,7 @@ import utils.method;
 import controller.Controller;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import javax.swing.JButton;
@@ -98,10 +99,13 @@ public class Login extends JFrame {
 			public void actionPerformed(ActionEvent e) {			
 				//tramite questa variabile troveremo il codice fiscale da passare al metodo getLottiByProprietario 
 				method.setUsernameGlobale(FieldUsername.getText()); 
-				String psw = FieldPassword.getText();
-				//CFProprietario = Controller.getCodiceFiscaleByUsername(usernameGlobale);
-				boolean[] check = controller.login(method.getUsernameGlobale(), psw);
-				controller.LoginResult(Login.this, check);
+				method.setPsw(FieldPassword.getText());
+				boolean check = controller.login(method.getUsernameGlobale(), method.getPsw());
+				if(check==false) {
+					JOptionPane.showMessageDialog(Login.this, "Credenziali errate!");
+				}else {
+					controller.creaUtente(check, Login.this);
+				}
 			}				
 		   }); 
 		    

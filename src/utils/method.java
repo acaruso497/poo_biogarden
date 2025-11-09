@@ -9,6 +9,7 @@ public class method {
 	private static String CF;
 	private static ProprietarioDTO proprietarioLoggato;
 	private static ColtivatoreDTO coltivatoreLoggato;
+	private static String psw;
 	
 	//Restituisce l'username del proprietario loggato
 	public static String getCF() {
@@ -48,6 +49,14 @@ public class method {
 	//Imposta il coltivatore loggato
 	public static void setColtivatoreLoggato(ColtivatoreDTO coltivatoreLoggato) {
 		method.coltivatoreLoggato = coltivatoreLoggato;
+	}
+
+	public static String getPsw() {
+		return psw;
+	}
+
+	public static void setPsw(String psw) {
+		method.psw = psw;
 	}
 	
 	

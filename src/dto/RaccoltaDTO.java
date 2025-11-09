@@ -6,11 +6,19 @@ public class RaccoltaDTO extends AttivitaDTO{
 	private Date giornoInizio;
 	private Date giornoFine;
 	
-	public RaccoltaDTO(int ID_Attivita, String codiceFiscaleCol, boolean stato, Date giornoInizio, Date giornoFine) {
-		super(ID_Attivita, codiceFiscaleCol, stato);
+	public RaccoltaDTO() {}
+
+	 public RaccoltaDTO(Date giornoInizio, Date giornoFine) {
+	     this.giornoInizio = giornoInizio;
+	     this.giornoFine = giornoFine;
+	 }
+	
+	public RaccoltaDTO(int ID_Attivita, String codiceFiscaleCol, Date giornoInizio, Date giornoFine) {
+		super(ID_Attivita, codiceFiscaleCol);
 		this.giornoInizio=giornoInizio;
 		this.giornoFine=giornoFine;
 	}
+	
 
 	public Date getGiornoInizio() {
 		return giornoInizio;

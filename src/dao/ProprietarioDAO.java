@@ -231,10 +231,10 @@ public class ProprietarioDAO {
 			        conn = Connessione.getConnection(); 
 
 			        String sql = "SELECT l.ID_Lotto, l.posizione " + 
-		                    "FROM Lotto l " +
-		                    "JOIN Proprietario p ON l.Codice_FiscalePr = p.Codice_Fiscale " +
-		                    "WHERE p.username = ? " +
-		                    "ORDER BY l.posizione"; 
+			                    "FROM Lotto l " +
+			                    "JOIN Proprietario p ON l.Codice_FiscalePr = p.Codice_Fiscale " +
+			                    "WHERE p.username = ? " +
+			                    "ORDER BY l.posizione"; 
 
 			        stmt = conn.prepareStatement(sql);   
 			        stmt.setString(1, proprietario.getUsername());         // Inserisce l'username del proprietario
