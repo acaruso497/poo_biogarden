@@ -8,7 +8,7 @@ public class UtenteDAO {
 
 	//____________________   REGISTRAZIONE     ____________________________________
 	
-	public static boolean usernameEsiste(UtenteDTO User) { //controlla se l'username esistente
+	public static boolean usernameEsiste(String username) { //controlla se l'username esistente
 	    Connection conn = null;
 	    PreparedStatement stmt = null;
 	    ResultSet rs = null;
@@ -22,8 +22,8 @@ public class UtenteDAO {
 	                     "SELECT username FROM Coltivatore WHERE username = ?";
 	        
 	        stmt = conn.prepareStatement(sql);
-	        stmt.setString(1, User.getUsername());
-	        stmt.setString(2, User.getUsername());
+	        stmt.setString(1,username);
+	        stmt.setString(2,username);
 	        
 	        rs = stmt.executeQuery();
 	        

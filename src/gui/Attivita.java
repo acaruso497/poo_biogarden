@@ -48,10 +48,18 @@ public class Attivita extends JFrame {
 	private JTextField FieldProfondita;
 	private JTextField FieldStimaRaccolto;
 	private JButton ButtonHomePage;
+	private JButton ButtonSalva;
+	//aggiunto
+  	private boolean seminaSalvata = false;
+  	private boolean irrigazioneSalvata = false;
+  	private boolean raccoltaSalvata = false;
+  	//aggiunto
 	private HomePageProprietario home; 
+	private boolean progettoCreato = false; // Flag per tracciare se il progetto è stato creato
 	Controller controller = new Controller(); 
 	
 	public Attivita(ProgettoColtivazioneDTO progetto, ColturaDTO coltura, LottoDTO lotto) {
+
 		home = new HomePageProprietario();
 		setTitle("Attività");
 	    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -192,6 +200,7 @@ public class Attivita extends JFrame {
 	    });
         
         ButtonHomePage = new JButton("HomePage");
+        contentPane.add(ButtonHomePage, "cell 10 20, growx");
         ButtonHomePage.setEnabled(false); 
         ButtonHomePage.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
@@ -203,164 +212,178 @@ public class Attivita extends JFrame {
               }
         	}
         });
-        
-
-        JButton ButtonSalva = new JButton("Salva");
+            
+        ButtonSalva = new JButton("Salva");
+        contentPane.add(ButtonSalva, "cell 9 20, growx");
         ButtonSalva.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		String attivita = (String) ComboAttivita.getSelectedItem();
-        		String dataInizioA = FieldDataIA.getText();
-				String dataFineA = FieldDataFA.getText();
-				String tipoIrrigazione = "";
-			    String tipoSemina = "";
-			    
-			    // ---CONTROLLI SUI FIELDS---
-			    
-			    if (attivita.equals("Irrigazione")) {
-			        tipoIrrigazione = (String) ComboTipoIrr.getSelectedItem();
-			        if (tipoIrrigazione.equals("-- Seleziona --")) {
-			            JOptionPane.showMessageDialog(Attivita.this, "Seleziona un tipo di irrigazione valido!", "Errore", JOptionPane.ERROR_MESSAGE);
-			            return;
-			        }
-			    } else if (attivita.equals("Semina")) {
-			        tipoSemina = FieldTipoSemina.getText();
-			        if (tipoSemina.isEmpty()) {
-			            JOptionPane.showMessageDialog(Attivita.this, "Inserisci un tipo di semina!", "Errore", JOptionPane.ERROR_MESSAGE);
-			            return;
-			        }
-			    }
-				
-				if (dataInizioA.isEmpty() || dataFineA.isEmpty()) {
-				    JOptionPane.showMessageDialog(Attivita.this, "COMPILA TUTTI I CAMPI !!", "Errore", JOptionPane.ERROR_MESSAGE);
-				    return; 
-				}
-				
-				if (ComboAttivita.getSelectedItem().equals("-- Seleziona --")) {
-				    JOptionPane.showMessageDialog(Attivita.this, "Seleziona un'attività!", "Errore", JOptionPane.ERROR_MESSAGE);
-				    return;
-				}
-				
-				
-				try { 				// Converte le date dell'attività ed effettua controlli
-					
-					LocalDate dataInseritaIA = LocalDate.parse(dataInizioA, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-		            if (dataInseritaIA.isBefore(LocalDate.now())) { //data inizio attività < oggi
-		                JOptionPane.showMessageDialog(Attivita.this, 
-		                							  "La data non può essere minore di oggi!");
-		                FieldDataIA.setBackground(Color.RED);
-		                return;
-		            }
-		            
-		            LocalDate dataInseritaFA = LocalDate.parse(dataFineA, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-		            if (dataInseritaFA.isBefore(LocalDate.now())) { //data fine attività < oggi
-		                JOptionPane.showMessageDialog(Attivita.this, 
-		                							  "La data non può essere minore di oggi!");
-		                FieldDataFA.setBackground(Color.RED);
-		                return;
-		            }
-		   
-		            if (dataInseritaFA.isBefore(dataInseritaIA)) { //data fine attività < data inizio attività
-		                JOptionPane.showMessageDialog(Attivita.this, 
-		                							  "La data non può essere minore della data di inizio!");
-		                FieldDataFA.setBackground(Color.RED);
-		                return;
-		            }
-		            
-		            if (dataInseritaIA.isAfter(dataInseritaFA)) { //data inizio attività > data fine attività
-		                JOptionPane.showMessageDialog(Attivita.this, 
-		                							 "La data non può essere maggiore della data di fine!");
-		                FieldDataIA.setBackground(Color.RED);
-		                return;
-		            }
-		            
-		            // Converte le date del progetto
-		            LocalDate dataInizioProgetto = progetto.getDataInizio().toLocalDate();
-		            LocalDate dataFineProgetto = progetto.getDataFine().toLocalDate();
-		            
-                    //LocalDate dataInizioProgetto = LocalDate.parse(dataInizioP, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-                    if (dataInseritaIA.isBefore(dataInizioProgetto)) { // Controlla che la data inizio attività non sia precedente alla data di inizio del progetto
-                        JOptionPane.showMessageDialog(Attivita.this, 
-                        					"La data di inizio attività non può essere precedente alla data di inizio del progetto (" 
-                        					+ dataInizioProgetto + ")!", "Errore", JOptionPane.ERROR_MESSAGE);
-                        FieldDataIA.setBackground(Color.RED);
-                        return;
-                    }
-                    
-                    //LocalDate dataFineProgetto = LocalDate.parse(dataFineP, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-                    if (dataInseritaFA.isAfter(dataFineProgetto)) {  // Controlla che la data fine attività non sia successiva alla data di fine del progetto
-                        JOptionPane.showMessageDialog(Attivita.this, 
-                        						"La data di fine attività non può essere successiva alla data di fine del progetto (" 
-                        						+ dataFineProgetto + ")!", "Errore", JOptionPane.ERROR_MESSAGE);
-                        FieldDataFA.setBackground(Color.RED);
-                        return;
-                    }
-                    
-                    
-					
-		        } catch (DateTimeParseException ex) { 		// controlla il formato
-		            JOptionPane.showMessageDialog(Attivita.this, "Inserisci una data valida con formato: 'GG/MM/AAAA'");
-		            return;
-					
-				}
-				
-				LocalDate datalocalIA = LocalDate.parse(dataInizioA, DateTimeFormatter.ofPattern("dd/MM/yyyy")); //converte il textfield della data inizio in tipo data di sql
-				Date dataIA = Date.valueOf(datalocalIA);
-				
-				LocalDate datalocalFA = LocalDate.parse(dataFineA, DateTimeFormatter.ofPattern("dd/MM/yyyy")); //converte il textfield della data fine in tipo data di sql
-				Date dataFA = Date.valueOf(datalocalFA);
-				
-				SeminaDTO semina = null;
-				IrrigazioneDTO irrigazione = null;
-				RaccoltaDTO raccolta = null;
+        		
+                     String attivita = (String) ComboAttivita.getSelectedItem();
+                     String dataInizioA = FieldDataIA.getText();
+                     String dataFineA = FieldDataFA.getText();
+                     String tipoIrrigazione = "";
+                     String tipoSemina = "";
+                     
+                     // ---CONTROLLI SUI FIELDS---
+                     
+                     if (attivita.equals("Irrigazione")) {
+                         tipoIrrigazione = (String) ComboTipoIrr.getSelectedItem();
+                         if (tipoIrrigazione.equals("-- Seleziona --")) {
+                             JOptionPane.showMessageDialog(Attivita.this, "Seleziona un tipo di irrigazione valido!", "Errore", JOptionPane.ERROR_MESSAGE);
+                             return;
+                         }
+                     } else if (attivita.equals("Semina")) {
+                         tipoSemina = FieldTipoSemina.getText();
+                         if (tipoSemina.isEmpty()) {
+                             JOptionPane.showMessageDialog(Attivita.this, "Inserisci un tipo di semina!", "Errore", JOptionPane.ERROR_MESSAGE);
+                             return;
+                         }
+                     }
+                     
+                     if (dataInizioA.isEmpty() || dataFineA.isEmpty()) {
+                         JOptionPane.showMessageDialog(Attivita.this, "COMPILA TUTTI I CAMPI !!", "Errore", JOptionPane.ERROR_MESSAGE);
+                         return; 
+                     }
+                     
+                     if (ComboAttivita.getSelectedItem().equals("-- Seleziona --")) {
+                         JOptionPane.showMessageDialog(Attivita.this, "Seleziona un'attività!", "Errore", JOptionPane.ERROR_MESSAGE);
+                         return;
+                     }
+                     
+                     
+                     try {
+                         
+                         LocalDate dataInseritaIA = LocalDate.parse(dataInizioA, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                         if (dataInseritaIA.isBefore(LocalDate.now())) {
+                             JOptionPane.showMessageDialog(Attivita.this, 
+                                                           "La data non può essere minore di oggi!");
+                             FieldDataIA.setBackground(Color.RED);
+                             return;
+                         }
+                         
+                         LocalDate dataInseritaFA = LocalDate.parse(dataFineA, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                         if (dataInseritaFA.isBefore(LocalDate.now())) {
+                             JOptionPane.showMessageDialog(Attivita.this, 
+                                                           "La data non può essere minore di oggi!");
+                             FieldDataFA.setBackground(Color.RED);
+                             return;
+                         }
+                
+                         if (dataInseritaFA.isBefore(dataInseritaIA)) {
+                             JOptionPane.showMessageDialog(Attivita.this, 
+                                                           "La data non può essere minore della data di inizio!");
+                             FieldDataFA.setBackground(Color.RED);
+                             return;
+                         }
+                         
+                         if (dataInseritaIA.isAfter(dataInseritaFA)) {
+                             JOptionPane.showMessageDialog(Attivita.this, 
+                                                          "La data non può essere maggiore della data di fine!");
+                             FieldDataIA.setBackground(Color.RED);
+                             return;
+                         }
+                         
+                         LocalDate dataInizioProgetto = progetto.getDataInizio().toLocalDate();
+                         LocalDate dataFineProgetto = progetto.getDataFine().toLocalDate();
+                         
+                         if (dataInseritaIA.isBefore(dataInizioProgetto)) {
+                             JOptionPane.showMessageDialog(Attivita.this, 
+                                                 "La data di inizio attività non può essere precedente alla data di inizio del progetto (" 
+                                                 + dataInizioProgetto + ")!", "Errore", JOptionPane.ERROR_MESSAGE);
+                             FieldDataIA.setBackground(Color.RED);
+                             return;
+                         }
+                         
+                         if (dataInseritaFA.isAfter(dataFineProgetto)) {
+                             JOptionPane.showMessageDialog(Attivita.this, 
+                                                     "La data di fine attività non può essere successiva alla data di fine del progetto (" 
+                                                     + dataFineProgetto + ")!", "Errore", JOptionPane.ERROR_MESSAGE);
+                             FieldDataFA.setBackground(Color.RED);
+                             return;
+                         }
+                         
+                         
+                         
+                     } catch (DateTimeParseException ex) {
+                         JOptionPane.showMessageDialog(Attivita.this, "Inserisci una data valida con formato: 'GG/MM/AAAA'");
+                         return;
+                         
+                     }
+                     
+                     LocalDate datalocalIA = LocalDate.parse(dataInizioA, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                     Date dataIA = Date.valueOf(datalocalIA);
+                     
+                     LocalDate datalocalFA = LocalDate.parse(dataFineA, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                     Date dataFA = Date.valueOf(datalocalFA);
+                     
+                     SeminaDTO semina = null;
+                     IrrigazioneDTO irrigazione = null;
+                     RaccoltaDTO raccolta = null;
 
-				
-				if (attivita.equals("Semina")) {
-	                semina = new SeminaDTO(dataIA, dataFA, tipoSemina);
-	            } else if (attivita.equals("Irrigazione")) {
-	                irrigazione = new IrrigazioneDTO(dataIA, dataFA, tipoIrrigazione);
+                     
+                     if (attivita.equals("Semina")) {
+                         semina = new SeminaDTO(dataIA, dataFA, tipoSemina);
+                     } else if (attivita.equals("Irrigazione")) {
+                         irrigazione = new IrrigazioneDTO(dataIA, dataFA, tipoIrrigazione);
 
-	            } else if (attivita.equals("Raccolta")) {
-	                raccolta = new RaccoltaDTO(dataIA, dataFA);
-	            }
-				
-				ArrayList<String> creaArr = SplitUtils.splitByCommaToArrayList(FieldTipologia.getText());
+                     } else if (attivita.equals("Raccolta")) {
+                         raccolta = new RaccoltaDTO(dataIA, dataFA);
+                     }
+                     
+                    //colture 
+                 	ArrayList<String> creaArr = SplitUtils.splitByCommaToArrayList(FieldTipologia.getText());
+                     // Crea il progetto solo la prima volta
+                     if (!progettoCreato) {
+                    	 progettoCreato = controller.creaProgetto(progetto, creaArr, lotto);
+                         
+                         if (!progettoCreato) {
+                             JOptionPane.showMessageDialog(Attivita.this, 
+                                 "Devi prima assegnare un coltivatore al lotto!", 
+                                 "Errore", 
+                                 JOptionPane.ERROR_MESSAGE);
+                             return;
+                         }
+                         progettoCreato = true;
+                     }
+                     
+                     // Crea l'attività
+                     boolean creaAttivita = controller.creaAttivita(semina, irrigazione, raccolta, lotto, progetto);
 
-				
-				
-			
-				boolean creaProgetto = controller.creaProgetto(progetto, creaArr, lotto);
-				
-				boolean creaAttivita = controller.creaAttivita(semina, irrigazione, raccolta, lotto, progetto);
-				
-				
-				if(creaProgetto==true && creaAttivita==true) { //crea l'attività
-				    JOptionPane.showMessageDialog(Attivita.this, "Progetto creato con successo!");
-				    if (controller.puoAvanzare()==true) {
-				        ButtonHomePage.setEnabled(true);
-				        ButtonSalva.setEnabled(false);
-				    } 
-				    
-				    // pulizia campi
-				    ComboAttivita.removeItem(attivita);
-				    ComboAttivita.setSelectedIndex(0);
-				    FieldDataIA.setText("");
-				    FieldDataFA.setText("");
-				    FieldDataIA.setBackground(Color.WHITE);
-				    FieldDataFA.setBackground(Color.WHITE);
-				} else { //se non trova un coltivatore associato al lotto dà errore
-				    JOptionPane.showMessageDialog(Attivita.this, 
-				        "Devi prima assegnare un coltivatore al lotto!", 
-				        "Errore", 
-				        JOptionPane.ERROR_MESSAGE);
-				}
-			     
-        	}
+                     if (creaAttivita) {
+                         JOptionPane.showMessageDialog(Attivita.this, "Attività salvata con successo!");
+                         if (attivita.equals("Semina")) {
+                             seminaSalvata = true;
+                         } else if (attivita.equals("Irrigazione")) {
+                             irrigazioneSalvata = true;
+                         } else if (attivita.equals("Raccolta")) {
+                             raccoltaSalvata = true;
+                         }                        
+                              
+                         if (seminaSalvata && irrigazioneSalvata && raccoltaSalvata) {
+                             ButtonSalva.setEnabled(false);
+                             ButtonHomePage.setEnabled(true);
+                             JOptionPane.showMessageDialog(Attivita.this,
+                                 "Tutte le attività sono state completate!\nPuoi tornare alla HomePage.",
+                                 "Completato",
+                                 JOptionPane.INFORMATION_MESSAGE);
+                         }
+                         // Pulizia campi
+                         ComboAttivita.removeItem(attivita);
+                         ComboAttivita.setSelectedIndex(0);
+                         FieldDataIA.setText("");
+                         FieldDataFA.setText("");
+                         FieldDataIA.setBackground(Color.WHITE);
+                         FieldDataFA.setBackground(Color.WHITE);
+                     } else {
+                         JOptionPane.showMessageDialog(Attivita.this, 
+                             "Errore durante il salvataggio dell'attività!", 
+                             "Errore", 
+                             JOptionPane.ERROR_MESSAGE);
+                     }// else 
+                 }		        	 
         });
-        contentPane.add(ButtonSalva, "cell 9 7,alignx center");
-        contentPane.add(ButtonHomePage, "cell 9 9,alignx center");
-	    
-	    
-        
+	
+		   
         JLabel LabelStimaRaccolto = new JLabel("Stima Raccolto");
         contentPane.add(LabelStimaRaccolto, "cell 0 14");
         
@@ -414,17 +437,11 @@ public class Attivita extends JFrame {
         if (progetto.getDataFine() != null) {
             FieldDataFP.setText(progetto.getDataFine().toString());
         }
+        }
+        }
+         
         
-        
-        
-       
-        
-//        DAO dao = new DAO();
-//	    creaProgettoController = new CreaProgettoController(dao);
-	    
-        
-	}
+	
 
 
 
-}

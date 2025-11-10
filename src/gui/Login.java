@@ -7,7 +7,6 @@ import java.awt.event.ActionListener;
 import java.awt.Dimension;
 import java.net.URL;
 import javax.swing.ImageIcon;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -19,7 +18,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import javax.swing.JButton;
-
 public class Login extends JFrame {
 
 	private static final long serialVersionUID = 1L;
@@ -45,8 +43,7 @@ public class Login extends JFrame {
 				}
 			}
 		});
-	}
-	
+	}	
 	public Login() {
 		setTitle("Login Schede");
 		 setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -80,8 +77,6 @@ public class Login extends JFrame {
 		    ButtonLogin = new JButton("Login");
 		    ButtonLogin.setPreferredSize(new Dimension(150, 20));
 		    contentPane.add(ButtonLogin, "cell 6 9 2 1, alignx center");
-		    
-		  //registra utente
 		    buttonRegistra = new JButton("registra utente ");
 		    buttonRegistra.addActionListener(new ActionListener() {
 		    	public void actionPerformed(ActionEvent e) {
@@ -107,8 +102,7 @@ public class Login extends JFrame {
 					controller.creaUtente(check, Login.this);
 				}
 			}				
-		   }); 
-		    
+		   }); 	    
 	}
 }
 

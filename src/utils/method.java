@@ -58,8 +58,5 @@ public class method {
 	public static void setPsw(String psw) {
 		method.psw = psw;
 	}
-	
-	
 		
-	
 } 

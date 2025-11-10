@@ -25,10 +25,16 @@ public class HomePageProprietario extends JFrame {
 	private VisualizzaProgetti visualizza;
 	private CreaNotifica creanotifica;
 	private CreaProgetto creaprogetto;
-	Controller controller = new Controller();
-	ProprietarioDTO proprietario = method.getProprietarioLoggato(); //recupera il il Proprietario loggato
-	
+	Controller controller = new Controller();	
+	private ProprietarioDTO proprietario;//AGGIUNTO
+
 	public HomePageProprietario() {
+		//AGGIUNTO
+
+		proprietario = new  ProprietarioDTO(method.getUsernameGlobale(), method.getPsw());//recupera il il Proprietario loggato
+		proprietario=controller.getProprietario(proprietario);
+		method.setProprietarioLoggato(proprietario);
+		//AGGIUNTO
 		setTitle("HomePageProprietario");
 	    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	    setBounds(100, 100, 843, 564);
@@ -80,18 +86,18 @@ public class HomePageProprietario extends JFrame {
 	    JButton ButtonCreaN = new JButton("Crea Notifica");
 	    contentPane.add(ButtonCreaN, "cell 5 8,alignx center");
 	    ButtonCreaN.setPreferredSize(new Dimension(150, 20));
-	    
 	    JButton ButtonAggiungiL = new JButton("Aggiungi Lotto");
 	    ButtonAggiungiL.setPreferredSize(new Dimension(150, 20));
-	    contentPane.add(ButtonAggiungiL, "cell 5 9,alignx center");
+	    contentPane.add(ButtonAggiungiL, "cell 5 9,alignx center");	
 	    
+	    //bottone crea notifica
 	    ButtonCreaN.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setVisible(false);
 				creanotifica.setVisible(true);
 			}
-		});
-	    
+		});	  
+	    //bottone aggiungi lotto
 	    ButtonAggiungiL.addActionListener(new ActionListener() { //aggiunge il primo lotto disponibile al proprietario
 	        public void actionPerformed(ActionEvent e) {
 	            boolean aggiuntaLotto = controller.aggiungiL(proprietario);

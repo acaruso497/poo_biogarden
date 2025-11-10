@@ -39,7 +39,44 @@ public class ProprietarioDAO {
 		   }
 		
 	}
-	
+	//AGGIUNTO
+	public static ProprietarioDTO getProprietario(ProprietarioDTO credenziali) {
+	    Connection conn = null;
+	    PreparedStatement stmt = null;
+	    ResultSet risultato = null;
+	    try {
+	        conn = Connessione.getConnection();
+	        // Cerca il proprietario con username e password forniti
+	        String sql = "SELECT * FROM proprietario WHERE username = ? AND psw = ?";
+	        stmt = conn.prepareStatement(sql);
+	        stmt.setString(1, credenziali.getUsername());
+	        stmt.setString(2, credenziali. getPassword());
+	        risultato = stmt.executeQuery();
+	        
+	        if (risultato.next()) {
+	            // Quando trovato, crea e popola un nuovo ProprietarioDTO con tutti gli attributi
+	            ProprietarioDTO proprietario = new ProprietarioDTO(
+	                risultato.getString("username"),
+	                risultato.getString("psw"),
+	                risultato.getString("nome"),
+	                risultato.getString("cognome"),
+	                risultato.getString("codice_fiscale")
+	            );            
+	            System.out.println("PROPRIETARIO RECUPERATO CON SUCCESSO");
+	            return proprietario;
+	        } else {
+	        	System.out.println("RECUPERO PROPRIETARIO FALLITO \n funzione di ProprietarioDAO\n chiamata :getProprietario");
+	            return null; // Non trovato
+	        }
+	    } catch (SQLException ex) {
+	        ex.printStackTrace();
+	        return null;
+	    } finally {
+	        try { if (risultato != null) risultato.close(); } catch (Exception e) {}
+	        try { if (stmt != null) stmt.close(); } catch (Exception e) {}
+	        try { if (conn != null) conn.close(); } catch (Exception e) {}
+	    }
+	}
 	//____________________   LOGIN     ____________________________________
 	
 	
@@ -67,8 +104,7 @@ public class ProprietarioDAO {
 				  try { if (stmt != null) stmt.close(); } catch (Exception e) {}
 				  try { if (conn != null) conn.close(); } catch (Exception e) {}
 			    }
-		  }
-				
+		  }				
 		public static boolean aggiungiL(ProprietarioDTO proprietario) { //Aggiunge il primo lotto disponibile al proprietario
 			Connection conn = null;
 			PreparedStatement stmt = null;
@@ -106,8 +142,6 @@ public class ProprietarioDAO {
 				   try { if (conn != null) conn.close(); } catch (Exception e) {}
 				 }
 			   }
-		
-		
 			public static ArrayList<String> popolaComboProprietari() { // popola la combobox dei proprietari
 			     ArrayList<String> usernames = new ArrayList<>();
 			     Connection conn = null;
@@ -136,9 +170,7 @@ public class ProprietarioDAO {
 			        }
 
 			        return usernames; // Restituisce l'ArrayList con gli username
-			    }
-			
-			
+			    }						
 	//____________________   REGISTRAZIONE     ____________________________________
 				
 		
@@ -148,20 +180,16 @@ public class ProprietarioDAO {
 			    Connection conn = null;
 			    PreparedStatement stmt = null;
 			    ResultSet risultato = null;
-
 			    try {
 			        conn = Connessione.getConnection();
-
 			        // Tutti i coltivatori che lavorano su QUALSIASI lotto del proprietario indicato
 			        String sql =
 			                "SELECT COALESCE(string_agg(DISTINCT c.username, ',' ORDER BY c.username), '') AS usernames " +
 			                 "FROM proprietario p " +
 			                 "JOIN coltivatore c ON c.username_proprietario = p.username " +
 			                 "WHERE p.username = ?";
-
 			        stmt = conn.prepareStatement(sql);
 			        stmt.setString(1, proprietario.getUsername());
-
 			        risultato = stmt.executeQuery();
 			        if (risultato.next()) {
 			            String s = risultato.getString(1);
@@ -176,34 +204,27 @@ public class ProprietarioDAO {
 			        try { if (stmt != null) stmt.close(); } catch (Exception e) {}
 			        try { if (conn != null) conn.close(); } catch (Exception e) {}
 			    }
-			}
-			
+			}		
 			public static ArrayList<String> getColtivatoriByProprietario(ProprietarioDTO proprietario) { 
 				ArrayList<String> coltivatori = new ArrayList<>();
-				
 			    Connection conn = null;
 			    PreparedStatement stmt = null;
 			    ResultSet risultato = null;
-
 			    try {
 			        conn = Connessione.getConnection();
-
 			        // Tutti i coltivatori che lavorano su QUALSIASI lotto del proprietario indicato
 			        String sql =
 			                "SELECT DISTINCT c.username " +
 			                 "FROM proprietario p " +
 			                 "JOIN coltivatore c ON c.username_proprietario = p.username " +
 			                 "WHERE p.username = ?";
-
 			        stmt = conn.prepareStatement(sql);
 			        stmt.setString(1, proprietario.getUsername());
-
 			        risultato = stmt.executeQuery();
 			        while (risultato.next()) {
 			            String coltivatore = risultato.getString("username");
 			            coltivatori.add(coltivatore);
-			        }
-			        
+			        }			        
 			        return coltivatori;
 			    } catch (SQLException ex) {
 			        ex.printStackTrace();
@@ -212,7 +233,6 @@ public class ProprietarioDAO {
 			        try { if (stmt != null) stmt.close(); } catch (Exception e) {}
 			        try { if (conn != null) conn.close(); } catch (Exception e) {}
 			    }
-			    
 			    return coltivatori;
 			}
 			
@@ -226,7 +246,6 @@ public class ProprietarioDAO {
 			    Connection conn = null;
 			    PreparedStatement stmt = null;
 			    ResultSet risultato = null;
-
 			    try {
 			        conn = Connessione.getConnection(); 
 
@@ -245,7 +264,6 @@ public class ProprietarioDAO {
 		                String idStr = String.valueOf(idLotto); 
 		                lista.add(idStr); // Aggiunge alla lista
 			        }
-
 			    } catch (SQLException e) {
 			        System.err.println("Errore SELECT: " + e.getMessage());
 			    } finally {
@@ -253,9 +271,7 @@ public class ProprietarioDAO {
 			        try { if (stmt != null) stmt.close(); } catch (Exception ignored) {}
 			        try { if (conn != null) conn.close(); } catch (Exception ignored) {}
 			    }
-
 			    return lista;
-			}
-			
+			}		
 	//____________________   CREAZIONE PROGETTO COLTIVAZIONE     ____________________________________
 }

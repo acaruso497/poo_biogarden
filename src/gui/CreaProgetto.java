@@ -42,7 +42,7 @@ public class CreaProgetto extends JFrame {
 	HomePageProprietario home;
 	Attivita attivita;
 	
-    private JComboBox<String> ComboLotto = new JComboBox<String>();  //La JComboBox è un array di stringhe per contenere i lotti
+    private JComboBox<String> ComboLotto;  //La JComboBox è un array di stringhe per contenere i lotti
     Controller controller = new Controller();  
     private JTextField FieldStimaRaccolto;
     private JTextField FieldTipologiaColtura;
@@ -59,8 +59,6 @@ public class CreaProgetto extends JFrame {
 	    contentPane = new BackgroundPanel(imageUrl);
 	    contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 	    setContentPane(contentPane);
-
-
 	    contentPane.setLayout(new MigLayout("", "[grow][grow][][][grow][][][][grow][grow][][grow][grow][grow][][grow][grow][grow][grow][grow][grow][grow]", 
 	    									"[grow][grow][grow][grow][][grow][][grow][][grow][grow][grow][grow][grow][grow][grow][grow]"));	    
 	    JLabel LabelProgetto = new JLabel("Crea Il Tuo Progetto");
@@ -94,12 +92,12 @@ public class CreaProgetto extends JFrame {
 	    FieldTitolo = new JTextField();
 	    contentPane.add(FieldTitolo, "cell 1 1 4 1,growx");
 	    FieldTitolo.setColumns(10);
-	    
+	    ComboLotto= new JComboBox<String>();
+	   
 	    JLabel LabelLotto = new JLabel("Lotto");
-	    contentPane.add(LabelLotto, "cell 0 2,alignx right");
-	    
+	    contentPane.add(LabelLotto, "cell 0 2,alignx right");	    
 	    contentPane.add(ComboLotto, "cell 1 2,growx");
-	     
+	    popolaComboLotto(method.getProprietarioLoggato());  
 	     JLabel LabelStima = new JLabel("Stima Raccolto");
 	     contentPane.add(LabelStima, "cell 0 4,alignx trailing");
 	     
@@ -365,7 +363,7 @@ public class CreaProgetto extends JFrame {
         
 	    
 	    
-        popolaComboLotto(method.getProprietarioLoggato());   
+        //popolaComboLotto(method.getProprietarioLoggato());   
        
 	}
 	public void popolaComboLotto(ProprietarioDTO proprietario) {
@@ -377,7 +375,5 @@ public class CreaProgetto extends JFrame {
 		ComboLotto.setSelectedIndex(-1);
 	}
 	
-	
-
 }
 	

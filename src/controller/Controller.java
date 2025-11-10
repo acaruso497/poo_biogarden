@@ -21,9 +21,7 @@ public class Controller {
 	
 //                      _________________ LOGIN _________________
 	
-    public boolean login(String username, String password) { //effettua l'autenticazione dell'utente
-    	
-    	
+    public boolean login(String username, String password) { //effettua l'autenticazione dell'utente   	
         boolean check = false; // [0]=true (user e password)campiOK, [1]=proprietario, [2]=coltivatore
 
         if (username == null || username.trim().isEmpty()
@@ -33,9 +31,7 @@ public class Controller {
             return check;           
         }
         
-        check = true;  // campi ok
-        
-        
+        check = true;  // campi ok      
         return check;
     }
     
@@ -53,7 +49,6 @@ public class Controller {
             	loginFrame.setVisible(false);
             	
             } 
-            
             else if(ruolo==false) {
             	ColtivatoreDTO c = new ColtivatoreDTO(method.getUsernameGlobale(), method.getPsw());
             	boolean ruolo2 = c.autentica();
@@ -68,7 +63,10 @@ public class Controller {
     	}
           
     }
-    
+  //AGGIUNTO
+    public ProprietarioDTO getProprietario (ProprietarioDTO proprietario) {
+    	return ProprietarioDAO.getProprietario(proprietario);
+    }   
     
 //                      _________________ LOGIN _________________
     
@@ -82,8 +80,7 @@ public class Controller {
 	result[2] = false; // registrazione non riuscita
 	result[3] = false; // user non esiste (inizialmente)
 
-	UtenteDTO user = new UtenteDTO(username);
-    result[3] = UtenteDAO.usernameEsiste(user); // Verifica se l'username esiste
+    result[3] = UtenteDAO.usernameEsiste(username); // Verifica se l'username esiste
 
 	if (result[3] == true) {
 		return result; // Esce se username esiste
@@ -185,10 +182,11 @@ public class Controller {
 		return ProprietarioDAO.getColtivatoriByProprietario(proprietario);
 	}
 
-	public boolean controllaUsername(String username) { //controlla l'esistenza di un username di un coltivatore
-		UtenteDTO user = new UtenteDTO(username);
-		return UtenteDAO.usernameEsiste(user);
-	}
+//  !!!	sposta nell oggetto utente opp in coltivatore proprietario opp utils!!
+//	public boolean controllaUsername(String username) { //controlla l'esistenza di un username di un coltivatore
+//		UtenteDTO user = new UtenteDTO(username);
+//		return UtenteDAO.usernameEsiste(user);
+//	}
 
    
 //                         _________________ CREAZIONE NOTIFICA _________________
@@ -211,22 +209,15 @@ public class Controller {
             coltureDTOList.add(col);
             
         }
-    }
-    
-        boolean ok = ProgettoColtivazioneDAO.registraProgetto(progetto, lotto, coltureDTOList);
-        
-        
-        return ok;
-	    
+    }   
+        boolean ok = ProgettoColtivazioneDAO.registraProgetto(progetto, lotto, coltureDTOList);        
+        return ok;	    
     }
     
     public boolean creaAttivita(SeminaDTO semina, IrrigazioneDTO irrigazione, RaccoltaDTO raccolta, LottoDTO lotto, ProgettoColtivazioneDTO progetto) {
-    	
-    	boolean insertAttivita = ProgettoColtivazioneDAO.insertAttivita(semina, irrigazione, raccolta, lotto, progetto);
-    	
-    	return insertAttivita;
-    	
-    }
+       	boolean insertAttivita = ProgettoColtivazioneDAO.insertAttivita(semina, irrigazione, raccolta, lotto, progetto);
+      	return insertAttivita;
+        }
     
     public List<String> getLottiByProprietario(ProprietarioDTO proprietario){ //popola la combobox dei lotti
     	ProprietarioDAO dao = new ProprietarioDAO();
@@ -242,11 +233,7 @@ public class Controller {
             countRaccolta++;
         }
     }
-    
-    public boolean puoAvanzare() { // Verifica se l'utente ha completato almeno 1 semina, 1 irrigazione e 1 raccolta
-        return countSemina >= 1 && countIrrigazione >= 1 && countRaccolta >= 1;
-    }
-   
+      
     public void resetContatori() {     // Reset dei contatori (utile quando si va alla prossima fase)
         countSemina = 0;
         countIrrigazione = 0;
