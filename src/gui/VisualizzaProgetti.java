@@ -11,6 +11,8 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.basic.BasicArrowButton;
 
+import controller.Controller;
+import dto.ProprietarioDTO;
 import net.miginfocom.swing.MigLayout;
 import utils.*;
 import javax.swing.JComboBox;
@@ -37,12 +39,12 @@ public class VisualizzaProgetti extends JFrame {
 	private JTextField FieldDataIA;
 	private JTextField FieldDataFA;
 	private JLabel LabelProgettoTerminato;
-	private ControllerVisualizzaP controller; 
-    private daoVisualizzaP dao; 
+	Controller controller = new Controller();
     private ButtonGroup gruppoStato;
     private String selectedProgetto = null;
-    private String username = ControllerLogin.getUsernameGlobale();
-    private String CFProprietario = ControllerLogin.getCodiceFiscaleByUsername(username);
+//    private String username = ControllerLogin.getUsernameGlobale();
+//    private String CFProprietario = ControllerLogin.getCodiceFiscaleByUsername(username);
+    ProprietarioDTO proprietario = method.getProprietarioLoggato();
     static String idLotto = null;
     JComboBox<String> ComboAttivita = new JComboBox<>();
     JComboBox<String> ComboProgetto = new JComboBox<>();
@@ -186,8 +188,6 @@ public class VisualizzaProgetti extends JFrame {
 	    JLabel ColtureRaccolte = new JLabel("Colture");
 	    contentPane.add(ColtureRaccolte, "cell 0 11,alignx trailing");
 	    
-	    dao = new daoVisualizzaP();
-	    controller = new ControllerVisualizzaP(dao);
 	    ComboColtureRacc.setSelectedIndex(-1);
 	    ComboColtureRacc.setPreferredSize(new Dimension(150, 20));
 	    contentPane.add(ComboColtureRacc, "cell 1 11,growx");
@@ -284,8 +284,6 @@ public class VisualizzaProgetti extends JFrame {
 	    });
 	    contentPane.add(ButtonModificaAttivita, "cell 5 17");
 	    
-	    dao = new daoVisualizzaP();
-        controller = new ControllerVisualizzaP(dao);
 	    
         popolaComboProgetto();
         

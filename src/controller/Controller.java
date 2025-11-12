@@ -36,7 +36,7 @@ public class Controller {
     }
     
     
-    public void creaUtente(boolean check, JFrame loginFrame) {
+    public boolean creaUtente(boolean check, JFrame loginFrame) {
     	
     	if(check==true) {
     		ProprietarioDTO p = new ProprietarioDTO(method.getUsernameGlobale(), method.getPsw());
@@ -47,6 +47,7 @@ public class Controller {
             	HomePageProprietario homeP = new HomePageProprietario();
             	homeP.setVisible(true);
             	loginFrame.setVisible(false);
+            	return true;
             	
             } 
             else if(ruolo==false) {
@@ -58,9 +59,12 @@ public class Controller {
             		HomePageColtivatore homeC = new HomePageColtivatore();
             		homeC.setVisible(true);
             		loginFrame.setVisible(false);
+            		return true;
             	}
             }
     	}
+    	
+    	return false; //non trova nessun utente
           
     }
   //AGGIUNTO
@@ -250,10 +254,12 @@ public class Controller {
 //                            _________________ CREAZIONE PROGETTO _________________
 
     
-//                           _________________ TITOLO _________________
+//                           _________________ VISUALIZZA PROGETTO _________________
    
+ 
+    
    
-//                           _________________ TITOLO _________________
+//                           _________________ VISUALIZZA PROGETTO _________________
 		
 		//CODICE
 		

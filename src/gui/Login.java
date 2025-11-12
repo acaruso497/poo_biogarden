@@ -99,7 +99,10 @@ public class Login extends JFrame {
 				if(check==false) {
 					JOptionPane.showMessageDialog(Login.this, "Credenziali errate!");
 				}else {
-					controller.creaUtente(check, Login.this);
+					boolean autenticato = controller.creaUtente(check, Login.this);
+		            if(!autenticato) {
+		                JOptionPane.showMessageDialog(Login.this, "Credenziali errate!");
+		            }
 				}
 			}				
 		   }); 	    
