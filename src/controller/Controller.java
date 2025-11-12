@@ -270,16 +270,16 @@ public class Controller {
         return ColtivatoreDAO.popolaProgettiCB(coltivatore);
     }
     // probabilmente da qui in giu si sposta tutto il dao nel dao progetto   ____INIZIO
-public List<String> DateInizioFineP(String titolo_progetto, String username) {
-        return ColtivatoreDAO.dateI_FProgCB(titolo_progetto, username);
+public List<String> DateInizioFineP(String titolo_progetto, ColtivatoreDTO coltivatore) {
+        return ColtivatoreDAO.dateI_FProgCB(titolo_progetto, coltivatore);
 }
 
-public List<String> getTipiAttivita(String username, String progetto) {
-    return ColtivatoreDAO.getTipiAttivitaColtivatore(username, progetto);
+public List<String> getTipiAttivita(ColtivatoreDTO coltivatore, String progetto) {
+    return ColtivatoreDAO.getTipiAttivitaColtivatore(coltivatore, progetto);
 }
 
-public List<String> getIdAttivita(String username, String progetto) {
-    return ColtivatoreDAO.getIdAttivitaColtivatore(username, progetto);
+public List<String> getIdAttivita(ColtivatoreDTO coltivatore, String progetto) {
+    return ColtivatoreDAO.getIdAttivitaColtivatore(coltivatore, progetto);
 }
 
 	
@@ -287,16 +287,16 @@ public String[] getDateByAttivitaId(String idAttivita, String tipoAttivita) {
     return ColtivatoreDAO.getDateByAttivitaId(idAttivita, tipoAttivita);
 }
 
-public String getLottoEPosizioneByProgetto(String progetto, String username) {
-    return ColtivatoreDAO.getLottoEPosizione(progetto, username);
+public String getLottoEPosizioneByProgetto(String progetto, ColtivatoreDTO coltivatore) {
+    return ColtivatoreDAO.getLottoEPosizione(progetto, coltivatore);
 }
 
-public String getStimaRaccolto(String username, String progetto) {
-    return ColtivatoreDAO.getStimaRaccolto(username, progetto);
+public String getStimaRaccolto(ColtivatoreDTO coltivatore, String progetto) {
+    return ColtivatoreDAO.getStimaRaccolto(coltivatore, progetto);
 }
 
-public String getIrrigazione(String username, String progetto) {
-    return ColtivatoreDAO.getIrrigazione(username, progetto);
+public String getIrrigazione(ColtivatoreDTO coltivatore, String progetto) {
+    return ColtivatoreDAO.getIrrigazione(coltivatore, progetto);
 } 
 
 public String getTipoSemina(String idSemina) {
@@ -307,8 +307,8 @@ public boolean sommaRaccolto(String raccolto, String coltura, String progetto) {
     return ColtivatoreDAO.sommaRaccolto(raccolto, coltura, progetto);
 }
 
-public List<String> getColtura(String username, String progetto) {
-    return ColtivatoreDAO.getColtura(username, progetto);
+public List<String> getColtura(ColtivatoreDTO coltivatore, String progetto) {
+    return ColtivatoreDAO.getColtura(coltivatore, progetto);
 }
 // probabilmente da qui in giu si sposta tutto il dao nel dao progetto FINE 
     

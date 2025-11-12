@@ -218,7 +218,7 @@ public static ArrayList<String> getAttivitaByPr(String titolo_progetto, String u
 
     return tipi;
 }
-public static ArrayList<String> dateI_FProgCB(String titolo_progetto, String usernameColtivatore) {		
+public static ArrayList<String> dateI_FProgCB(String titolo_progetto, ColtivatoreDTO coltivatore) {		
     ArrayList<String> date = new ArrayList<>();
     Connection conn = null;
     PreparedStatement stmt = null;
@@ -240,7 +240,7 @@ public static ArrayList<String> dateI_FProgCB(String titolo_progetto, String use
         """;
 
         stmt = conn.prepareStatement(sql);
-        stmt.setString(1, usernameColtivatore);
+        stmt.setString(1, coltivatore.getUsername());
         stmt.setString(2, titolo_progetto);
 
         rs = stmt.executeQuery();
@@ -261,7 +261,7 @@ public static ArrayList<String> dateI_FProgCB(String titolo_progetto, String use
     return date;
 }
 
-public static List<String> getTipiAttivitaColtivatore(String username, String progetto) {
+public static List<String> getTipiAttivitaColtivatore(ColtivatoreDTO coltivatore, String progetto) {
     List<String> tipoList = new ArrayList<>();
 
     String sql = "SELECT tipo_attivita " +
@@ -277,7 +277,7 @@ public static List<String> getTipiAttivitaColtivatore(String username, String pr
     try (Connection conn = Connessione.getConnection();
          PreparedStatement stmt = conn.prepareStatement(sql)) {
         
-        stmt.setString(1, username);
+        stmt.setString(1, coltivatore.getUsername());
         stmt.setString(2, progetto);
         
         try (ResultSet rs = stmt.executeQuery()) {
@@ -292,7 +292,7 @@ public static List<String> getTipiAttivitaColtivatore(String username, String pr
     
     return tipoList;
 }
-public static List<String> getIdAttivitaColtivatore(String username, String progetto) {
+public static List<String> getIdAttivitaColtivatore(ColtivatoreDTO coltivatore, String progetto) {
     List<String> idList = new ArrayList<>();
     
         
@@ -303,7 +303,7 @@ public static List<String> getIdAttivitaColtivatore(String username, String prog
                 "WHERE username = ? AND titolo = ? AND done = false AND stato IN ('pianificata', 'in corso')" +
                 "ORDER BY giorno_inizio")) {
     
-        stmt.setString(1, username);
+        stmt.setString(1, coltivatore.getUsername());
         stmt.setString(2, progetto);
         ResultSet rs = stmt.executeQuery();
 
@@ -370,7 +370,7 @@ public static String[] getDateByAttivitaId(String idAttivita, String tipoAttivit
     return date;
 }
 
-public static String getLottoEPosizione(String progetto, String username) {
+public static String getLottoEPosizione(String progetto, ColtivatoreDTO coltivatore) {
     String risultato = "";
     
     try (Connection conn = Connessione.getConnection();
@@ -380,7 +380,7 @@ public static String getLottoEPosizione(String progetto, String username) {
                 "WHERE titolo_progetto = ? AND username_coltivatore = ?")) {
         
         stmt.setString(1, progetto);
-        stmt.setString(2, username);
+        stmt.setString(2, coltivatore.getUsername());
         ResultSet rs = stmt.executeQuery();
         
         if (rs.next()) {
@@ -393,7 +393,7 @@ public static String getLottoEPosizione(String progetto, String username) {
     
     return risultato;
 }
-public static String getStimaRaccolto(String username, String progetto) {
+public static String getStimaRaccolto(ColtivatoreDTO coltivatore, String progetto) {
     String stima = "";
         
     try (Connection conn = Connessione.getConnection();
@@ -401,7 +401,7 @@ public static String getStimaRaccolto(String username, String progetto) {
                 "SELECT stima_raccolto FROM stima_raccoltoColtivatore " +
                 "WHERE username_coltivatore = ? AND titolo_progetto = ?")) {
     
-        stmt.setString(1, username);
+        stmt.setString(1, coltivatore.getUsername());
         stmt.setString(2, progetto);
         ResultSet rs = stmt.executeQuery();
         
@@ -413,7 +413,7 @@ public static String getStimaRaccolto(String username, String progetto) {
     }
     return stima;
 }
-public static String getIrrigazione(String username, String progetto) {
+public static String getIrrigazione(ColtivatoreDTO coltivatore, String progetto) {
     String irrigazione = "";
     
     try (Connection conn = Connessione.getConnection();
@@ -421,7 +421,7 @@ public static String getIrrigazione(String username, String progetto) {
             		"SELECT DISTINCT tipo_irrigazione FROM irrigazione_coltivatore " +
                     "WHERE username_coltivatore = ? AND titolo_progetto = ?")) {
         
-        stmt.setString(1, username);
+        stmt.setString(1, coltivatore.getUsername());
         stmt.setString(2, progetto);
         ResultSet rs = stmt.executeQuery();
         
@@ -494,7 +494,7 @@ public static boolean sommaRaccolto(String raccolto, String coltura, String prog
         try { if (conn != null) conn.close(); } catch (Exception ignore) {}
     }
 }
-public static List<String> getColtura(String username, String progetto) {
+public static List<String> getColtura(ColtivatoreDTO coltivatore, String progetto) {
 	List<String> lista = new ArrayList<>();
 	
 	Connection conn = null;
@@ -510,7 +510,7 @@ public static List<String> getColtura(String username, String progetto) {
 		 
 	 
 		 stmt = conn.prepareStatement(sql); 
-		 stmt.setString(1, username);
+		 stmt.setString(1, coltivatore.getUsername());
 		 stmt.setString(2, progetto);
 		 risultato= stmt.executeQuery();
 	  

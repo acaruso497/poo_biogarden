@@ -324,7 +324,7 @@ public class HomePageColtivatore extends JFrame {
 	     
 	        
 	        // Date progetto
-	        List<String> dateProgetto = controller.DateInizioFineP(progettoSelezionato, coltivatore.getUsernameProprietario());
+	        List<String> dateProgetto = controller.DateInizioFineP(progettoSelezionato, coltivatore);
 	        if (dateProgetto != null && dateProgetto.size() >= 2) {
 	            FieldDataIP.setText(dateProgetto.get(0));
 	            FieldDataFP.setText(dateProgetto.get(1));
@@ -332,15 +332,15 @@ public class HomePageColtivatore extends JFrame {
 	        
 	        // COLTURA 
 	        ComboTipologia.removeAllItems();
-	        List<String> colture = controller.getColtura(coltivatore.getUsernameProprietario(), progettoSelezionato); 
+	        List<String> colture = controller.getColtura(coltivatore, progettoSelezionato); 
 	        for (String tipoColtura : colture) {
 	        	ComboTipologia.addItem(tipoColtura); 
 	        }
 	        ComboTipologia.setSelectedIndex(-1);
 	        
 	        // Altri campi
-	        FieldStima.setText(controller.getStimaRaccolto(coltivatore.getUsernameProprietario(), progettoSelezionato));
-	        FieldIrrigazione.setText(controller.getIrrigazione(coltivatore.getUsernameProprietario(), progettoSelezionato));
+	        FieldStima.setText(controller.getStimaRaccolto(coltivatore, progettoSelezionato));
+	        FieldIrrigazione.setText(controller.getIrrigazione(coltivatore, progettoSelezionato));
 	        
 	    } else {
 	        // Pulisci tutti i campi
@@ -355,7 +355,7 @@ public class HomePageColtivatore extends JFrame {
 	@SuppressWarnings("unused")
 	private void popolaAttivita() { 	//popola i campi relativi alle attività
 	    String progettoSelezionato = (String) ComboProgetti.getSelectedItem();
-	    String username = coltivatore.getUsername();
+//	    String username = coltivatore.getUsername();
 	    ComboAttivita.removeAllItems();
 	    ComboAttivita.addItem("--seleziona--");
 	    
@@ -367,9 +367,9 @@ public class HomePageColtivatore extends JFrame {
 	        return;
 	    }
  
-	    tipiAttivita = controller.getTipiAttivita(username, progettoSelezionato);
+	    tipiAttivita = controller.getTipiAttivita(coltivatore, progettoSelezionato);
 	    
-	    for (String idSpecifico : controller.getIdAttivita(username, progettoSelezionato)) {
+	    for (String idSpecifico : controller.getIdAttivita(coltivatore, progettoSelezionato)) {
 	        ComboAttivita.addItem(idSpecifico);
 	    }
 	    
@@ -464,7 +464,7 @@ public class HomePageColtivatore extends JFrame {
 		    if (progettoSelezionato != null && !progettoSelezionato.equals("--seleziona--")) {
 		        
 		        
-		        String lottoEPosizione = controller.getLottoEPosizioneByProgetto(progettoSelezionato,coltivatore.getUsernameProprietario());
+		        String lottoEPosizione = controller.getLottoEPosizioneByProgetto(progettoSelezionato,coltivatore);
 		        
 		        if (lottoEPosizione != null && !lottoEPosizione.isEmpty()) {
 		            //  ESTRAI LOTTO E POSIZIONE SEPARATAMENTE
