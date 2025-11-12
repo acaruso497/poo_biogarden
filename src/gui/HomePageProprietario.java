@@ -25,9 +25,8 @@ public class HomePageProprietario extends JFrame {
 	private VisualizzaProgetti visualizza;
 	private CreaNotifica creanotifica;
 	private CreaProgetto creaprogetto;
-	Controller controller = new Controller();	
+	private Controller controller = new Controller();	
 	private ProprietarioDTO proprietario;//AGGIUNTO
-
 	public HomePageProprietario() {
 		//AGGIUNTO
 

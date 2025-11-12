@@ -7,34 +7,41 @@ public class ColtivatoreDTO extends UtenteDTO{
 	private String cognome;
 	private String codiceFiscale;
 	private String usernameProprietario;
+	private String esperienza;
 	
 	public ColtivatoreDTO(String username, String password, String nome, String cognome, 
-					   String codiceFiscale, String usernameProprietario)  {
+					   String codiceFiscale, String usernameProprietario, String esperienza)  {
 		super(username, password);
 		this.nome=nome;
 		this.cognome=cognome;
 		this.codiceFiscale=codiceFiscale;
 		this.usernameProprietario=usernameProprietario;
+		this.esperienza=esperienza;
 	}
-	
+	public ColtivatoreDTO(String username, String password, String nome, String cognome, 
+			   String codiceFiscale, String usernameProprietario)  {
+		super(username, password);
+		this.nome=nome;
+		this.cognome=cognome;
+		this.codiceFiscale=codiceFiscale;
+		this.usernameProprietario=usernameProprietario;
+		
+}
 	public ColtivatoreDTO(String username) {
 		super(username);
 	}
-	
 	public ColtivatoreDTO(String username, String password) {
 		super(username, password);
 	}
-	
 	public ColtivatoreDTO() {
 		super(null);
-	}
-	
+	}	
 	@Override
 	public boolean autentica() {
 		return ColtivatoreDAO.authC(this);
-	}
-	
+	}	
 	//Getter e Setter
+	public String getEsperienza() { return esperienza; }
 	public String getNome() { return nome; }
 	public void setNome(String nome) { this.nome = nome;}
 
