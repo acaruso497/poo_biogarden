@@ -318,12 +318,12 @@ public List<String> getColtura(ColtivatoreDTO coltivatore, String progetto) {
     
 //  	_________________ HomePagecoltivatore _________________
     
-//                           _________________ VISUALIZZA PROGETTO _________________
+//                           _________________ TITOLO _________________
    
  
     
    
-//                           _________________ VISUALIZZA PROGETTO _________________
+//                           _________________ TITOLO _________________
 		
 		//CODICE
 		
