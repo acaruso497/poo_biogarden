@@ -54,8 +54,8 @@ public class Login extends JFrame {
 		    contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		    setContentPane(contentPane);
 
-		    contentPane.setLayout(new MigLayout("", "[grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow]", "[grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow]"));
-		    
+		    contentPane.setLayout(new MigLayout("", "[grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow]",
+		    		"[grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow]"));		    
 		    ImageIcon originalIcon = new ImageIcon(getClass().getResource("/img/logo.png"));
 		    Image scaledImage = originalIcon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
 		    Logo = new JLabel(new ImageIcon(scaledImage));
@@ -72,8 +72,7 @@ public class Login extends JFrame {
 		    contentPane.add(LabelPassword, "cell 6 7,alignx center,aligny center");
 		    
 		    FieldPassword = new JPasswordField();
-		    contentPane.add(FieldPassword, "cell 7 7,growx");
-		    
+		    contentPane.add(FieldPassword, "cell 7 7,growx");		    
 		    ButtonLogin = new JButton("Login");
 		    ButtonLogin.setPreferredSize(new Dimension(150, 20));
 		    contentPane.add(ButtonLogin, "cell 6 9 2 1, alignx center");

@@ -13,7 +13,6 @@ import javax.swing.JOptionPane;
 import gui.HomePageColtivatore;
 import gui.HomePageProprietario;
 
-	
 public class Controller {
 	private int countSemina = 0;
     private int countIrrigazione = 0;
@@ -97,7 +96,10 @@ public class Controller {
 		ProprietarioDAO.aggiungiL(proprietario);
 	} else if (ruolo.equals("Coltivatore")) {
 		result[1] = true; // è coltivatore
-		ColtivatoreDTO coltivatore = new ColtivatoreDTO(username, password, nome, cognome, cf, usernameProprietario);
+		ColtivatoreDTO coltivatore = new ColtivatoreDTO(
+									username, password, 
+									nome, cognome, cf, 
+									usernameProprietario);
 		result[2] = ColtivatoreDAO.registraC(coltivatore); // esito registrazione
 
   }
@@ -253,6 +255,68 @@ public class Controller {
     
 //                            _________________ CREAZIONE PROGETTO _________________
 
+//  	_________________ HomePagecoltivatore _________________
+    
+    public ColtivatoreDTO getColtivatore(ColtivatoreDTO coltivatore) {
+    	return ColtivatoreDAO.getColtivatore(coltivatore);
+    }
+	public boolean legginotifiche(ColtivatoreDTO coltivatore) {
+        return ColtivatoreDAO.segnaNotificheColtivatoreComeLette(coltivatore);
+    }
+	public boolean checknotifiche(ColtivatoreDTO coltivatore) {
+        return ColtivatoreDAO.ciSonoNotificheNonLette(coltivatore);
+    }
+	public String mostranotifiche(ColtivatoreDTO coltivatore) {
+        return ColtivatoreDAO.getNotificheNonLette(coltivatore);
+    }
+
+    public List<String> popolaPrComboBox(ColtivatoreDTO coltivatore) {
+        return ColtivatoreDAO.popolaProgettiCB(coltivatore);
+    }
+    // probabilmente da qui in giu si sposta tutto il dao nel dao progetto   ____INIZIO
+public List<String> DateInizioFineP(String titolo_progetto, ColtivatoreDTO coltivatore) {
+        return ColtivatoreDAO.dateI_FProgCB(titolo_progetto, coltivatore);
+}
+
+public List<String> getTipiAttivita(ColtivatoreDTO coltivatore, String progetto) {
+    return ColtivatoreDAO.getTipiAttivitaColtivatore(coltivatore, progetto);
+}
+
+public List<String> getIdAttivita(ColtivatoreDTO coltivatore, String progetto) {
+    return ColtivatoreDAO.getIdAttivitaColtivatore(coltivatore, progetto);
+}
+
+	
+public String[] getDateByAttivitaId(String idAttivita, String tipoAttivita) {
+    return ColtivatoreDAO.getDateByAttivitaId(idAttivita, tipoAttivita);
+}
+
+public String getLottoEPosizioneByProgetto(String progetto, ColtivatoreDTO coltivatore) {
+    return ColtivatoreDAO.getLottoEPosizione(progetto, coltivatore);
+}
+
+public String getStimaRaccolto(ColtivatoreDTO coltivatore, String progetto) {
+    return ColtivatoreDAO.getStimaRaccolto(coltivatore, progetto);
+}
+
+public String getIrrigazione(ColtivatoreDTO coltivatore, String progetto) {
+    return ColtivatoreDAO.getIrrigazione(coltivatore, progetto);
+} 
+
+public String getTipoSemina(String idSemina) {
+    return ColtivatoreDAO.getTipoSemina(idSemina);
+}
+
+public boolean sommaRaccolto(String raccolto, String coltura, String progetto) {
+    return ColtivatoreDAO.sommaRaccolto(raccolto, coltura, progetto);
+}
+
+public List<String> getColtura(ColtivatoreDTO coltivatore, String progetto) {
+    return ColtivatoreDAO.getColtura(coltivatore, progetto);
+}
+// probabilmente da qui in giu si sposta tutto il dao nel dao progetto FINE 
+    
+//  	_________________ HomePagecoltivatore _________________
     
 //                           _________________ VISUALIZZA PROGETTO _________________
    

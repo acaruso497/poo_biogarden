@@ -48,11 +48,17 @@ public class HomePageColtivatore extends JFrame {
     private List<String> tipiAttivita;
     private JComboBox<String> ComboTipologia;
     Controller controller = new Controller();
-    ColtivatoreDTO coltivatore = method.getColtivatoreLoggato(); //recupera il il Coltivatore loggato
+  //  ColtivatoreDTO coltivatore = method.getColtivatoreLoggato(); //recupera il il Coltivatore loggato
+	private ColtivatoreDTO coltivatore;//AGGIUNTO
    
 	
 	@SuppressWarnings("unused")
 	public HomePageColtivatore() {
+		//AGGIUNTO
+		coltivatore=new ColtivatoreDTO(method.getUsernameGlobale(), method.getPsw());;
+	    coltivatore=controller.getColtivatore(coltivatore);
+	    method.setColtivatoreLoggato(coltivatore); 	    
+	  //AGGIUNTO
 		setTitle("HomePageColtivatore");
 	    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	    setBounds(100, 100, 893, 564);
@@ -74,9 +80,6 @@ public class HomePageColtivatore extends JFrame {
 	    TButtonNotifiche.setBorderPainted(false);
 	    TButtonNotifiche.setContentAreaFilled(false);
 	    TButtonNotifiche.setFocusPainted(false);
-
-	    
-	    ControllerColtivatore ControllerC = new ControllerColtivatore();		//SISTEMA NOTIFICHE
 	    
 	    JTextArea TxtListaNotifiche = new JTextArea();
 	    JScrollPane scrollNotifiche = new JScrollPane(TxtListaNotifiche);
@@ -125,20 +128,20 @@ public class HomePageColtivatore extends JFrame {
 	    contentPane.add(scrollNotifiche, "cell 22 1 2 4,grow");
 	    
 	    //popola esperienza
-	    ControllerColtivatore controllerEsperienza = new ControllerColtivatore();
-	    String esperienza = controllerEsperienza.getEsperienzaColtivatore(ControllerLogin.getUsernameGlobale());
+	    
+	    String esperienza = coltivatore.getEsperienza();
 	    FieldEsperienza.setText(esperienza);
 	    
 	    //CONTROLLO NOTIFICHE - scelgo l'immagine in base alle notifiche in arrivo 
-	    if(!ControllerC.checknotifiche(ControllerLogin.getUsernameGlobale())) {
+	    if(!controller.checknotifiche(coltivatore.getUsername())){
 		    ImageIcon originalIcon = new ImageIcon(getClass().getResource("/img/notifichevuote.png"));
 		    Image scaledImage = originalIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);	//ridimensionamento immagine
 		    ImageIcon scaledIcon = new ImageIcon(scaledImage);
 		    TButtonNotifiche.setIcon(scaledIcon);
 	    }
 	    else {
-	    	TxtListaNotifiche.setText(ControllerC.mostranotifiche(ControllerLogin.getUsernameGlobale()));
-	    	ControllerC.legginotifiche(ControllerLogin.getUsernameGlobale());
+	    	TxtListaNotifiche.setText(controller.mostranotifiche(coltivatore));
+	    	controller.legginotifiche(coltivatore);
 		    ImageIcon originalIcon = new ImageIcon(getClass().getResource("/img/notifichepiene.png"));
 		    Image scaledImage = originalIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);	//ridimensionamento immagine
 		    ImageIcon scaledIcon = new ImageIcon(scaledImage);
@@ -154,8 +157,8 @@ public class HomePageColtivatore extends JFrame {
 		        contentPane.revalidate();
 		        contentPane.repaint();
 		        
-		        ControllerColtivatore controllerColtivatore = new ControllerColtivatore();
-				controllerColtivatore.legginotifiche(ControllerLogin.getUsernameGlobale());
+//		        ControllerColtivatore controllerColtivatore = new ControllerColtivatore();
+				controller.legginotifiche(coltivatore);
 			}
 		});
 	    
@@ -252,7 +255,7 @@ public class HomePageColtivatore extends JFrame {
 	    ButtonSalva.addActionListener(new ActionListener() { //salva il raccolto delle colture inserite
 	    	public void actionPerformed(ActionEvent e) {
 	    		try {
-	    			ControllerColtivatore controller = new ControllerColtivatore();
+	    		//	ControllerColtivatore controller = new ControllerColtivatore();
 		    		String selectedProgetto = (String) ComboProgetti.getSelectedItem();
 		    		String selectedColtura = (String) ComboTipologia.getSelectedItem();
 		    		String raccoltoColture = FieldRaccoltoColture.getText();
@@ -306,7 +309,7 @@ public class HomePageColtivatore extends JFrame {
 	    //ControllerColtivatore controller = new ControllerColtivatore();
 	    ComboProgetti.removeAllItems();
 	    ComboProgetti.addItem("--seleziona--");
-	    for (String p : controller.popolaPrComboBox(ControllerLogin.getUsernameGlobale())) {
+	    for (String p : controller.popolaPrComboBox(coltivatore)){
 	        ComboProgetti.addItem(p);
 	    }
 	    ComboProgetti.setSelectedItem("--seleziona--");
@@ -315,13 +318,13 @@ public class HomePageColtivatore extends JFrame {
 	
 	private void aggiornaCampiProgetto() { //imposta i campi relativi al progetto
 	    String progettoSelezionato = (String) ComboProgetti.getSelectedItem();
-	    String username = ControllerLogin.getUsernameGlobale();
+//	    String username = coltivatore.getUsernameProprietario();
 	    
 	    if (progettoSelezionato != null && !progettoSelezionato.equals("--seleziona--")) {
-	        ControllerColtivatore controller = new ControllerColtivatore();
+	     
 	        
 	        // Date progetto
-	        List<String> dateProgetto = controller.DateInizioFineP(progettoSelezionato, username);
+	        List<String> dateProgetto = controller.DateInizioFineP(progettoSelezionato, coltivatore);
 	        if (dateProgetto != null && dateProgetto.size() >= 2) {
 	            FieldDataIP.setText(dateProgetto.get(0));
 	            FieldDataFP.setText(dateProgetto.get(1));
@@ -329,15 +332,15 @@ public class HomePageColtivatore extends JFrame {
 	        
 	        // COLTURA 
 	        ComboTipologia.removeAllItems();
-	        List<String> colture = controller.getColtura(username, progettoSelezionato); 
+	        List<String> colture = controller.getColtura(coltivatore, progettoSelezionato); 
 	        for (String tipoColtura : colture) {
 	        	ComboTipologia.addItem(tipoColtura); 
 	        }
 	        ComboTipologia.setSelectedIndex(-1);
 	        
 	        // Altri campi
-	        FieldStima.setText(controller.getStimaRaccolto(username, progettoSelezionato));
-	        FieldIrrigazione.setText(controller.getIrrigazione(username, progettoSelezionato));
+	        FieldStima.setText(controller.getStimaRaccolto(coltivatore, progettoSelezionato));
+	        FieldIrrigazione.setText(controller.getIrrigazione(coltivatore, progettoSelezionato));
 	        
 	    } else {
 	        // Pulisci tutti i campi
@@ -348,14 +351,11 @@ public class HomePageColtivatore extends JFrame {
 	        FieldRaccoltoColture.setText("");
 	        FieldIrrigazione.setText("");
 	    }
-	}
-	    
-	    
+	}  
 	@SuppressWarnings("unused")
 	private void popolaAttivita() { 	//popola i campi relativi alle attività
 	    String progettoSelezionato = (String) ComboProgetti.getSelectedItem();
-	    String username = ControllerLogin.getUsernameGlobale();
-	    
+//	    String username = coltivatore.getUsername();
 	    ComboAttivita.removeAllItems();
 	    ComboAttivita.addItem("--seleziona--");
 	    
@@ -366,12 +366,10 @@ public class HomePageColtivatore extends JFrame {
 	        tipoSeminaField.setText("");
 	        return;
 	    }
+ 
+	    tipiAttivita = controller.getTipiAttivita(coltivatore, progettoSelezionato);
 	    
-	    ControllerColtivatore controller = new ControllerColtivatore();
-	    
-	    tipiAttivita = controller.getTipiAttivita(username, progettoSelezionato);
-	    
-	    for (String idSpecifico : controller.getIdAttivita(username, progettoSelezionato)) {
+	    for (String idSpecifico : controller.getIdAttivita(coltivatore, progettoSelezionato)) {
 	        ComboAttivita.addItem(idSpecifico);
 	    }
 	    
@@ -426,7 +424,6 @@ public class HomePageColtivatore extends JFrame {
 	                String id = parts[1];
 	                
 	                try {
-	                    ControllerColtivatore controller = new ControllerColtivatore();
 	                    
 	                    String[] date = controller.getDateByAttivitaId(id, tipo);
 	                    
@@ -465,9 +462,9 @@ public class HomePageColtivatore extends JFrame {
 		    String progettoSelezionato = (String) ComboProgetti.getSelectedItem();
 		    
 		    if (progettoSelezionato != null && !progettoSelezionato.equals("--seleziona--")) {
-		        ControllerColtivatore controller = new ControllerColtivatore();
 		        
-		        String lottoEPosizione = controller.getLottoEPosizioneByProgetto(progettoSelezionato, ControllerLogin.getUsernameGlobale());
+		        
+		        String lottoEPosizione = controller.getLottoEPosizioneByProgetto(progettoSelezionato,coltivatore);
 		        
 		        if (lottoEPosizione != null && !lottoEPosizione.isEmpty()) {
 		            //  ESTRAI LOTTO E POSIZIONE SEPARATAMENTE
@@ -488,6 +485,4 @@ public class HomePageColtivatore extends JFrame {
 		        FieldPosizione.setText("");
 		    }
 		}
-
-
 	}
