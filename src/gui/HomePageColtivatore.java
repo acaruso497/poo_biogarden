@@ -13,7 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import controller.Controller;
-import dto.ColtivatoreDTO;
+import dto.*;
 import utils.*;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.JLabel;
@@ -50,13 +50,16 @@ public class HomePageColtivatore extends JFrame {
     Controller controller = new Controller();
   //  ColtivatoreDTO coltivatore = method.getColtivatoreLoggato(); //recupera il il Coltivatore loggato
 	private ColtivatoreDTO coltivatore;//AGGIUNTO
-   
+//	private NotificaDTO notifica;
+//	private AttivitaDTO attivita;
+//	private ProgettoColtivazioneDTO progetto;
 	
 	@SuppressWarnings("unused")
 	public HomePageColtivatore() {
 		//AGGIUNTO
 		coltivatore=new ColtivatoreDTO(method.getUsernameGlobale(), method.getPsw());;
 	    coltivatore=controller.getColtivatore(coltivatore);
+
 	    method.setColtivatoreLoggato(coltivatore); 	    
 	  //AGGIUNTO
 		setTitle("HomePageColtivatore");
@@ -133,22 +136,21 @@ public class HomePageColtivatore extends JFrame {
 	    FieldEsperienza.setText(esperienza);
 	    
 	    //CONTROLLO NOTIFICHE - scelgo l'immagine in base alle notifiche in arrivo 
-	    if(!controller.checknotifiche(coltivatore.getUsername())){
+	    if(!NotificaDTO.checknotifiche(coltivatore)){
 		    ImageIcon originalIcon = new ImageIcon(getClass().getResource("/img/notifichevuote.png"));
 		    Image scaledImage = originalIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);	//ridimensionamento immagine
 		    ImageIcon scaledIcon = new ImageIcon(scaledImage);
 		    TButtonNotifiche.setIcon(scaledIcon);
 	    }
 	    else {
-	    	TxtListaNotifiche.setText(controller.mostranotifiche(coltivatore));
-	    	controller.legginotifiche(coltivatore);
+	    	TxtListaNotifiche.setText(NotificaDTO.mostranotifiche(coltivatore));
+	    	NotificaDTO.legginotifiche(coltivatore);
 		    ImageIcon originalIcon = new ImageIcon(getClass().getResource("/img/notifichepiene.png"));
 		    Image scaledImage = originalIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);	//ridimensionamento immagine
 		    ImageIcon scaledIcon = new ImageIcon(scaledImage);
 		    TButtonNotifiche.setIcon(scaledIcon);
 	    }
 	    
-
 	    TButtonNotifiche.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 		        // Se il bottone è attivato, mostra la tendina
@@ -158,7 +160,7 @@ public class HomePageColtivatore extends JFrame {
 		        contentPane.repaint();
 		        
 //		        ControllerColtivatore controllerColtivatore = new ControllerColtivatore();
-				controller.legginotifiche(coltivatore);
+		        NotificaDTO.legginotifiche(coltivatore);
 			}
 		});
 	    
@@ -318,13 +320,13 @@ public class HomePageColtivatore extends JFrame {
 	
 	private void aggiornaCampiProgetto() { //imposta i campi relativi al progetto
 	    String progettoSelezionato = (String) ComboProgetti.getSelectedItem();
-//	    String username = coltivatore.getUsernameProprietario();
+
 	    
 	    if (progettoSelezionato != null && !progettoSelezionato.equals("--seleziona--")) {
 	     
 	        
 	        // Date progetto
-	        List<String> dateProgetto = controller.DateInizioFineP(progettoSelezionato, coltivatore);
+	        List<String> dateProgetto = ProgettoColtivazioneDTO.DateInizioFineP(progettoSelezionato, coltivatore);
 	        if (dateProgetto != null && dateProgetto.size() >= 2) {
 	            FieldDataIP.setText(dateProgetto.get(0));
 	            FieldDataFP.setText(dateProgetto.get(1));

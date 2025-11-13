@@ -218,48 +218,7 @@ public static ArrayList<String> getAttivitaByPr(String titolo_progetto, String u
 
     return tipi;
 }
-public static ArrayList<String> dateI_FProgCB(String titolo_progetto, ColtivatoreDTO coltivatore) {		
-    ArrayList<String> date = new ArrayList<>();
-    Connection conn = null;
-    PreparedStatement stmt = null;
-    ResultSet rs = null;
 
-    try {
-        conn = Connessione.getConnection();
-
-        String sql = """
-            SELECT pc.data_inizio, pc.data_fine
-            FROM progetto_coltivazione pc
-            JOIN lotto l         ON l.id_lotto = pc.id_lotto
-            JOIN proprietario p  ON p.codice_fiscale = l.codice_fiscalepr
-            JOIN coltivatore c   ON c.username_proprietario = p.username
-            WHERE c.username = ?
-              AND pc.titolo = ?
-            ORDER BY pc.data_inizio DESC
-            LIMIT 1
-        """;
-
-        stmt = conn.prepareStatement(sql);
-        stmt.setString(1, coltivatore.getUsername());
-        stmt.setString(2, titolo_progetto);
-
-        rs = stmt.executeQuery();
-
-        if (rs.next()) {
-            date.add(rs.getString("data_inizio"));
-            date.add(rs.getString("data_fine"));
-        }
-
-    } catch (SQLException ex) {
-        ex.printStackTrace();
-    } finally {
-        try { if (rs != null) rs.close(); } catch (Exception ignored) {}
-        try { if (stmt != null) stmt.close(); } catch (Exception ignored) {}
-        try { if (conn != null) conn.close(); } catch (Exception ignored) {}
-    }
-
-    return date;
-}
 
 public static List<String> getTipiAttivitaColtivatore(ColtivatoreDTO coltivatore, String progetto) {
     List<String> tipoList = new ArrayList<>();
@@ -534,103 +493,103 @@ public static List<String> getColtura(ColtivatoreDTO coltivatore, String progett
   //  _________________ HomePagecoltivatore _________________
  //  _____________________NOTIFICHE _________________________
 
-	public static boolean segnaNotificheColtivatoreComeLette(ColtivatoreDTO coltivatore) {
-	    Connection conn = null;
-	    PreparedStatement stmt = null;
-
-	    try {
-	        conn = Connessione.getConnection();
-
-	        String sql = 
-	        	    "UPDATE \"notifica\" " +
-	        	    "SET \"lettura\" = TRUE " +
-	        	    "WHERE \"lettura\" = FALSE " +
-	        	    "  AND \"utenti_tag\" LIKE ?";
-
-
-	        stmt = conn.prepareStatement(sql);
-	        stmt.setString(1, "%" + coltivatore.getUsername()+ "%");
-
-	        int updated = stmt.executeUpdate();
-	        return updated > 0;  // true se almeno una notifica è stata aggiornata
-	    } catch (SQLException ex) {
-	        ex.printStackTrace();
-	        return false;
-	    } finally {
-	        try { if (stmt != null) stmt.close(); } catch (Exception e) {}
-	        try { if (conn != null) conn.close(); } catch (Exception e) {}
-	    }
-	}
-	public static String getNotificheNonLette(ColtivatoreDTO coltivatore){
-	    Connection conn = null;
-	    PreparedStatement stmt = null;
-	    ResultSet rs = null;
-
-	    try {
-	        conn = Connessione.getConnection();
-
-	        String sql =
-	        	    "SELECT \"titolo\", \"descrizione\" " +
-	        	    "FROM \"notifica\" " +
-	        	    "WHERE \"lettura\" = FALSE " +
-	        	    "  AND \"utenti_tag\" LIKE ?";
-
-
-	        stmt = conn.prepareStatement(sql);
-	        stmt.setString(1, "%" + coltivatore.getUsername() + "%");
-
-	        rs = stmt.executeQuery();
-
-	        StringBuilder sb = new StringBuilder();
-	        while (rs.next()) {
-	            String titolo = rs.getString("titolo");
-	            String descrizione = rs.getString("descrizione");
-
-	            sb.append(titolo).append(" : ").append(descrizione).append("\n");
-	        }
-
-	        return sb.toString().trim(); // rimuove eventuale \n finale
-	    } catch (SQLException ex) {
-	        ex.printStackTrace();
-	        return "";
-	    } finally {
-	        try { if (rs != null) rs.close(); } catch (Exception e) {}
-	        try { if (stmt != null) stmt.close(); } catch (Exception e) {}
-	        try { if (conn != null) conn.close(); } catch (Exception e) {}
-	    }
-	}
-	public static boolean ciSonoNotificheNonLette(ColtivatoreDTO coltivatore){
-	    Connection conn = null;
-	    PreparedStatement stmt = null;
-	    ResultSet rs = null;
-
-	    try {
-	        conn = Connessione.getConnection();
-
-	        String sql = 
-	        	    "SELECT COUNT(*) " +
-	        	    "FROM \"notifica\" " +
-	        	    "WHERE \"lettura\" = FALSE " +
-	        	    "  AND \"utenti_tag\" LIKE ?";
-	        
-	        stmt = conn.prepareStatement(sql);
-	        stmt.setString(1, "%" + coltivatore.getUsername() + "%");
-
-	        rs = stmt.executeQuery();
-	        if (rs.next()) {
-	            int count = rs.getInt(1);
-	            return count > 0;   // true se ci sono notifiche non lette
-	        }
-	        return false;
-	    } catch (SQLException ex) {
-	        ex.printStackTrace();
-	        return false;
-	    } finally {
-	        try { if (rs != null) rs.close(); } catch (Exception e) {}
-	        try { if (stmt != null) stmt.close(); } catch (Exception e) {}
-	        try { if (conn != null) conn.close(); } catch (Exception e) {}
-	    }
-	}
+//	public static boolean segnaNotificheColtivatoreComeLette(ColtivatoreDTO coltivatore) {
+//	    Connection conn = null;
+//	    PreparedStatement stmt = null;
+//
+//	    try {
+//	        conn = Connessione.getConnection();
+//
+//	        String sql = 
+//	        	    "UPDATE \"notifica\" " +
+//	        	    "SET \"lettura\" = TRUE " +
+//	        	    "WHERE \"lettura\" = FALSE " +
+//	        	    "  AND \"utenti_tag\" LIKE ?";
+//
+//
+//	        stmt = conn.prepareStatement(sql);
+//	        stmt.setString(1, "%" + coltivatore.getUsername()+ "%");
+//
+//	        int updated = stmt.executeUpdate();
+//	        return updated > 0;  // true se almeno una notifica è stata aggiornata
+//	    } catch (SQLException ex) {
+//	        ex.printStackTrace();
+//	        return false;
+//	    } finally {
+//	        try { if (stmt != null) stmt.close(); } catch (Exception e) {}
+//	        try { if (conn != null) conn.close(); } catch (Exception e) {}
+//	    }
+//	}
+//	public static String getNotificheNonLette(ColtivatoreDTO coltivatore){
+//	    Connection conn = null;
+//	    PreparedStatement stmt = null;
+//	    ResultSet rs = null;
+//
+//	    try {
+//	        conn = Connessione.getConnection();
+//
+//	        String sql =
+//	        	    "SELECT \"titolo\", \"descrizione\" " +
+//	        	    "FROM \"notifica\" " +
+//	        	    "WHERE \"lettura\" = FALSE " +
+//	        	    "  AND \"utenti_tag\" LIKE ?";
+//
+//
+//	        stmt = conn.prepareStatement(sql);
+//	        stmt.setString(1, "%" + coltivatore.getUsername() + "%");
+//
+//	        rs = stmt.executeQuery();
+//
+//	        StringBuilder sb = new StringBuilder();
+//	        while (rs.next()) {
+//	            String titolo = rs.getString("titolo");
+//	            String descrizione = rs.getString("descrizione");
+//
+//	            sb.append(titolo).append(" : ").append(descrizione).append("\n");
+//	        }
+//
+//	        return sb.toString().trim(); // rimuove eventuale \n finale
+//	    } catch (SQLException ex) {
+//	        ex.printStackTrace();
+//	        return "";
+//	    } finally {
+//	        try { if (rs != null) rs.close(); } catch (Exception e) {}
+//	        try { if (stmt != null) stmt.close(); } catch (Exception e) {}
+//	        try { if (conn != null) conn.close(); } catch (Exception e) {}
+//	    }
+//	}
+//	public static boolean ciSonoNotificheNonLette(ColtivatoreDTO coltivatore){
+//	    Connection conn = null;
+//	    PreparedStatement stmt = null;
+//	    ResultSet rs = null;
+//
+//	    try {
+//	        conn = Connessione.getConnection();
+//
+//	        String sql = 
+//	        	    "SELECT COUNT(*) " +
+//	        	    "FROM \"notifica\" " +
+//	        	    "WHERE \"lettura\" = FALSE " +
+//	        	    "  AND \"utenti_tag\" LIKE ?";
+//	        
+//	        stmt = conn.prepareStatement(sql);
+//	        stmt.setString(1, "%" + coltivatore.getUsername() + "%");
+//
+//	        rs = stmt.executeQuery();
+//	        if (rs.next()) {
+//	            int count = rs.getInt(1);
+//	            return count > 0;   // true se ci sono notifiche non lette
+//	        }
+//	        return false;
+//	    } catch (SQLException ex) {
+//	        ex.printStackTrace();
+//	        return false;
+//	    } finally {
+//	        try { if (rs != null) rs.close(); } catch (Exception e) {}
+//	        try { if (stmt != null) stmt.close(); } catch (Exception e) {}
+//	        try { if (conn != null) conn.close(); } catch (Exception e) {}
+//	    }
+//	}
 
 //  _____________________NOTIFICHE _________________________
 }

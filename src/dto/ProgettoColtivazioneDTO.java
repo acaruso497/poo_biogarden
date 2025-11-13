@@ -1,6 +1,9 @@
 package dto;
 
 import java.sql.Date;
+import java.util.List;
+
+import dao.ProgettoColtivazioneDAO;
 
 public class ProgettoColtivazioneDTO {
 	private int ID_Progetto;
@@ -57,6 +60,10 @@ public class ProgettoColtivazioneDTO {
 
 	public boolean isDone() { return done; }
 	public void setDone(boolean done) { this.done = done; }
+	
+	public static List<String> DateInizioFineP(String titolo_progetto, ColtivatoreDTO coltivatore) {
+        return ProgettoColtivazioneDAO.dateI_FProgCB(titolo_progetto, coltivatore);
+}
 	
 	
 }
