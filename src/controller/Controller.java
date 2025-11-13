@@ -307,9 +307,9 @@ public String getTipoSemina(String idSemina) {
     return ColtivatoreDAO.getTipoSemina(idSemina);
 }
 
-public boolean sommaRaccolto(String raccolto, String coltura, String progetto) {
-    return ColtivatoreDAO.sommaRaccolto(raccolto, coltura, progetto);
-}
+//public boolean sommaRaccolto(String raccolto, String coltura, String progetto) {
+//    return ColtivatoreDAO.sommaRaccolto(raccolto, coltura, progetto);
+//}
 
 public List<String> getColtura(ColtivatoreDTO coltivatore, String progetto) {
     return ColtivatoreDAO.getColtura(coltivatore, progetto);
@@ -318,12 +318,81 @@ public List<String> getColtura(ColtivatoreDTO coltivatore, String progetto) {
     
 //  	_________________ HomePagecoltivatore _________________
     
-//                           _________________ TITOLO _________________
+//                           _________________ VISUALIZZA PROGETTI _________________
    
- 
+	//elimina
+//	public boolean terminaProgetto(ProgettoColtivazioneDTO progetto, LottoDTO lotto) { //termina il progetto di coltivazione 
+//		ProgettoColtivazioneDAO dao = new ProgettoColtivazioneDAO();
+//		return dao.terminaProgetto(progetto, lotto);
+//	}
+	
+    public String getRaccoltoProdotto(ProprietarioDTO proprietario, LottoDTO lotto, ArrayList<String> coltureList){ //restituisce il raccolto prodotto della coltura
+    	ArrayList<ColturaDTO> coltureDTOList = new ArrayList<>();
+    	
+        if (coltureList != null && !coltureList.isEmpty()) {
+        for (int i = 0; i < coltureList.size(); i++) {
+            String coltura = coltureList.get(i);
+            String colturaPulita = coltura.trim();
+            
+            ColturaDTO col = new ColturaDTO(colturaPulita);
+            coltureDTOList.add(col);
+            
+        }
+    	
+        }
+        ColturaDAO dao = new ColturaDAO();
+        return dao.getRaccoltoProdotto(proprietario, lotto, coltureDTOList);
+    }
     
+    
+    public boolean aggiornaStato(String stato, String tipoAttivita, LottoDTO lotto) { // Aggiorna lo stato delle attività
+    	AttivitaDAO dao = new AttivitaDAO();
+    	SeminaDTO semina = null;
+    	IrrigazioneDTO irrigazione = null;
+    	RaccoltaDTO raccolta = null;
+    	
+    	if(tipoAttivita.equals("Semina")) {
+    		semina = new SeminaDTO(stato);
+    	}else if(tipoAttivita.equals("Irrigazione")) {
+    		irrigazione = new IrrigazioneDTO(stato);
+    	}else if(tipoAttivita.equals("Raccolta")) {
+    		raccolta = new RaccoltaDTO(stato);
+    	}
+    	
+    	return dao.aggiornaStato(semina, irrigazione, raccolta, lotto);
+    }
    
-//                           _________________ TITOLO _________________
+    
+
+    public void popolaDatiProgetto(ProgettoColtivazioneDTO progetto) {  // Setta il titolo del progetto, i campi di data inizio e data fine
+    	ProgettoColtivazioneDAO dao = new ProgettoColtivazioneDAO();
+        dao.popolaDatiProgetto(progetto);
+    } 
+    
+    public boolean isCompletata(ProprietarioDTO proprietario, ProgettoColtivazioneDTO progetto) {     //controlla se il progetto è completato
+    	ProgettoColtivazioneDAO dao = new ProgettoColtivazioneDAO();
+    	return dao.isCompletata(proprietario, progetto);
+    }
+    
+ 
+    public ArrayList<String> getColtureProprietario(ProprietarioDTO proprietario, ProgettoColtivazioneDTO progetto) { //restituisce le colture presenti nel lotto del progetto di coltivazione in riferimento al proprietario
+    	ColturaDAO dao = new ColturaDAO();
+    	return dao.getColtureProprietario(proprietario, progetto);
+	}
+    
+ 
+    public List<String> getProgettiByProprietario(ProprietarioDTO proprietario) { // Popola ComboProgetto con il titolo del progetto del proprietario
+    	ProprietarioDAO dao = new ProprietarioDAO();
+        return dao.getProgettiByProprietario(proprietario);  
+    }
+    
+    public String getLottoProgettoByProprietario(ProgettoColtivazioneDTO progetto, ProprietarioDTO proprietario) {
+    	LottoDAO dao = new LottoDAO();
+    	return dao.getLottoProgettoByProprietario(progetto, proprietario);
+    }
+    
+    
+//                           _________________ VISUALIZZA PROGETTI _________________
 		
 		//CODICE
 		

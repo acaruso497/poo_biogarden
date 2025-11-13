@@ -2,6 +2,8 @@ package dto;
 
 import java.sql.Date;
 
+import dao.ProgettoColtivazioneDAO;
+
 public class ProgettoColtivazioneDTO {
 	private int ID_Progetto;
 	private String titolo;
@@ -32,6 +34,17 @@ public class ProgettoColtivazioneDTO {
 		this.dataFine=dataFine;
 		this.idLotto=idLotto;
 	}
+	
+	public ProgettoColtivazioneDTO(String titolo)  {
+		this.titolo=titolo;
+	}
+	
+	public ProgettoColtivazioneDTO(String titolo, double stimaRaccolto, Date dataInizio, Date dataFine)  {
+		this.titolo=titolo;
+		this.stimaRaccolto=stimaRaccolto;
+		this.dataInizio=dataInizio;
+		this.dataFine=dataFine;
+	}
 
 	//Getter e setter
 	public int getID_Progetto() { return ID_Progetto; }
@@ -57,6 +70,11 @@ public class ProgettoColtivazioneDTO {
 
 	public boolean isDone() { return done; }
 	public void setDone(boolean done) { this.done = done; }
+	
+	public boolean terminaProgetto(ProgettoColtivazioneDTO progetto, LottoDTO lotto) { //termina il progetto di coltivazione 
+		
+		return ProgettoColtivazioneDAO.terminaProgetto(progetto, lotto);
+	}
 	
 	
 }

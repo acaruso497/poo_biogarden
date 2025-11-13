@@ -13,7 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import controller.Controller;
-import dto.ColtivatoreDTO;
+
 import utils.*;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.JLabel;
@@ -25,7 +25,7 @@ import javax.swing.JToggleButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JButton;
-
+import dto.*;
 
 public class HomePageColtivatore extends JFrame {
 
@@ -47,6 +47,7 @@ public class HomePageColtivatore extends JFrame {
     private JComboBox<String> ComboAttivita;
     private List<String> tipiAttivita;
     private JComboBox<String> ComboTipologia;
+    private RaccoltaDTO RaccoltaDTO;
     Controller controller = new Controller();
   //  ColtivatoreDTO coltivatore = method.getColtivatoreLoggato(); //recupera il il Coltivatore loggato
 	private ColtivatoreDTO coltivatore;//AGGIUNTO
@@ -251,7 +252,7 @@ public class HomePageColtivatore extends JFrame {
 	    
 	    ButtonSalva.setEnabled(false); 
 	    contentPane.add(ButtonSalva, "cell 8 12,alignx center");
-	    
+	    RaccoltaDTO= new RaccoltaDTO();
 	    ButtonSalva.addActionListener(new ActionListener() { //salva il raccolto delle colture inserite
 	    	public void actionPerformed(ActionEvent e) {
 	    		try {
@@ -276,7 +277,7 @@ public class HomePageColtivatore extends JFrame {
 		    			FieldRaccoltoColture.setBackground(Color.RED);
 		    			return;
 	    			}else {
-	    				boolean sommaRaccolto = controller.sommaRaccolto(raccoltoColture, selectedColtura, selectedProgetto);
+	    				boolean sommaRaccolto = RaccoltaDTO.sommaRaccolto(raccoltoColture, selectedColtura, selectedProgetto);
 	    				JOptionPane.showMessageDialog(HomePageColtivatore.this, 
 	    											  "Il raccolto è stato aggiornato con successo!");
 	    			}

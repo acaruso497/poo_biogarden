@@ -2,9 +2,13 @@ package dto;
 
 import java.sql.Date;
 
+import dao.*;
+
 public class RaccoltaDTO extends AttivitaDTO{
 	private Date giornoInizio;
 	private Date giornoFine;
+	private String stato;
+	
 	
 	public RaccoltaDTO() {}
 
@@ -17,6 +21,10 @@ public class RaccoltaDTO extends AttivitaDTO{
 		super(ID_Attivita, codiceFiscaleCol);
 		this.giornoInizio=giornoInizio;
 		this.giornoFine=giornoFine;
+	}
+	
+	public RaccoltaDTO(String stato) {
+		this.stato=stato;
 	}
 	
 
@@ -35,6 +43,20 @@ public class RaccoltaDTO extends AttivitaDTO{
 	public void setGiornoFine(Date giornoFine) {
 		this.giornoFine = giornoFine;
 	}
+
+	public String getStato() {
+		return stato;
+	}
+
+	public void setStato(String stato) {
+		this.stato = stato;
+	}
+	
+	public boolean sommaRaccolto(String raccolto, String coltura, String progetto) {
+	    return RaccoltaDAO.sommaRaccolto(raccolto, coltura, progetto);
+	}
 	
 	
+	
+
 }

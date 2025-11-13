@@ -274,4 +274,49 @@ public class ProprietarioDAO {
 			    return lista;
 			}		
 	//____________________   CREAZIONE PROGETTO COLTIVAZIONE     ____________________________________
+			
+			
+			
+//          _________________ VISUALIZZA PROGETTI _________________
+			
+		    public List<String> getProgettiByProprietario(ProprietarioDTO proprietario) { //seleziono tutti i progetti del proprietario dato il suo username (utile per ComboProgetto)
+		        List<String> lista = new ArrayList<>();
+		        Connection conn = null;
+		        PreparedStatement stmt = null;
+		        ResultSet risultato = null;
+
+		        try {
+		            conn = Connessione.getConnection(); 
+
+			        String sql = "SELECT pc.titolo " +
+			        		  "FROM Progetto_Coltivazione pc " +
+			        		  "JOIN Lotto l ON l.ID_Lotto = pc.ID_Lotto " +
+			        		  "JOIN Proprietario p ON l.Codice_FiscalePr = p.Codice_Fiscale " +
+			        		  "WHERE p.username = ? " +
+			        		  "ORDER BY pc.ID_Progetto ";
+		            
+		            stmt = conn.prepareStatement(sql);   
+		            stmt.setString(1, proprietario.getUsername());
+		            risultato = stmt.executeQuery();
+		            
+		            while (risultato.next()) {
+		                String titoloProgetto = risultato.getString("titolo");
+		                lista.add(titoloProgetto);
+		            }  
+		        } catch (SQLException ex) {
+		        	ex.printStackTrace();
+		        } finally {
+		            try { if (risultato != null) risultato.close(); } catch (Exception ignored) {}
+		            try { if (stmt != null) stmt.close(); } catch (Exception ignored) {}
+		            try { if (conn != null) conn.close(); } catch (Exception ignored) {}
+		        }
+		        return lista;
+		    }
+		    
+		  
+			
+		    
+		    
+//          _________________ VISUALIZZA PROGETTI _________________
 }
+

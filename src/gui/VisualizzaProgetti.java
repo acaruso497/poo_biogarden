@@ -4,6 +4,9 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ArrayList;
 import javax.swing.JFrame;
@@ -12,6 +15,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.basic.BasicArrowButton;
 
 import controller.Controller;
+import dto.LottoDTO;
+import dto.ProgettoColtivazioneDTO;
 import dto.ProprietarioDTO;
 import net.miginfocom.swing.MigLayout;
 import utils.*;
@@ -39,11 +44,10 @@ public class VisualizzaProgetti extends JFrame {
 	private JTextField FieldDataIA;
 	private JTextField FieldDataFA;
 	private JLabel LabelProgettoTerminato;
+	private ProgettoColtivazioneDTO ProgettoColtivazioneDTO;
 	Controller controller = new Controller();
     private ButtonGroup gruppoStato;
-    private String selectedProgetto = null;
-//    private String username = ControllerLogin.getUsernameGlobale();
-//    private String CFProprietario = ControllerLogin.getCodiceFiscaleByUsername(username);
+//    private String selectedProgetto = null;
     ProprietarioDTO proprietario = method.getProprietarioLoggato();
     static String idLotto = null;
     JComboBox<String> ComboAttivita = new JComboBox<>();
@@ -57,7 +61,8 @@ public class VisualizzaProgetti extends JFrame {
     private JTextField VisualRaccolto;
     private JButton ButtonTermina;
     private JButton ButtonModificaAttivita;
-	
+    private LottoDTO lottodto;
+	// attivita , progetto , lotto, coltura, semina irrigazione e raccolta
 	public VisualizzaProgetti(HomePageProprietario home) {
 		this.home = home;
 		
@@ -125,18 +130,24 @@ public class VisualizzaProgetti extends JFrame {
 	    contentPane.add(ButtonTermina, "cell 2 3,aligny center");
 	    ButtonTermina.addActionListener(new ActionListener() {
 	    	public void actionPerformed(ActionEvent e) { //termina il progetto selezionato
-	    		selectedProgetto = (String) ComboProgetto.getSelectedItem();
+	    		ProgettoColtivazioneDTO= new  ProgettoColtivazioneDTO((String)ComboProgetto.getSelectedItem());
 	    		String lotto = FieldLotto.getText();
 	    		
-	    		if(selectedProgetto == null || lotto.isEmpty()) {
+	    		
+	    		if(ProgettoColtivazioneDTO.getTitolo() == null || lotto.isEmpty()) {
 	                JOptionPane.showMessageDialog(VisualizzaProgetti.this, 
 	                							  "Seleziona un progetto valido!");
 	                return;
 	            }
-	            	 
-	    		boolean termina = controller.terminaProgetto(selectedProgetto, lotto);
 	    		
-	    		if(termina==true) {
+	    		int idLotto = Integer.parseInt(lotto);  //converte il tipo del field per creare il LottoDTO
+	    		
+	    		//creazione di oggetti DTO
+	    		 lottodto = new LottoDTO(idLotto);
+           	 
+	    		//termina=ProgettoColtivazioneDTO.terminaProgetto(ProgettoColtivazioneDTO, lottodto);
+	    		//if(termina)
+	    		if(ProgettoColtivazioneDTO.terminaProgetto(ProgettoColtivazioneDTO, lottodto)) {
 	    			JOptionPane.showMessageDialog(VisualizzaProgetti.this, "Progetto terminato con successo!");
 	    			ButtonTermina.setEnabled(false);
 	    			ButtonModificaAttivita.setEnabled(false);
@@ -202,12 +213,14 @@ public class VisualizzaProgetti extends JFrame {
 	    ComboColtureRacc.addActionListener(new ActionListener() { //popola la combobox con le colture presenti
 	        public void actionPerformed(ActionEvent e) {
 	            try {
-	                String selectedColtura = (String) ComboColtureRacc.getSelectedItem();
+	                //String selectedColtura = (String) ComboColtureRacc.getSelectedItem();
+	            	ArrayList<String> selectedColtura = SplitUtils.splitByCommaToArrayList((String) ComboColtureRacc.getSelectedItem());
 	                if (selectedColtura != null && !selectedColtura.equals("--Seleziona coltura--")) {
 	                    String lottoText = FieldLotto.getText();
 	                    if (lottoText != null && !lottoText.isEmpty()) {
 	                        int idLotto = Integer.parseInt(lottoText);
-	                        String raccolto = controller.getRaccoltoProdotto(username, idLotto, selectedColtura);
+	        	    		LottoDTO lottodto = new LottoDTO(idLotto); //creazione di oggetti DTO
+	                        String raccolto = controller.getRaccoltoProdotto(proprietario, lottodto, selectedColtura);
 	                        VisualRaccolto.setText(raccolto);
 	                    } else {
 	                        VisualRaccolto.setText("no dati"); // Default se il lotto non è valido
@@ -267,15 +280,17 @@ public class VisualizzaProgetti extends JFrame {
 		                							  "COMPILA TUTTI I CAMPI!!", "Errore", JOptionPane.ERROR_MESSAGE);
 		            } else {
 		            	String selectedStato = "";
+		            	int idLotto = Integer.parseInt(selectedLotto);
+		            	LottoDTO lotto = new LottoDTO(idLotto);
 					    if (RadioPianificata.isSelected()) { // setta i pallini del radiobutton
 					    	  selectedStato = RadioPianificata.getText(); // Restituisce attività "pianificata"
-					    	  controller.aggiornaStato(selectedStato, selectedAttivita, selectedLotto);
+					    	  controller.aggiornaStato(selectedStato, selectedAttivita, lotto);
 					     } else if (RadioInCorso.isSelected()) {
 					    	   selectedStato = RadioInCorso.getText(); // Restituisce attività "in corso"
-					    	   controller.aggiornaStato(selectedStato, selectedAttivita, selectedLotto);
+					    	   controller.aggiornaStato(selectedStato, selectedAttivita, lotto);
 					     } else if (RadioCompletata.isSelected()) {
 					    	   selectedStato = RadioCompletata.getText(); // Restituisce attività "completata"
-					    	   controller.aggiornaStato(selectedStato, selectedAttivita, selectedLotto);
+					    	   controller.aggiornaStato(selectedStato, selectedAttivita, lotto);
 					     } 
 				            JOptionPane.showMessageDialog(VisualizzaProgetti.this, 
 				                "Attività aggiornata con successo!");
@@ -308,12 +323,31 @@ public class VisualizzaProgetti extends JFrame {
 	                    return;
 	                }
 	                
-	                controller.popolaDatiProgetto(selectedProgetto, FieldStima, 
-	                								FieldDataIP, FieldDataFP); // Popola i campi progetto
+	                LocalDate datalocalIA = LocalDate.parse(FieldDataIP.getText(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                    Date dataIP = Date.valueOf(datalocalIA);
+                    
+                    LocalDate datalocalFA = LocalDate.parse(FieldDataFP.getText(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                    Date dataFP = Date.valueOf(datalocalFA);
+	                
+                    double stima = Double.parseDouble(FieldStima.getText());
+                    
+	                ProgettoColtivazioneDTO progetto = new ProgettoColtivazioneDTO(selectedProgetto, stima, dataIP, dataFP);
+	                controller.popolaDatiProgetto(progetto); // Popola i campi progetto
+	                
+	                // Popolo i campi GUI dai dati del DTO
+	                if (progetto.getStimaRaccolto() > 0) {
+	                    FieldStima.setText(progetto.getStimaRaccolto() + " kg");
+	                }
+	                if (progetto.getDataInizio() != null) {
+	                    FieldDataIP.setText(progetto.getDataInizio().toLocalDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+	                }
+	                if (progetto.getDataFine() != null) {
+	                    FieldDataFP.setText(progetto.getDataFine().toLocalDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+	                }
 	                popolaFieldLotto(); //una volta che ha trovato un progetto, popola il field del lotto
 	                String lotto = FieldLotto.getText();
 	                
-	                boolean isCompletato = controller.isCompletata(username, selectedProgetto);
+	                boolean isCompletato = controller.isCompletata(proprietario, progetto);
 	                if(isCompletato==true) { //se il progetto è completato disabilita i campi
 	                	ButtonTermina.setEnabled(false);
 	                	ButtonModificaAttivita.setEnabled(false);
@@ -331,7 +365,7 @@ public class VisualizzaProgetti extends JFrame {
 	                }
 	                
 	                if (lotto != null && !lotto.isEmpty()) { //prima di popolare la combo delle colture, verifica l'esistenza di un lotto
-	            	    colture = controller.getColtureProprietario(Login.CFProprietario, selectedProgetto );
+	            	    colture = controller.getColtureProprietario(proprietario, progetto);
 	            	    ComboColtureRacc.removeAllItems();
 	            	    ComboColtureRacc.addItem("--Seleziona coltura--");
 	            	    for (String coltura : colture) {
@@ -366,7 +400,7 @@ public class VisualizzaProgetti extends JFrame {
                             return;
                         }
                     
-                    String idProgettoStr = selectedProgetto.toString(); //converto l'id del progetto selezionato in una stringa
+                    //String idProgettoStr = selectedProgetto.toString(); //converto l'id del progetto selezionato in una stringa
                     
                     // Chiamata al controller per ottenere lo stato e popolare data inizio e data fine
 		    	    String stato = controller.popolaAttivita(idProgettoStr, selectedAttivita, FieldDataIA, FieldDataFA);
@@ -389,8 +423,7 @@ public class VisualizzaProgetti extends JFrame {
 	
 	 
     private void popolaComboProgetto() { 	 // Popola ComboProgetto
-    	
-        List<String> progetti = controller.getProgettiByProprietario(username); 
+        List<String> progetti = controller.getProgettiByProprietario(proprietario); 
         for (String idProgetto : progetti) {
             ComboProgetto.addItem(idProgetto); //popola la combobox con l'id progetto
         }
@@ -408,8 +441,10 @@ public class VisualizzaProgetti extends JFrame {
             return;
         }
         
+        ProgettoColtivazioneDTO progetto = new ProgettoColtivazioneDTO(selectedProgetto);
+        
         try {
-             idLotto = controller.getLottiByProprietario(selectedProgetto, CFProprietario); 
+             idLotto = controller.getLottoProgettoByProprietario(progetto, proprietario); 
             
             //controlla l'esistenza di un lotto
             if (idLotto != null) { 

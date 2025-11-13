@@ -4,6 +4,7 @@ import database.Connessione;
 import dto.*;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ProgettoColtivazioneDAO {
 
@@ -283,6 +284,158 @@ public class ProgettoColtivazioneDAO {
 		
 		//____________________   CREAZIONE PROGETTO COLTIVAZIONE     ____________________________________
 		
+			//      _________________ VISUALIZZA PROGETTI _________________
 		
+		public static boolean terminaProgetto(ProgettoColtivazioneDTO progetto, LottoDTO lotto) { //Libera un lotto da un progetto di coltivazione e tutti i suoi riferimenti
+			Connection conn = null;
+			PreparedStatement stmt = null;
+			ResultSet risultato = null;
+			
+			try {
+					conn = Connessione.getConnection(); 
+					@SuppressWarnings("unused")
+					int rows = 0;
+		
+					// segno il progetto come completato con la flag done
+			        String sql1 = "UPDATE Progetto_Coltivazione SET done = true WHERE id_lotto = ? AND titolo = ? ";
+			        stmt = conn.prepareStatement(sql1);
+			        stmt.setInt(1, lotto.getID_Lotto());
+			        stmt.setString(2, progetto.getTitolo());
+			        rows = stmt.executeUpdate();
+			        stmt.close();
+					
+			        //segno l'attività come completata
+			        String sql2 = "UPDATE Attivita SET stato = 'completata' WHERE id_lotto = ? ";
+			        stmt = conn.prepareStatement(sql2);
+			        stmt.setInt(1, lotto.getID_Lotto());
+			        rows = stmt.executeUpdate();
+			        stmt.close();
+			        
+			        //ricavo l'id dell'attività in modo da collegare le 3 attività
+			        String sqlAttivita = "SELECT id_attivita FROM Attivita WHERE id_lotto = ? ";
+			        stmt = conn.prepareStatement(sqlAttivita);
+			        stmt.setInt(1, lotto.getID_Lotto());
+			        risultato = stmt.executeQuery();
+			        
+			        List<AttivitaDTO> attivitaList = new ArrayList<>();
+			        
+			        while (risultato.next()) {
+			        	AttivitaDTO attivita = new AttivitaDTO();
+			            attivita.setID_Attivita(risultato.getInt("id_attivita"));
+			            attivitaList.add(attivita);
+			        }
+			        risultato.close();
+			        stmt.close();
+			        
+			        //per ogni id dell'attività, segna ogni attività come completata
+			        for (AttivitaDTO attivita : attivitaList) {
+			            // Segna semina come completata
+			            String sql3 = "UPDATE Semina SET stato = 'completata' WHERE id_attivita = ?";
+			            stmt = conn.prepareStatement(sql3);
+			            stmt.setInt(1, attivita.getID_Attivita());
+			            stmt.executeUpdate();
+			            stmt.close();
+			            
+			            // Segna irrigazione come completata
+			            String sql4 = "UPDATE Irrigazione SET stato = 'completata' WHERE id_attivita = ?";
+			            stmt = conn.prepareStatement(sql4);
+			            stmt.setInt(1, attivita.getID_Attivita());
+			            stmt.executeUpdate();
+			            stmt.close();
+			            
+			            // Segna raccolta come completata
+			            String sql5 = "UPDATE Raccolta SET stato = 'completata' WHERE id_attivita = ?";
+			            stmt = conn.prepareStatement(sql5);
+			            stmt.setInt(1, attivita.getID_Attivita());
+			            stmt.executeUpdate();
+			            stmt.close();
+			        }
+					return true;
+			}  catch (SQLException | NumberFormatException ex) {
+				ex.printStackTrace();
+				return false;
+			} finally {
+				try { if (risultato != null) risultato.close(); } catch (Exception ignored) {}
+				try { if (stmt != null) stmt.close(); } catch (Exception ignored) {}
+				try { if (conn != null) conn.close(); } catch (Exception ignored) {}
+			}		
+		}
+		
+		
+		
+		
+		
+		public void popolaDatiProgetto(ProgettoColtivazioneDTO progetto) { //popola la combobox del progetto, il text field di data inizio, data fine, stima raccolto
+				Connection conn = null;
+				PreparedStatement stmt = null;
+				ResultSet risultato = null;
+				
+				try {
+				conn = Connessione.getConnection(); 
+				//recupera tutti i dati del progetto tramite la view
+				String sql = "SELECT stima_raccolto, data_inizio, data_fine FROM view_raccolto WHERE titolo = ?"; 
+				
+				stmt = conn.prepareStatement(sql);   
+				stmt.setString(1, progetto.getTitolo());
+				risultato = stmt.executeQuery();
+				
+				if (risultato.next()) {
+		            double stima = risultato.getDouble("stima_raccolto");
+		            java.sql.Date sqlDataInizio = risultato.getDate("data_inizio");
+		            java.sql.Date sqlDataFine = risultato.getDate("data_fine");
+		            progetto.setStimaRaccolto(stima);
+		            progetto.setDataInizio(sqlDataInizio);
+		            progetto.setDataFine(sqlDataFine);
+		         }
+				
+				} catch (SQLException | NumberFormatException ex) {
+					ex.printStackTrace();
+				} finally {
+					try { if (risultato != null) risultato.close(); } catch (Exception ignored) {}
+					try { if (stmt != null) stmt.close(); } catch (Exception ignored) {}
+					try { if (conn != null) conn.close(); } catch (Exception ignored) {}
+				}
+		}
+		
+		
+		
+	    public boolean isCompletata(ProprietarioDTO proprietario, ProgettoColtivazioneDTO progetto) { 		 //controlla se il progetto è completato
+	    	Connection conn = null;
+	        PreparedStatement stmt = null;
+	        ResultSet risultato = null;
+	    	
+	    	try {
+	    		conn = Connessione.getConnection();
+	    		
+	    		String sql = "SELECT pc.done " +
+		                    "FROM Progetto_Coltivazione pc " +
+		                    "JOIN Lotto l ON l.ID_Lotto = pc.ID_Lotto " +
+		                    "JOIN Proprietario p ON l.Codice_FiscalePr = p.Codice_Fiscale " +
+		                    "WHERE p.username = ? AND pc.titolo = ?";
+	        
+				 stmt = conn.prepareStatement(sql);   
+				 stmt.setString(1, proprietario.getUsername());
+				 stmt.setString(2, progetto.getTitolo());
+				 risultato = stmt.executeQuery();
+
+				 if (risultato.next()) {
+					 progetto.setDone(risultato.getBoolean("done"));
+			         return true;
+			     }else {
+			    	 return false;
+			     }
+			    	
+	    } catch (SQLException ex) {
+	    	ex.printStackTrace();
+	    	return false;
+	    } finally {
+	        try { if (risultato != null) risultato.close(); } catch (Exception ignored) {}
+	        try { if (stmt != null) stmt.close(); } catch (Exception ignored) {}
+	        try { if (conn != null) conn.close(); } catch (Exception ignored) {}
+	    }
+	 }   
+		
+		
+			//      _________________ VISUALIZZA PROGETTI _________________
 	
 }

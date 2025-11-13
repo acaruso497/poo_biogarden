@@ -6,6 +6,7 @@ public class IrrigazioneDTO extends AttivitaDTO{
 	private Date giornoInizio;
 	private Date giornoFine;
 	private String tipoIrrigazione;
+	private String stato;
 	
 	public IrrigazioneDTO() {}
 
@@ -21,6 +22,10 @@ public class IrrigazioneDTO extends AttivitaDTO{
 		this.giornoFine=giornoFine;
 		this.tipoIrrigazione=tipoIrrigazione;
 	}
+	
+	public IrrigazioneDTO(String stato) {
+		this.stato=stato;
+    }
 
 	public Date getGiornoInizio() {
 		return giornoInizio;
@@ -45,6 +50,16 @@ public class IrrigazioneDTO extends AttivitaDTO{
 	public void setTipoIrrigazione(String tipoIrrigazione) {
 		this.tipoIrrigazione = tipoIrrigazione;
 	}
+
+	public String getStato() {
+		return stato;
+	}
+
+	public void setStato(String stato) {
+		this.stato = stato;
+	}
+	
+	
 
 	
 	

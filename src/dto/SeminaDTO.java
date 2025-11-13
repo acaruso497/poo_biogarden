@@ -6,6 +6,7 @@ public class SeminaDTO extends AttivitaDTO{
 	private Date giornoInizio;
 	private Date giornoFine;
 	private String tipoSemina;
+	private String stato;
 	
 	public SeminaDTO() {}
 
@@ -21,6 +22,10 @@ public class SeminaDTO extends AttivitaDTO{
 		this.giornoInizio=giornoInizio;
 		this.giornoFine=giornoFine;
 		this.tipoSemina=tipoSemina;
+	}
+	
+	public SeminaDTO(String stato) {
+		this.stato=stato;
 	}
 
 	public Date getGiornoInizio() {
@@ -46,6 +51,15 @@ public class SeminaDTO extends AttivitaDTO{
 	public void setTipoSemina(String tipoSemina) {
 		this.tipoSemina = tipoSemina;
 	}
+
+	public String getStato() {
+		return stato;
+	}
+
+	public void setStato(String stato) {
+		this.stato = stato;
+	}
+	
 	
 	
 }
