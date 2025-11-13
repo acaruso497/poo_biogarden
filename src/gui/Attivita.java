@@ -334,7 +334,7 @@ public class Attivita extends JFrame {
                  	ArrayList<String> creaArr = SplitUtils.splitByCommaToArrayList(FieldTipologia.getText());
                      // Crea il progetto solo la prima volta
                      if (!progettoCreato) {
-                    	 progettoCreato = controller.creaProgetto(progetto, creaArr, lotto);
+                    	 progettoCreato = ProgettoColtivazioneDTO.creaProgetto(progetto, creaArr, lotto);
                          
                          if (!progettoCreato) {
                              JOptionPane.showMessageDialog(Attivita.this, 

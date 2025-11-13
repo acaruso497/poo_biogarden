@@ -46,8 +46,7 @@ public class CreaProgetto extends JFrame {
     Controller controller = new Controller();  
     private JTextField FieldStimaRaccolto;
     private JTextField FieldTipologiaColtura;
-    //ProprietarioDTO proprietario = method.getProprietarioLoggato();
-    //private Integer idProgetto;
+
 	
 	public CreaProgetto(HomePageProprietario home) {
 		this.home = home;
@@ -235,26 +234,7 @@ public class CreaProgetto extends JFrame {
 		            ButtonIndietro.setEnabled(true);
 		            return;
 				}
-				
-//				DAO dao = new DAO(); // Crea il DAO
-//		        creaProgettoController = new CreaProgettoController(dao); // Crea il controller
-		        
-				//String [] creaArr=creaProgettoController.dividiPerVirgola(FieldTipologiaColtura.getText()); // divide le colture dalle virgole per poterle salvare nel database
-				//ArrayList<String> creaArr = SplitUtils.splitByCommaToArrayList(FieldTipologiaColtura.getText());
-				
-	            //LocalDate datalocalIP = LocalDate.parse(dataInizioP, DateTimeFormatter.ofPattern("dd/MM/yyyy")); //converte il textfield della data inizio in tipo data di sql
-				//Date dataIP = Date.valueOf(datalocalIP);
-				
-				//LocalDate datalocalFP = LocalDate.parse(dataFineP, DateTimeFormatter.ofPattern("dd/MM/yyyy")); //converte il textfield della data fine in tipo data di sql
-				//Date dataFP = Date.valueOf(datalocalFP);
-				
-				//boolean controllo = creaProgettoController.checkColt(lotto, creaArr); //DA VEDERE SE SERVE
-				//flag per controllare se le colture sono state piantate nel lotto
-				
-//				if(controllo==true) {
-//					JOptionPane.showMessageDialog(CreaProgetto.this, 
-//												 "\n\nuna tra le colture inserite è gia stata piantata");
-//				}else {
+
 				
 				int idLotto = Integer.parseInt(lotto);
 				LottoDTO lottoDTO = new LottoDTO(idLotto);
@@ -356,14 +336,7 @@ public class CreaProgetto extends JFrame {
 	            attivita.setVisible(true);
 	    	}
 	    });
-	    
-	    
-//	    DAO dao = new DAO(); // Crea il DAO
-//        creaProgettoController = new CreaProgettoController(dao); // Crea il controller
-        
-	    
-	    
-        //popolaComboLotto(method.getProprietarioLoggato());   
+
        
 	}
 	public void popolaComboLotto(ProprietarioDTO proprietario) {

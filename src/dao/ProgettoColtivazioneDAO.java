@@ -1,3 +1,4 @@
+
 package dao;
 
 import database.Connessione;
@@ -284,7 +285,6 @@ public class ProgettoColtivazioneDAO {
 		    Connection conn = null;
 		    PreparedStatement stmt = null;
 		    ResultSet rs = null;
-
 		    try {
 		        conn = Connessione.getConnection();
 
@@ -405,7 +405,7 @@ public class ProgettoColtivazioneDAO {
 		
 		
 		
-		public void popolaDatiProgetto(ProgettoColtivazioneDTO progetto) { //popola la combobox del progetto, il text field di data inizio, data fine, stima raccolto
+		public static void popolaDatiProgetto(ProgettoColtivazioneDTO progetto) { //popola la combobox del progetto, il text field di data inizio, data fine, stima raccolto
 				Connection conn = null;
 				PreparedStatement stmt = null;
 				ResultSet risultato = null;
@@ -426,6 +426,7 @@ public class ProgettoColtivazioneDAO {
 		            progetto.setStimaRaccolto(stima);
 		            progetto.setDataInizio(sqlDataInizio);
 		            progetto.setDataFine(sqlDataFine);
+		            
 		         }
 				
 				} catch (SQLException | NumberFormatException ex) {
