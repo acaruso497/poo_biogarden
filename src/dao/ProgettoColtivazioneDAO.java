@@ -279,8 +279,48 @@ public class ProgettoColtivazioneDAO {
 		    }
 		    
 			}
-		
-		
+		public static ArrayList<String> dateI_FProgCB(String titolo_progetto, ColtivatoreDTO coltivatore) {		
+		    ArrayList<String> date = new ArrayList<>();
+		    Connection conn = null;
+		    PreparedStatement stmt = null;
+		    ResultSet rs = null;
+
+		    try {
+		        conn = Connessione.getConnection();
+
+		        String sql = """
+		            SELECT pc.data_inizio, pc.data_fine
+		            FROM progetto_coltivazione pc
+		            JOIN lotto l         ON l.id_lotto = pc.id_lotto
+		            JOIN proprietario p  ON p.codice_fiscale = l.codice_fiscalepr
+		            JOIN coltivatore c   ON c.username_proprietario = p.username
+		            WHERE c.username = ?
+		              AND pc.titolo = ?
+		            ORDER BY pc.data_inizio DESC
+		            LIMIT 1
+		        """;
+
+		        stmt = conn.prepareStatement(sql);
+		        stmt.setString(1, coltivatore.getUsername());
+		        stmt.setString(2, titolo_progetto);
+
+		        rs = stmt.executeQuery();
+
+		        if (rs.next()) {
+		            date.add(rs.getString("data_inizio"));
+		            date.add(rs.getString("data_fine"));
+		        }
+
+		    } catch (SQLException ex) {
+		        ex.printStackTrace();
+		    } finally {
+		        try { if (rs != null) rs.close(); } catch (Exception ignored) {}
+		        try { if (stmt != null) stmt.close(); } catch (Exception ignored) {}
+		        try { if (conn != null) conn.close(); } catch (Exception ignored) {}
+		    }
+
+		    return date;
+		}
 		
 		//____________________   CREAZIONE PROGETTO COLTIVAZIONE     ____________________________________
 		

@@ -118,25 +118,7 @@ public class Controller {
    public boolean aggiungiL(ProprietarioDTO proprietario) { //aggiunge il primo lotto disponibile
 		return ProprietarioDAO.aggiungiL(proprietario);
 	}
-//                       _________________ HOMEPAGE COLTIVATORE _________________
-   
-	public void legginotifiche(String usernamecoltivatore) {
-		NotificaDAO DAO = new NotificaDAO();
-		ColtivatoreDTO coltivatore = new ColtivatoreDTO(usernamecoltivatore);
-		DAO.segnaNotificheColtivatoreComeLette(coltivatore);
-    }
-	
-	public boolean checknotifiche(String usernamecoltivatore) {
-		NotificaDAO DAO = new NotificaDAO();
-		ColtivatoreDTO coltivatore = new ColtivatoreDTO(usernamecoltivatore);
-        return DAO.ciSonoNotificheNonLette(coltivatore);
-    }
-	
-	public String mostranotifiche(String usernamecoltivatore) {
-		NotificaDAO DAO = new NotificaDAO();
-		ColtivatoreDTO coltivatore = new ColtivatoreDTO(usernamecoltivatore);
-        return DAO.getNotificheNonLette(coltivatore);
-    }
+
    
 //                        __________________ CREAZIONE NOTIFICA _________________
    
@@ -188,11 +170,7 @@ public class Controller {
 		return ProprietarioDAO.getColtivatoriByProprietario(proprietario);
 	}
 
-//  !!!	sposta nell oggetto utente opp in coltivatore proprietario opp utils!!
-//	public boolean controllaUsername(String username) { //controlla l'esistenza di un username di un coltivatore
-//		UtenteDTO user = new UtenteDTO(username);
-//		return UtenteDAO.usernameEsiste(user);
-//	}
+
 
    
 //                         _________________ CREAZIONE NOTIFICA _________________
@@ -253,30 +231,19 @@ public class Controller {
     }
     
     
-//                            _________________ CREAZIONE PROGETTO _________________
+//      _________________ CREAZIONE PROGETTO _________________
 
 //  	_________________ HomePagecoltivatore _________________
     
     public ColtivatoreDTO getColtivatore(ColtivatoreDTO coltivatore) {
     	return ColtivatoreDAO.getColtivatore(coltivatore);
     }
-	public boolean legginotifiche(ColtivatoreDTO coltivatore) {
-        return ColtivatoreDAO.segnaNotificheColtivatoreComeLette(coltivatore);
-    }
-	public boolean checknotifiche(ColtivatoreDTO coltivatore) {
-        return ColtivatoreDAO.ciSonoNotificheNonLette(coltivatore);
-    }
-	public String mostranotifiche(ColtivatoreDTO coltivatore) {
-        return ColtivatoreDAO.getNotificheNonLette(coltivatore);
-    }
 
     public List<String> popolaPrComboBox(ColtivatoreDTO coltivatore) {
         return ColtivatoreDAO.popolaProgettiCB(coltivatore);
     }
     // probabilmente da qui in giu si sposta tutto il dao nel dao progetto   ____INIZIO
-public List<String> DateInizioFineP(String titolo_progetto, ColtivatoreDTO coltivatore) {
-        return ColtivatoreDAO.dateI_FProgCB(titolo_progetto, coltivatore);
-}
+
 
 public List<String> getTipiAttivita(ColtivatoreDTO coltivatore, String progetto) {
     return ColtivatoreDAO.getTipiAttivitaColtivatore(coltivatore, progetto);

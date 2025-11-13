@@ -38,7 +38,7 @@ public class NotificaDAO {
    }	
  }
 	
-	public boolean ciSonoNotificheNonLette(ColtivatoreDTO coltivatore) {
+	public static boolean ciSonoNotificheNonLette(ColtivatoreDTO coltivatore) {
 	    Connection conn = null;
 	    PreparedStatement stmt = null;
 	    ResultSet rs = null;
@@ -71,7 +71,7 @@ public class NotificaDAO {
 	    }
 	}
 	
-	public boolean segnaNotificheColtivatoreComeLette(ColtivatoreDTO coltivatore) {
+	public static boolean segnaNotificheColtivatoreComeLette(ColtivatoreDTO coltivatore) {
 	    Connection conn = null;
 	    PreparedStatement stmt = null;
 
@@ -99,7 +99,8 @@ public class NotificaDAO {
 	    }
 	}
 	
-	public String getNotificheNonLette(ColtivatoreDTO coltivatore) {
+
+	public static String getNotificheNonLette(ColtivatoreDTO coltivatore){
 	    Connection conn = null;
 	    PreparedStatement stmt = null;
 	    ResultSet rs = null;
@@ -137,6 +138,8 @@ public class NotificaDAO {
 	        try { if (conn != null) conn.close(); } catch (Exception e) {}
 	    }
 	}
+
+
 	//____________________   CREAZIONE NOTIFICA     ____________________________________
 	
 	
