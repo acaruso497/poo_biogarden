@@ -1,6 +1,7 @@
 package dto;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 import dao.ProgettoColtivazioneDAO;
@@ -60,6 +61,25 @@ public class ProgettoColtivazioneDTO {
 
 	public boolean isDone() { return done; }
 	public void setDone(boolean done) { this.done = done; }
+	
+  public static boolean creaProgetto(ProgettoColtivazioneDTO progetto, ArrayList<String> coltureString, LottoDTO lotto) {
+	
+	
+	ArrayList<ColturaDTO> coltureDTOList = new ArrayList<>();
+	
+    if (coltureString != null && !coltureString.isEmpty()) {
+    for (int i = 0; i < coltureString.size(); i++) {
+        String coltura = coltureString.get(i);
+        String colturaPulita = coltura.trim();
+        
+        ColturaDTO col = new ColturaDTO(colturaPulita);
+        coltureDTOList.add(col);
+        
+    }
+}   
+    boolean ok = ProgettoColtivazioneDAO.registraProgetto(progetto, lotto, coltureDTOList);        
+    return ok;	    
+}
 	
 	public static List<String> DateInizioFineP(String titolo_progetto, ColtivatoreDTO coltivatore) {
         return ProgettoColtivazioneDAO.dateI_FProgCB(titolo_progetto, coltivatore);

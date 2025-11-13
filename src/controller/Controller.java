@@ -32,9 +32,7 @@ public class Controller {
         
         check = true;  // campi ok      
         return check;
-    }
-    
-    
+    }   
     public boolean creaUtente(boolean check, JFrame loginFrame) {
     	
     	if(check==true) {
@@ -179,24 +177,24 @@ public class Controller {
 //                          _________________ CREAZIONE PROGETTO _________________
    
 	 //Crea il progetto di coltivazione inserendo i parametri tramite dao 
-    public boolean creaProgetto(ProgettoColtivazioneDTO progetto, ArrayList<String> coltureString, LottoDTO lotto) {
-    	
-    	
-    	ArrayList<ColturaDTO> coltureDTOList = new ArrayList<>();
-    	
-        if (coltureString != null && !coltureString.isEmpty()) {
-        for (int i = 0; i < coltureString.size(); i++) {
-            String coltura = coltureString.get(i);
-            String colturaPulita = coltura.trim();
-            
-            ColturaDTO col = new ColturaDTO(colturaPulita);
-            coltureDTOList.add(col);
-            
-        }
-    }   
-        boolean ok = ProgettoColtivazioneDAO.registraProgetto(progetto, lotto, coltureDTOList);        
-        return ok;	    
-    }
+//    public boolean creaProgetto(ProgettoColtivazioneDTO progetto, ArrayList<String> coltureString, LottoDTO lotto) {
+//    	
+//    	
+//    	ArrayList<ColturaDTO> coltureDTOList = new ArrayList<>();
+//    	
+//        if (coltureString != null && !coltureString.isEmpty()) {
+//        for (int i = 0; i < coltureString.size(); i++) {
+//            String coltura = coltureString.get(i);
+//            String colturaPulita = coltura.trim();
+//            
+//            ColturaDTO col = new ColturaDTO(colturaPulita);
+//            coltureDTOList.add(col);
+//            
+//        }
+//    }   
+//        boolean ok = ProgettoColtivazioneDAO.registraProgetto(progetto, lotto, coltureDTOList);        
+//        return ok;	    
+//    }
     
     public boolean creaAttivita(SeminaDTO semina, IrrigazioneDTO irrigazione, RaccoltaDTO raccolta, LottoDTO lotto, ProgettoColtivazioneDTO progetto) {
        	boolean insertAttivita = ProgettoColtivazioneDAO.insertAttivita(semina, irrigazione, raccolta, lotto, progetto);
@@ -281,18 +279,6 @@ public boolean sommaRaccolto(String raccolto, String coltura, String progetto) {
 public List<String> getColtura(ColtivatoreDTO coltivatore, String progetto) {
     return ColtivatoreDAO.getColtura(coltivatore, progetto);
 }
-// probabilmente da qui in giu si sposta tutto il dao nel dao progetto FINE 
+
     
-//  	_________________ HomePagecoltivatore _________________
-    
-//                           _________________ TITOLO _________________
-   
- 
-    
-   
-//                           _________________ TITOLO _________________
-		
-		//CODICE
-		
-//                            _________________ TITOLO _________________
 }

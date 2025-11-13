@@ -283,7 +283,6 @@ public class ProgettoColtivazioneDAO {
 		    Connection conn = null;
 		    PreparedStatement stmt = null;
 		    ResultSet rs = null;
-
 		    try {
 		        conn = Connessione.getConnection();
 
