@@ -489,7 +489,38 @@ public static List<String> getColtura(ColtivatoreDTO coltivatore, String progett
 
 	return lista;
 }
+
+//  _________________ Notifica _________________
+
+public static boolean usernameColtivatoreEsiste(ColtivatoreDTO coltivatore) { //controlla se l'username esistente
+    Connection conn = null;
+    PreparedStatement stmt = null;
+    ResultSet rs = null;
+    
+    try {
+        conn = Connessione.getConnection();
+        
+        // Query che cerca lo username in entrambe le tabelle
+        String sql = "SELECT username FROM Coltivatore WHERE username = ? ";
+        
+        stmt = conn.prepareStatement(sql);
+        stmt.setString(1,coltivatore.getUsername());
+        
+        rs = stmt.executeQuery();
+        
+        // Se il ResultSet ha almeno una riga, lo username esiste
+        return rs.next();
+        
+    } catch (SQLException ex) {
+        ex.printStackTrace();
+        return false; // In caso di errore, assumiamo che lo username non esista
+    } finally {
+        // Chiudi le risorse
+        try { if (rs != null) rs.close(); } catch (Exception e) {}
+        try { if (stmt != null) stmt.close(); } catch (Exception e) {}
+        try { if (conn != null) conn.close(); } catch (Exception e) {}
+    }
+}
 }
 
-  //  _________________ HomePagecoltivatore _________________
 
