@@ -16,7 +16,10 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 
 import controller.Controller;
+import dto.ProprietarioDTO;
 import net.miginfocom.swing.MigLayout;
+import utils.method;
+
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JComboBox;
@@ -32,6 +35,7 @@ public class Grafico extends JFrame {
 	HomePageProprietario home;
 	JComboBox<String> ComboLotto = new JComboBox<String>();
 	JComboBox<String> ComboColtura = new JComboBox<String>();
+	Controller controller = new Controller(); 
 
 	public Grafico() {
 		home = new HomePageProprietario();
@@ -98,7 +102,7 @@ public class Grafico extends JFrame {
 	            }
 	            final String varieta = selColt.toString().trim();
 
-	            Controller controller = new Controller(); //try
+	            
 
 	            double[] stats = controller.getStatistiche(varieta);
 
@@ -147,14 +151,7 @@ public class Grafico extends JFrame {
 	    });
 	    contentPane.add(ButtonReport, "cell 1 4,alignx center");
 	    
-	    
-	    DAO dao = new DAO(); //creo il DAO
-	    creaProgettoController = new CreaProgettoController(dao); //creo il controller di crea progetto
-	    
-	    controllerGrafico = new ControllerGrafico(); //creo il controller
-	    
-	    popolaComboLotto(); //Popola la ComboLotto con i lotti del proprietario loggato
-	    
+	    popolaComboLotto();
 
         // Aggiungi listener per aggiornare ComboColtura quando cambia ComboLotto
         ComboLotto.addActionListener(new ActionListener() {
@@ -167,12 +164,12 @@ public class Grafico extends JFrame {
 	}
 	
 	private void popolaComboLotto() {  //Popolo il combolotto 
-        String username = ControllerLogin.getUsernameGlobale(); // Usa l'username globale
-		List<String> lotti = controllerGrafico.getLotti(username);  
-        for (String lotto : lotti) { 
-            ComboLotto.addItem(lotto); 
-        }
-        ComboLotto.setSelectedIndex(-1);
+		List<String> lotti = controller.getLottiByProprietario(method.getProprietarioLoggato());
+		ComboLotto.removeAllItems();
+		for(String lotto : lotti) {
+		    ComboLotto.addItem(lotto);
+		}
+		ComboLotto.setSelectedIndex(-1);
     }
 	
 	private void popolaComboColtura(String idLotto) { //Popolo il combocoltura 
