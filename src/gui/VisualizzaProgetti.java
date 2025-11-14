@@ -13,11 +13,13 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.basic.BasicArrowButton;
-
 import controller.Controller;
+import dto.IrrigazioneDTO;
 import dto.LottoDTO;
 import dto.ProgettoColtivazioneDTO;
 import dto.ProprietarioDTO;
+import dto.RaccoltaDTO;
+import dto.SeminaDTO;
 import net.miginfocom.swing.MigLayout;
 import utils.*;
 import javax.swing.JComboBox;
@@ -47,7 +49,6 @@ public class VisualizzaProgetti extends JFrame {
 	private ProgettoColtivazioneDTO ProgettoColtivazioneDTO;
 	Controller controller = new Controller();
     private ButtonGroup gruppoStato;
-//    private String selectedProgetto = null;
     ProprietarioDTO proprietario = method.getProprietarioLoggato();
     static String idLotto = null;
     JComboBox<String> ComboAttivita = new JComboBox<>();
@@ -62,7 +63,10 @@ public class VisualizzaProgetti extends JFrame {
     private JButton ButtonTermina;
     private JButton ButtonModificaAttivita;
     private LottoDTO lottodto;
-    private  ProgettoColtivazioneDTO progetto;
+    private ProgettoColtivazioneDTO progetto;
+    private SeminaDTO semina;
+    private IrrigazioneDTO irrigazione;
+    private RaccoltaDTO raccolta;
     
 	// attivita , progetto , lotto, coltura, semina irrigazione e raccolta
 	public VisualizzaProgetti(HomePageProprietario home) {
@@ -101,7 +105,6 @@ public class VisualizzaProgetti extends JFrame {
 	        
 	        ButtonTermina = new JButton("Termina");
 	        ButtonTermina.setEnabled(false);
-	        ButtonModificaAttivita = new JButton("Modifica");
 	        
 	        // Pulsante freccia indietro
 	        BasicArrowButton ButtonIndietro = new BasicArrowButton(BasicArrowButton.WEST);
@@ -130,10 +133,9 @@ public class VisualizzaProgetti extends JFrame {
 	    ComboProgetto.setPreferredSize(new Dimension(150, 20));
 	    
 	    contentPane.add(ButtonTermina, "cell 2 3,aligny center");
-	    contentPane.add(ButtonModificaAttivita, "cell 5 17");
 	    
 	    
-        popolaComboProgetto();
+	    popolaComboProgetto();
         
         ComboProgetto.addActionListener(new ActionListener() { //popola la combobox del progetto
             public void actionPerformed(ActionEvent e) {
@@ -150,21 +152,13 @@ public class VisualizzaProgetti extends JFrame {
                 gruppoStato.clearSelection();
             	
               try {
-            	  //ACTIONLITNER COMBOPROGETTI
-//	                String selectedProgetto = (String) ComboProgetto.getSelectedItem(); 
             	  	String titolo= (String) ComboProgetto.getSelectedItem();
-	                if (progetto.getTitolo() == null ||progetto.getTitolo().equals("") || ComboProgetto.getSelectedIndex() == -1) {
-	                    resetCampi();
-	                    return;
-	                }
-//	                CANCELLARE
-//	                LocalDate datalocalIA = LocalDate.parse(FieldDataIP.getText(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-//                    Date dataIP = Date.valueOf(datalocalIA);
-//                    
-//                    LocalDate datalocalFA = LocalDate.parse(FieldDataFP.getText(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-//                    Date dataFP = Date.valueOf(datalocalFA);
-//	                
-//                    double stima = Double.parseDouble(FieldStima.getText());
+            	  	if (titolo == null || titolo.equals("") || ComboProgetto.getSelectedIndex() == -1 || 
+            	  		    titolo.equals("-- Seleziona --")) {
+            	  		    resetCampi();
+            	  		    return;
+            	  		}
+
                     
 	                progetto = controller.getProgettoByTitolo(titolo);
 	                
@@ -217,9 +211,10 @@ public class VisualizzaProgetti extends JFrame {
             	}
             }
         });
+        
 	    ButtonTermina.addActionListener(new ActionListener() {
 	    	public void actionPerformed(ActionEvent e) { //termina il progetto selezionato
-	    		ProgettoColtivazioneDTO= new  ProgettoColtivazioneDTO((String)ComboProgetto.getSelectedItem());
+	    		ProgettoColtivazioneDTO= new ProgettoColtivazioneDTO((String)ComboProgetto.getSelectedItem());
 	    		String lotto = FieldLotto.getText();
 	    		
 	    		
@@ -302,14 +297,29 @@ public class VisualizzaProgetti extends JFrame {
 	    ComboColtureRacc.addActionListener(new ActionListener() { //popola la combobox con le colture presenti
 	        public void actionPerformed(ActionEvent e) {
 	            try {
-	                //String selectedColtura = (String) ComboColtureRacc.getSelectedItem();
+	                
+	            	
+	                if (ComboColtureRacc.getSelectedIndex() == -1 || ComboColtureRacc.getSelectedItem() == null) {
+	                    VisualRaccolto.setText("...");
+	                    return;
+	                }
+	                
+	                String selectedItem = (String) ComboColtureRacc.getSelectedItem();
+	                
+	                
+	                if (selectedItem.equals("--Seleziona coltura--")) {
+	                    VisualRaccolto.setText("...");
+	                    return;
+	                }
+	            	
+	            	
 	            	ArrayList<String> selectedColtura = SplitUtils.splitByCommaToArrayList((String) ComboColtureRacc.getSelectedItem());
-	                if (selectedColtura != null && !selectedColtura.equals("--Seleziona coltura--")) {
+	            	
+	                if (selectedColtura != null) {
 	                    String lottoText = FieldLotto.getText();
 	                    if (lottoText != null && !lottoText.isEmpty()) {
 	                        int idLotto = Integer.parseInt(lottoText);
-	        	    		LottoDTO lottodto = new LottoDTO(idLotto); //creazione di oggetti DTO
-	                        String raccolto = controller.getRaccoltoProdotto(proprietario, lottodto, selectedColtura);
+	                        String raccolto = controller.getRaccoltoProdotto(proprietario, idLotto, selectedColtura);
 	                        VisualRaccolto.setText(raccolto);
 	                    } else {
 	                        VisualRaccolto.setText("no dati"); // Default se il lotto non è valido
@@ -358,6 +368,8 @@ public class VisualizzaProgetti extends JFrame {
 	    contentPane.add(FieldDataFA, "cell 1 19,growx");
 	    FieldDataFA.setColumns(10);
 	    FieldDataFA.setEditable(false); 
+	    ButtonModificaAttivita = new JButton("Modifica");
+	    contentPane.add(ButtonModificaAttivita, "cell 5 17");
 	    
 	    ButtonModificaAttivita.addActionListener(new ActionListener() { 	//modifica lo stato delle attività selezionate
 	    	public void actionPerformed(ActionEvent e) { 
@@ -386,94 +398,6 @@ public class VisualizzaProgetti extends JFrame {
 		            }	      
 	    	}
 	    });
-//	    contentPane.add(ButtonModificaAttivita, "cell 5 17");
-//	    
-//	    
-//        popolaComboProgetto();
-//        
-//        ComboProgetto.addActionListener(new ActionListener() { //popola la combobox del progetto
-//            public void actionPerformed(ActionEvent e) {
-//            	//pulizia campi
-//            	ComboAttivita.setSelectedIndex(0);
-//                ComboColtureRacc.setSelectedIndex(-1);
-//                FieldStima.setText("");
-//                FieldDataIP.setText("");
-//                FieldDataFP.setText("");
-//                FieldDataIA.setText("");
-//                FieldDataFA.setText("");
-//                FieldLotto.setText("");
-//                VisualRaccolto.setText("");
-//                gruppoStato.clearSelection();
-//            	
-//              try {
-//            	  //ACTIONLITNER COMBOPROGETTI
-////	                String selectedProgetto = (String) ComboProgetto.getSelectedItem(); 
-//            	  	progetto = new ProgettoColtivazioneDTO( (String) ComboProgetto.getSelectedItem());
-//	                if (progetto.getTitolo() == null ||progetto.getTitolo().equals("") || ComboProgetto.getSelectedIndex() == -1) {
-//	                    resetCampi();
-//	                    return;
-//	                }
-//	                
-//	                LocalDate datalocalIA = LocalDate.parse(FieldDataIP.getText(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-//                    Date dataIP = Date.valueOf(datalocalIA);
-//                    
-//                    LocalDate datalocalFA = LocalDate.parse(FieldDataFP.getText(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-//                    Date dataFP = Date.valueOf(datalocalFA);
-//	                
-//                    double stima = Double.parseDouble(FieldStima.getText());
-//                    
-//	                progetto = new ProgettoColtivazioneDTO(selectedProgetto, stima, dataIP, dataFP);
-//	                controller.popolaDatiProgetto(progetto); // Popola i campi progetto
-//	                
-//	                // Popolo i campi GUI dai dati del DTO
-//	                if (progetto.getStimaRaccolto() > 0) {
-//	                    FieldStima.setText(progetto.getStimaRaccolto() + " kg");
-//	                }
-//	                if (progetto.getDataInizio() != null) {
-//	                    FieldDataIP.setText(progetto.getDataInizio().toLocalDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-//	                }
-//	                if (progetto.getDataFine() != null) {
-//	                    FieldDataFP.setText(progetto.getDataFine().toLocalDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-//	                }
-//	                popolaFieldLotto(); //una volta che ha trovato un progetto, popola il field del lotto
-//	                String lotto = FieldLotto.getText();
-//	                
-//	                boolean isCompletato = controller.isCompletata(proprietario, progetto);
-//	                if(isCompletato==true) { //se il progetto è completato disabilita i campi
-//	                	ButtonTermina.setEnabled(false);
-//	                	ButtonModificaAttivita.setEnabled(false);
-//	                	RadioPianificata.setEnabled(false);
-//	                	RadioInCorso.setEnabled(false);
-//	                	RadioCompletata.setEnabled(false);
-//	                    LabelProgettoTerminato.setVisible(true);
-//	                }else { //se non è completato, li abilita
-//	                	ButtonTermina.setEnabled(true);
-//	                	ButtonModificaAttivita.setEnabled(true);
-//	                	RadioPianificata.setEnabled(true);
-//	                	RadioInCorso.setEnabled(true);
-//	                	RadioCompletata.setEnabled(true);
-//	                    LabelProgettoTerminato.setVisible(false);
-//	                }
-//	                
-//	                if (lotto != null && !lotto.isEmpty()) { //prima di popolare la combo delle colture, verifica l'esistenza di un lotto
-//	            	    colture = controller.getColtureProprietario(proprietario, progetto);
-//	            	    ComboColtureRacc.removeAllItems();
-//	            	    ComboColtureRacc.addItem("--Seleziona coltura--");
-//	            	    for (String coltura : colture) {
-//	            	        ComboColtureRacc.addItem(coltura);
-//	            	    }
-//	                } else { //non trova nulla, reset
-//	                	ComboColtureRacc.setEnabled(false); 
-//	                	ComboColtureRacc.removeAllItems();
-//	                    
-//	                }	    
-//                }catch (NullPointerException ex) { //controllo progetto
-//            		JOptionPane.showMessageDialog(VisualizzaProgetti.this, 
-//            		"Seleziona un progetto valido", "Errore", JOptionPane.ERROR_MESSAGE);
-//            		resetCampi();
-//            	}
-//            }
-//        });
         
         // qui ogni volta che viene selezionata un attivita ti serve ginizio , gfine , stato 
        // chiami dal controller un metodo che in base al tipo di attivita selezionato va a pescare questi dati 
@@ -483,33 +407,100 @@ public class VisualizzaProgetti extends JFrame {
             public void actionPerformed(ActionEvent e) {
               try {
             	  	String selectedAttivita = (String) ComboAttivita.getSelectedItem(); //converto il tipo di attività selezionata in una stringa
-                    Object selectedProgetto = ComboProgetto.getSelectedItem(); //estraggo l'id del progetto selezionato dalla combobox
+                    String titolo = (String) ComboProgetto.getSelectedItem(); //estraggo il titolo del progetto selezionato dalla combobox
                     
                     if (selectedAttivita == null || selectedAttivita.equals("-- Seleziona --") || 
-                            selectedProgetto == null || ComboProgetto.getSelectedIndex() == -1) {
+                            titolo == null || ComboProgetto.getSelectedIndex() == -1) {
                             // Resetta i campi relativi all'attività
                             FieldDataIA.setText("");
                             FieldDataFA.setText("");
                             gruppoStato.clearSelection();
                             return;
                         }
-                   
-		    	    String stato = controller.popolaAttivita(idProgettoStr, selectedAttivita, FieldDataIA, FieldDataFA);
-		    	    
-                    if ("pianificata".equals(stato)) {  // il radio button corrispondente confronta lo stato nel dao e setta il pallino
-                        RadioPianificata.setSelected(true);
-                    } else if ("in corso".equals(stato)) {
-                        RadioInCorso.setSelected(true);
-                    } else if ("completata".equals(stato)) {
-                        RadioCompletata.setSelected(true);
-                    } 
+                    
+                    Date dataIA = null;
+                    Date dataFA = null;
+                    
+                    if (FieldDataIA.getText() != null && !FieldDataIA.getText().trim().isEmpty()) {
+                        LocalDate datalocalIA = LocalDate.parse(FieldDataIA.getText(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                        dataIA = Date.valueOf(datalocalIA);
+                    }
+                    
+                    if (FieldDataFA.getText() != null && !FieldDataFA.getText().trim().isEmpty()) {
+                        LocalDate datalocalFA = LocalDate.parse(FieldDataFA.getText(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                        dataFA = Date.valueOf(datalocalFA);
+                    }
+                    
+                  if(selectedAttivita.equals("Semina")){
+                		semina = controller.getSeminaByTitolo(titolo, dataIA, dataFA);
+                		// Popolo i campi GUI dai dati del DTO
+                		if (semina.getGiornoInizio() != null) {
+                	        FieldDataIA.setText(semina.getGiornoInizio().toLocalDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+                	    } 
+
+                	    if (semina.getGiornoFine() != null) {
+                	        FieldDataFA.setText(semina.getGiornoFine().toLocalDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+                	    } 
+                	    
+                	    if (semina.getStato() != null) {
+                	        switch (semina.getStato().toLowerCase()) {
+                	            case "pianificata": RadioPianificata.setSelected(true); break;
+                	            case "in corso": RadioInCorso.setSelected(true); break;
+                	            case "completata": RadioCompletata.setSelected(true); break;
+                	        }
+                	    }
+                   } 
+                  
+                  
+                  if(selectedAttivita.equals("Irrigazione")){
+              		irrigazione = controller.getIrrigazioneByTitolo(titolo, dataIA, dataFA);
+              		// Popolo i campi GUI dai dati del DTO
+              		if (irrigazione.getGiornoInizio() != null) {
+              	        FieldDataIA.setText(irrigazione.getGiornoInizio().toLocalDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+              	    } 
+
+              	    if (irrigazione.getGiornoFine() != null) {
+              	        FieldDataFA.setText(irrigazione.getGiornoFine().toLocalDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+              	    } 
+              	    
+              	    if (irrigazione.getStato() != null) {
+              	        switch (irrigazione.getStato().toLowerCase()) {
+              	            case "pianificata": RadioPianificata.setSelected(true); break;
+              	            case "in corso": RadioInCorso.setSelected(true); break;
+              	            case "completata": RadioCompletata.setSelected(true); break;
+              	        }
+              	    }
+                 } 
+                  
+                  if(selectedAttivita.equals("Raccolta")){
+                		raccolta = controller.getRaccoltaByTitolo(titolo, dataIA, dataFA);
+                		// Popolo i campi GUI dai dati del DTO
+                		if (raccolta.getGiornoInizio() != null) {
+                	        FieldDataIA.setText(raccolta.getGiornoInizio().toLocalDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+                	    } 
+
+                	    if (raccolta.getGiornoFine() != null) {
+                	        FieldDataFA.setText(raccolta.getGiornoFine().toLocalDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+                	    } 
+                	    
+                	    if (raccolta.getStato() != null) {
+                	        switch (raccolta.getStato().toLowerCase()) {
+                	            case "pianificata": RadioPianificata.setSelected(true); break;
+                	            case "in corso": RadioInCorso.setSelected(true); break;
+                	            case "completata": RadioCompletata.setSelected(true); break;
+                	        }
+                	    }
+                   } 
+                  
                     
                 	}catch (NullPointerException ex) {
                 		JOptionPane.showMessageDialog(VisualizzaProgetti.this, 
                 									  "Seleziona un'attività valida", "Errore", JOptionPane.ERROR_MESSAGE);
                 	}
                 }                 
-        });       
+        });
+        
+        
 	}
 	
 	 

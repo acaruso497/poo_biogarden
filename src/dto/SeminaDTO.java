@@ -23,6 +23,12 @@ public class SeminaDTO extends AttivitaDTO{
         super();
         this.stato = stato;
     }
+    
+    public SeminaDTO(Date giornoInizio, Date giornoFine) {
+    	super();
+        this.giornoInizio = giornoInizio;
+        this.giornoFine = giornoFine;
+    }
 
 
 	public String getTipoSemina() {

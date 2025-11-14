@@ -46,7 +46,7 @@ public class HomePageProprietario extends JFrame {
 	    contentPane.setLayout(new MigLayout("", "[grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow]", 
 	    									"[grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][][grow][grow][grow][grow][grow][grow]"));
 	  
-//	    visualizza = new VisualizzaProgetti(this);
+	    visualizza = new VisualizzaProgetti(this);
 	    creanotifica = new CreaNotifica(this);
 	    creaprogetto = new CreaProgetto(this); 
 	    

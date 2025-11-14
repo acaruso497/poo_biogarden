@@ -1,12 +1,11 @@
 package dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-
 import database.Connessione;
+import dto.*;
+import java.sql.*;
 
 public class RaccoltaDAO {
-	
+				//	_________________ HOMEPAGE COLTIVATORE  _________________
 	public static boolean sommaRaccolto(String raccolto, String coltura, String progetto) {
 	    Connection conn = null;
 	    PreparedStatement ps = null;
@@ -48,5 +47,56 @@ public class RaccoltaDAO {
 	        try { if (conn != null) conn.close(); } catch (Exception ignore) {}
 	    }
 	}
+	
+			//	_________________ HOMEPAGE COLTIVATORE  _________________
+	
+			//	_________________ VISUALIZZA PROGETTI _________________
+	
+	public static void popolaRaccolta(ProgettoColtivazioneDTO progetto, RaccoltaDTO raccolta) { //popola il text field di giorno inizio, giorno fine e il radio button dello stato dell'attività
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		String sql = null;
+
+		try {
+			  conn = Connessione.getConnection();
+
+				if (raccolta != null) {
+						sql = """
+						SELECT r.id_attivita, r.stato, r.giorno_inizio, r.giorno_fine
+						FROM progetto_coltivazione pc
+						JOIN attivita a   ON a.id_progetto = pc.id_progetto
+						JOIN raccolta r   ON r.id_attivita = a.id_attivita
+						WHERE pc.titolo = ?
+						AND (
+						r.giorno_inizio BETWEEN pc.data_inizio AND pc.data_fine
+						OR r.giorno_fine   BETWEEN pc.data_inizio AND pc.data_fine
+						OR pc.data_inizio  BETWEEN r.giorno_inizio AND r.giorno_fine
+						)
+						ORDER BY r.giorno_inizio DESC, r.giorno_fine DESC
+						LIMIT 1
+						""";
+						stmt = conn.prepareStatement(sql);
+						stmt.setString(1, progetto.getTitolo());
+						
+						rs = stmt.executeQuery();
+						
+						if (rs.next()) { 
+							raccolta.setStato(rs.getString("stato"));
+							raccolta.setGiornoInizio(rs.getDate("giorno_inizio"));
+							raccolta.setGiornoFine(rs.getDate("giorno_fine"));
+						}
+						
+					     }
+				} catch (SQLException ex) {
+					ex.printStackTrace();
+					} finally {
+					  try { if (rs != null) rs.close(); } catch (Exception ignored) {}
+					  try { if (stmt != null) stmt.close(); } catch (Exception ignored) {}
+					  try { if (conn != null) conn.close(); } catch (Exception ignored) {}
+				}
+		}
+	
+			//	_________________ VISUALIZZA PROGETTI _________________
 
 }

@@ -286,8 +286,9 @@ public List<String> getColtura(ColtivatoreDTO coltivatore, String progetto) {
    
 
 	
-    public String getRaccoltoProdotto(ProprietarioDTO proprietario, LottoDTO lotto, ArrayList<String> coltureList){ //restituisce il raccolto prodotto della coltura
+    public String getRaccoltoProdotto(ProprietarioDTO proprietario, int idLotto, ArrayList<String> coltureList){ //restituisce il raccolto prodotto della coltura
     	ArrayList<ColturaDTO> coltureDTOList = new ArrayList<>();
+    	LottoDTO lotto = new LottoDTO(idLotto); 
     	
         if (coltureList != null && !coltureList.isEmpty()) {
         for (int i = 0; i < coltureList.size(); i++) {
@@ -325,20 +326,16 @@ public List<String> getColtura(ColtivatoreDTO coltivatore, String progetto) {
     
     public ProgettoColtivazioneDTO getProgettoByTitolo(String titolo) {
 
-        ProgettoColtivazioneDTO progetto = new ProgettoColtivazioneDTO(titolo);
+       ProgettoColtivazioneDTO progetto = new ProgettoColtivazioneDTO(titolo);
 
-        
-       
        ProgettoColtivazioneDAO.popolaDatiProgetto(progetto);
-
        
-        return progetto;
+       return progetto;
     }
 
 
-    public void popolaDatiProgetto(ProgettoColtivazioneDTO progetto) {  // Setta il titolo del progetto, i campi di data inizio e data fine
-    	ProgettoColtivazioneDAO dao = new ProgettoColtivazioneDAO();
-        dao.popolaDatiProgetto(progetto);
+    public static void popolaDatiProgetto(ProgettoColtivazioneDTO progetto) {  // Setta il titolo del progetto, i campi di data inizio e data fine
+    	ProgettoColtivazioneDAO.popolaDatiProgetto(progetto);
     } 
     
     public boolean isCompletata(ProprietarioDTO proprietario, ProgettoColtivazioneDTO progetto) {     //controlla se il progetto è completato
@@ -364,8 +361,54 @@ public List<String> getColtura(ColtivatoreDTO coltivatore, String progetto) {
     }
     
 
-	public boolean terminaProgetto(ProgettoColtivazioneDTO progetto, LottoDTO lotto) { //termina il progetto di coltivazione 
+	public boolean terminaProgetto(ProgettoColtivazioneDTO progetto, LottoDTO lotto) { //termina il progetto di coltivazione ;
+		AttivitaDTO attivita = new AttivitaDTO();
 		
-		return ProgettoColtivazioneDAO.terminaProgetto(progetto, lotto);
+		return ProgettoColtivazioneDAO.terminaProgetto(progetto, lotto, attivita);
 	}
+	
+	public SeminaDTO getSeminaByTitolo(String titolo, Date dataIA, Date dataFA) {
+		ProgettoColtivazioneDTO progetto = new ProgettoColtivazioneDTO(titolo);
+		SeminaDTO semina = new SeminaDTO(dataIA, dataFA);
+		
+		SeminaDAO.popolaSemina(progetto, semina);
+		
+		return semina;
+		
+	}
+	
+	public IrrigazioneDTO getIrrigazioneByTitolo(String titolo, Date dataIA, Date dataFA) {
+		ProgettoColtivazioneDTO progetto = new ProgettoColtivazioneDTO(titolo);
+		IrrigazioneDTO irrigazione = new IrrigazioneDTO(dataIA, dataFA);
+		
+		IrrigazioneDAO.popolaIrrigazione(progetto, irrigazione);
+		
+		return irrigazione;
+		
+	}
+	
+	public RaccoltaDTO getRaccoltaByTitolo(String titolo, Date dataIA, Date dataFA) {
+		ProgettoColtivazioneDTO progetto = new ProgettoColtivazioneDTO(titolo);
+		RaccoltaDTO raccolta = new RaccoltaDTO(dataIA, dataFA);
+		
+		RaccoltaDAO.popolaRaccolta(progetto, raccolta);
+		
+		return raccolta;
+		
+	}
+	
+	public static void popolaSemina(ProgettoColtivazioneDTO progetto, SeminaDTO semina) {
+		SeminaDAO.popolaSemina(progetto, semina);
+	}
+	
+	public static void popolaIrrigazione(ProgettoColtivazioneDTO progetto, IrrigazioneDTO irrigazione) {
+		IrrigazioneDAO.popolaIrrigazione(progetto, irrigazione);
+	}
+	
+	public static void popolaRaccolta(ProgettoColtivazioneDTO progetto, RaccoltaDTO raccolta) {
+		RaccoltaDAO.popolaRaccolta(progetto, raccolta);
+	}
+	
+
+		
 }

@@ -326,7 +326,7 @@ public class ProgettoColtivazioneDAO {
 		
 			//      _________________ VISUALIZZA PROGETTI _________________
 		
-		public static boolean terminaProgetto(ProgettoColtivazioneDTO progetto, LottoDTO lotto) { //Libera un lotto da un progetto di coltivazione e tutti i suoi riferimenti
+		public static boolean terminaProgetto(ProgettoColtivazioneDTO progetto, LottoDTO lotto, AttivitaDTO attivita) { //Libera un lotto da un progetto di coltivazione e tutti i suoi riferimenti
 			Connection conn = null;
 			PreparedStatement stmt = null;
 			ResultSet risultato = null;
@@ -335,7 +335,7 @@ public class ProgettoColtivazioneDAO {
 					conn = Connessione.getConnection(); 
 					@SuppressWarnings("unused")
 					int rows = 0;
-		
+					
 					// segno il progetto come completato con la flag done
 			        String sql1 = "UPDATE Progetto_Coltivazione SET done = true WHERE id_lotto = ? AND titolo = ? ";
 			        stmt = conn.prepareStatement(sql1);
@@ -343,53 +343,53 @@ public class ProgettoColtivazioneDAO {
 			        stmt.setString(2, progetto.getTitolo());
 			        rows = stmt.executeUpdate();
 			        stmt.close();
-					
+			        
 			        //segno l'attività come completata
 			        String sql2 = "UPDATE Attivita SET stato = 'completata' WHERE id_lotto = ? ";
 			        stmt = conn.prepareStatement(sql2);
 			        stmt.setInt(1, lotto.getID_Lotto());
 			        rows = stmt.executeUpdate();
 			        stmt.close();
-			        
-			        //ricavo l'id dell'attività in modo da collegare le 3 attività
+					
+					
+					//ricavo l'id dell'attività in modo da collegare le 3 attività
 			        String sqlAttivita = "SELECT id_attivita FROM Attivita WHERE id_lotto = ? ";
 			        stmt = conn.prepareStatement(sqlAttivita);
 			        stmt.setInt(1, lotto.getID_Lotto());
 			        risultato = stmt.executeQuery();
 			        
-			        List<AttivitaDTO> attivitaList = new ArrayList<>();
+			        List<Integer> idAttivitaList = new ArrayList<>();
 			        
 			        while (risultato.next()) {
-			        	AttivitaDTO attivita = new AttivitaDTO();
-			            attivita.setID_Attivita(risultato.getInt("id_attivita"));
-			            attivitaList.add(attivita);
+			            idAttivitaList.add(risultato.getInt("id_attivita"));
 			        }
 			        risultato.close();
 			        stmt.close();
 			        
 			        //per ogni id dell'attività, segna ogni attività come completata
-			        for (AttivitaDTO attivita : attivitaList) {
+			        for (int idAttivita : idAttivitaList) {
 			            // Segna semina come completata
 			            String sql3 = "UPDATE Semina SET stato = 'completata' WHERE id_attivita = ?";
 			            stmt = conn.prepareStatement(sql3);
-			            stmt.setInt(1, attivita.getID_Attivita());
+			            stmt.setInt(1, idAttivita);
 			            stmt.executeUpdate();
 			            stmt.close();
 			            
 			            // Segna irrigazione come completata
 			            String sql4 = "UPDATE Irrigazione SET stato = 'completata' WHERE id_attivita = ?";
 			            stmt = conn.prepareStatement(sql4);
-			            stmt.setInt(1, attivita.getID_Attivita());
+			            stmt.setInt(1, idAttivita);
 			            stmt.executeUpdate();
 			            stmt.close();
 			            
 			            // Segna raccolta come completata
 			            String sql5 = "UPDATE Raccolta SET stato = 'completata' WHERE id_attivita = ?";
 			            stmt = conn.prepareStatement(sql5);
-			            stmt.setInt(1, attivita.getID_Attivita());
+			            stmt.setInt(1, idAttivita);
 			            stmt.executeUpdate();
 			            stmt.close();
-			        }
+			        } 
+		 
 					return true;
 			}  catch (SQLException | NumberFormatException ex) {
 				ex.printStackTrace();
@@ -460,11 +460,12 @@ public class ProgettoColtivazioneDAO {
 				 risultato = stmt.executeQuery();
 
 				 if (risultato.next()) {
-					 progetto.setDone(risultato.getBoolean("done"));
-			         return true;
-			     }else {
-			    	 return false;
-			     }
+			            boolean isDone = risultato.getBoolean("done"); 
+			            progetto.setDone(isDone); 
+			            return isDone; 
+			        } else {
+			            return false; 
+			        }
 			    	
 	    } catch (SQLException ex) {
 	    	ex.printStackTrace();

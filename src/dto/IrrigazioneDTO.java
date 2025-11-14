@@ -25,6 +25,12 @@ public class IrrigazioneDTO extends AttivitaDTO{
         super();
         this.stato = stato;
     }
+	
+	public IrrigazioneDTO(Date giornoInizio, Date giornoFine) {
+		super();
+        this.giornoInizio = giornoInizio;
+        this.giornoFine = giornoFine;
+    }
 
 
 	public String getTipoIrrigazione() {
