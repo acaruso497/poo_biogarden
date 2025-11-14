@@ -326,7 +326,7 @@ public class ProgettoColtivazioneDAO {
 		
 			//      _________________ VISUALIZZA PROGETTI _________________
 		
-		public static boolean terminaProgetto(ProgettoColtivazioneDTO progetto, LottoDTO lotto, AttivitaDTO attivita) { //Libera un lotto da un progetto di coltivazione e tutti i suoi riferimenti
+		public static boolean terminaProgetto(ProgettoColtivazioneDTO progetto, LottoDTO lotto) { //Libera un lotto da un progetto di coltivazione e tutti i suoi riferimenti
 			Connection conn = null;
 			PreparedStatement stmt = null;
 			ResultSet risultato = null;

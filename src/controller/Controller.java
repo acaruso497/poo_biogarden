@@ -63,7 +63,6 @@ public class Controller {
     	return false; //non trova nessun utente
           
     }
-  //AGGIUNTO
     public ProprietarioDTO getProprietario (ProprietarioDTO proprietario) {
     	return ProprietarioDAO.getProprietario(proprietario);
     }   
@@ -119,32 +118,32 @@ public class Controller {
    
 //                        __________________ CREAZIONE NOTIFICA _________________
    
-
-	public boolean dividiUsername(String usernameProprietario, String usernameConcatenati,
-            Date data, String titolo, String descrizione) { // viene chiamato se la spunta "tutti i coltivatori" è disattivata
-
-		// Split della stringa + conversione in ArrayList (utils)
-		ArrayList<String> usernamesList = SplitUtils.splitByCommaToArrayList(usernameConcatenati);
-
-		// Ottieni i coltivatori del proprietario (versione refactor: DTO/DAO)
-		ProprietarioDTO proprietario = new ProprietarioDTO(usernameProprietario);
-		ArrayList<String> coltivatoriProprietario = ProprietarioDAO.getColtivatoriByProprietario(proprietario);
-
-		// Verifica se i coltivatori appartengono al proprietario loggato (tuo controllo)
-		for (int i = 0; i < usernamesList.size(); i++) {
-			if (!coltivatoriProprietario.contains(usernamesList.get(i))) {
-				return false;
-			}
-		}
-
-		// Inserimento notifiche (versione refactor: DTO/DAO)
-		for (int i = 0; i < usernamesList.size(); i++) {
-			NotificaDTO notifica = new NotificaDTO(titolo, descrizione, data, usernamesList.get(i));
-			NotificaDAO.Inserisci_NotificaDB(notifica);
-		}
-
-	return true;
-	}
+// !!!!!!!!USA QUELLO DEL CHE STA IN UTILS.METHOD!!!!!!!
+//	public boolean dividiUsername(String usernameProprietario, String usernameConcatenati,
+//            Date data, String titolo, String descrizione) { // viene chiamato se la spunta "tutti i coltivatori" è disattivata
+//
+//		// Split della stringa + conversione in ArrayList (utils)
+//		ArrayList<String> usernamesList = SplitUtils.splitByCommaToArrayList(usernameConcatenati);
+//
+//		// Ottieni i coltivatori del proprietario (versione refactor: DTO/DAO)
+//		ProprietarioDTO proprietario = new ProprietarioDTO(usernameProprietario);
+//		ArrayList<String> coltivatoriProprietario = ProprietarioDAO.getColtivatoriByProprietario(proprietario);
+//
+//		// Verifica se i coltivatori appartengono al proprietario loggato (tuo controllo)
+//		for (int i = 0; i < usernamesList.size(); i++) {
+//			if (!coltivatoriProprietario.contains(usernamesList.get(i))) {
+//				return false;
+//			}
+//		}
+//
+//		// Inserimento notifiche (versione refactor: DTO/DAO)
+//		for (int i = 0; i < usernamesList.size(); i++) {
+//			NotificaDTO notifica = new NotificaDTO(titolo, descrizione, data, usernamesList.get(i));
+//			NotificaDAO.Inserisci_NotificaDB(notifica);
+//		}
+//
+//	return true;
+//	}
 
 
 	public void dividiUsernameTutti(String usernameProprietario, Date data, String titolo, String descrizione) { //viene chiamato se la spunta "tutti i coltivatori" è attivata		
@@ -362,9 +361,9 @@ public List<String> getColtura(ColtivatoreDTO coltivatore, String progetto) {
     
 
 	public boolean terminaProgetto(ProgettoColtivazioneDTO progetto, LottoDTO lotto) { //termina il progetto di coltivazione ;
-		AttivitaDTO attivita = new AttivitaDTO();
 		
-		return ProgettoColtivazioneDAO.terminaProgetto(progetto, lotto, attivita);
+		return ProgettoColtivazioneDAO.terminaProgetto(progetto, lotto);
+
 	}
 	
 	public SeminaDTO getSeminaByTitolo(String titolo, Date dataIA, Date dataFA) {
