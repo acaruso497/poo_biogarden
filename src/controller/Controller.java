@@ -408,6 +408,28 @@ public List<String> getColtura(ColtivatoreDTO coltivatore, String progetto) {
 		RaccoltaDAO.popolaRaccolta(progetto, raccolta);
 	}
 	
-
+	
+//	_________________ VisualizzaProgetto _________________
+	
+	
+//	_________________ Grafici _________________
+	
+	// Popola ComboColtura con l'ID del lotto
+	public static List<String> getColturaByLotto(int idLottoStr) {
+		LottoDTO lotto = new LottoDTO(idLottoStr);
+        return ColturaDAO.getColturaByLotto(lotto);
+    }
+	
+	// chiama il dao per ottenere le statistiche
+    public static double[] getStatistiche(String varieta) {
+    	ColturaDTO coltura = new ColturaDTO(varieta);
+        long   num   = ColturaDAO.getNumeroRaccolte(coltura);
+        double media = ColturaDAO.getMediaRaccolto(coltura);
+        double min   = ColturaDAO.getMinRaccolto(coltura);
+        double max   = ColturaDAO.getMaxRaccolto(coltura);
+        return new double[]{ num, media, min, max };
+    }
+    
+   
 		
 }

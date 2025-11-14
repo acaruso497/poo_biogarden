@@ -14,6 +14,8 @@ import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
+
+import controller.Controller;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -26,8 +28,6 @@ public class Grafico extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	CreaProgettoController creaProgettoController;
-	ControllerGrafico controllerGrafico;
 	VisualizzaProgetti visualizzaProgetti;
 	HomePageProprietario home;
 	JComboBox<String> ComboLotto = new JComboBox<String>();
@@ -98,9 +98,9 @@ public class Grafico extends JFrame {
 	            }
 	            final String varieta = selColt.toString().trim();
 
-	            ControllerGrafico controller = new ControllerGrafico();
+	            Controller controller = new Controller(); //try
 
-	            double[] stats = controller.getStatistiche(idlotto, varieta);
+	            double[] stats = controller.getStatistiche(varieta);
 
 	            //se non c'è nessun dato, avvisa
 	            if (stats == null) {
@@ -176,8 +176,9 @@ public class Grafico extends JFrame {
     }
 	
 	private void popolaComboColtura(String idLotto) { //Popolo il combocoltura 
+		int idLottoInterna = Integer.parseInt(idLotto);
         if (idLotto != null) {
-            List<String> colture = controllerGrafico.getColturaByLotto(idLotto); 
+            List<String> colture = Controller.getColturaByLotto(idLottoInterna); 
             ComboColtura.removeAllItems();;
             for (String coltura : colture) {
                 ComboColtura.addItem(coltura); 
