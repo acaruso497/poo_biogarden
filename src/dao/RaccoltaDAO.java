@@ -4,10 +4,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 
 import database.Connessione;
+import dto.*;
 
 public class RaccoltaDAO {
+	// da vedeere se serve progetto coltivazione dto da chiedere 
 	
-	public static boolean sommaRaccolto(String raccolto, String coltura, String progetto) {
+	public static boolean sommaRaccolto(String raccolto,  ColturaDTO coltura, ProgettoColtivazioneDTO progetto) {
 	    Connection conn = null;
 	    PreparedStatement ps = null;
 	    try {
@@ -23,7 +25,7 @@ public class RaccoltaDAO {
 	            "  max = GREATEST(max, ?)," +
 	            "  min = CASE WHEN min = 0 OR ? < min THEN ? ELSE min END," +
 	            "  counter = counter + 1," +
-	            "  avg = (raccoltoprodotto + ?) / (counter + 1) " +  // usa i valori PRIMA dell'update a destra
+	            "  avg = (raccoltoprodotto + ?) / (counter + 1) " +  
 	            "WHERE varietà = ?";
 
 	        ps = conn.prepareStatement(sql);
@@ -32,7 +34,7 @@ public class RaccoltaDAO {
 	        ps.setInt(3, nuovo);
 	        ps.setInt(4, nuovo);
 	        ps.setInt(5, nuovo);
-	        ps.setString(6, coltura);
+	        ps.setString(6, coltura.getVarieta());
 
 	        int rows = ps.executeUpdate();
 	        conn.commit();
