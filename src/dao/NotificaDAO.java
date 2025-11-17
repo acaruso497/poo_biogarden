@@ -8,7 +8,7 @@ public class NotificaDAO {
 
 	//____________________   CREAZIONE NOTIFICA     ____________________________________
 	
-	public static boolean Inserisci_NotificaDB(NotificaDTO notifica) { 
+	public boolean Inserisci_NotificaDB(NotificaDTO notifica) { 
 	Connection conn = null;
 	PreparedStatement stmt = null;
 	ResultSet risultato = null;
@@ -38,7 +38,7 @@ public class NotificaDAO {
    }	
  }
 	
-	public static boolean ciSonoNotificheNonLette(ColtivatoreDTO coltivatore) {
+	public boolean ciSonoNotificheNonLette(ColtivatoreDTO coltivatore) {
 	    Connection conn = null;
 	    PreparedStatement stmt = null;
 	    ResultSet rs = null;
@@ -71,7 +71,7 @@ public class NotificaDAO {
 	    }
 	}
 	
-	public static boolean segnaNotificheColtivatoreComeLette(ColtivatoreDTO coltivatore) {
+	public boolean segnaNotificheColtivatoreComeLette(ColtivatoreDTO coltivatore) {
 	    Connection conn = null;
 	    PreparedStatement stmt = null;
 
@@ -83,7 +83,6 @@ public class NotificaDAO {
 	        	    "SET \"lettura\" = TRUE " +
 	        	    "WHERE \"lettura\" = FALSE " +
 	        	    "  AND \"utenti_tag\" LIKE ?";
-
 
 	        stmt = conn.prepareStatement(sql);
 	        stmt.setString(1, "%" + coltivatore.getUsername() + "%");
@@ -99,8 +98,7 @@ public class NotificaDAO {
 	    }
 	}
 	
-
-	public static String getNotificheNonLette(ColtivatoreDTO coltivatore){
+	public String getNotificheNonLette(ColtivatoreDTO coltivatore){
 	    Connection conn = null;
 	    PreparedStatement stmt = null;
 	    ResultSet rs = null;

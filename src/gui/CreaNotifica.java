@@ -1,8 +1,8 @@
 package gui;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-
 import java.awt.Color;
 import java.awt.Dimension;
 import java.net.URL;
@@ -14,21 +14,16 @@ import javax.swing.border.EmptyBorder;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.JCheckBox;
 import javax.swing.JTextField;
 import javax.swing.JTextArea;
 import javax.swing.JButton;
 import javax.swing.plaf.basic.BasicArrowButton;
-
 import controller.Controller;
-
 import java.util.ArrayList;
-
 import javax.swing.JComboBox;
 
 public class CreaNotifica extends JFrame {
@@ -54,7 +49,6 @@ public class CreaNotifica extends JFrame {
 		    contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		    setContentPane(contentPane);
 
-
 		    contentPane.setLayout(new MigLayout("", "[grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow]", 
 		    										"[grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow]"));
 		    
@@ -63,7 +57,6 @@ public class CreaNotifica extends JFrame {
 		    contentPane.add(LabelNotifica, "cell 0 0");
 		    
 		    JTextArea TxtDescrizione = new JTextArea();
-		    
 		    
 		    JLabel LabelData = new JLabel("Data");
 		    contentPane.add(LabelData, "cell 0 2,alignx trailing");
@@ -139,8 +132,8 @@ public class CreaNotifica extends JFrame {
 		    
 		    
 		    contentPane.add(TxtDescrizione, "cell 1 9 5 4,grow");
-		    //wrapping : andare a capo automaticamente e non spezza le parole
-		    TxtDescrizione.setLineWrap(true);
+		    
+		    TxtDescrizione.setLineWrap(true); //wrapping : andare a capo automaticamente e non spezza le parole
 		    TxtDescrizione.setWrapStyleWord(true);
 		    
 		    JButton ButtonInviaN = new JButton("Invia Notifica");
@@ -201,7 +194,7 @@ public class CreaNotifica extends JFrame {
 			            } else {
 						controller.dividiUsernameTutti(usernameP, data, titolo, descrizione);
 						JOptionPane.showMessageDialog(CreaNotifica.this, "Notifica inviata con successo!");
-						
+
 					}
 			}    
 		    });

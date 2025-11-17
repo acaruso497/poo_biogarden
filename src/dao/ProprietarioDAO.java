@@ -10,7 +10,7 @@ public class ProprietarioDAO {
 	
 	//____________________   LOGIN     ____________________________________
 	
-	public static boolean authP(UtenteDTO User) { //Autenticazione proprietario
+	public boolean authP(UtenteDTO User) { //Autenticazione proprietario
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		ResultSet risultato = null;
@@ -39,8 +39,8 @@ public class ProprietarioDAO {
 		   }
 		
 	}
-	//AGGIUNTO
-	public static ProprietarioDTO getProprietario(ProprietarioDTO credenziali) {
+	
+	public ProprietarioDTO getProprietario(ProprietarioDTO credenziali) {
 	    Connection conn = null;
 	    PreparedStatement stmt = null;
 	    ResultSet risultato = null;
@@ -66,7 +66,7 @@ public class ProprietarioDAO {
 	            return proprietario;
 	        } else {
 	        	System.out.println("RECUPERO PROPRIETARIO FALLITO \n funzione di ProprietarioDAO\n chiamata :getProprietario");
-	            return null; // Non trovato
+	            return null; 
 	        }
 	    } catch (SQLException ex) {
 	        ex.printStackTrace();
@@ -82,7 +82,7 @@ public class ProprietarioDAO {
 	
 	//____________________   REGISTRAZIONE     ____________________________________
 	
-		public static boolean registraP(ProprietarioDTO proprietario) { // Registrazione PROPRIETARIO
+		public boolean registraP(ProprietarioDTO proprietario) { // Registrazione PROPRIETARIO
 			Connection conn = null;
 			PreparedStatement stmt = null;
 			try {
@@ -94,7 +94,9 @@ public class ProprietarioDAO {
 				  stmt.setString(3, proprietario.getUsername());
 				  stmt.setString(4, proprietario.getPassword());
 				  stmt.setString(5, proprietario.getCodiceFiscale());
+				  
 				  int rows = stmt.executeUpdate();
+				  
 				  if (rows ==1) { System.out.println("REGISTRAZIONE AVVENUTA CON SUCCESSO"); return true;}
 				  	else {return false;}
 			    } catch (SQLException ex) {
@@ -104,24 +106,23 @@ public class ProprietarioDAO {
 				  try { if (stmt != null) stmt.close(); } catch (Exception e) {}
 				  try { if (conn != null) conn.close(); } catch (Exception e) {}
 			    }
-		  }				
-		public static boolean aggiungiL(ProprietarioDTO proprietario) { //Aggiunge il primo lotto disponibile al proprietario
+		  }		
+		
+		public boolean aggiungiL(ProprietarioDTO proprietario) { //Aggiunge il primo lotto disponibile al proprietario
 			Connection conn = null;
 			PreparedStatement stmt = null;
 			ResultSet risultato = null;
 			try {
 				 conn = Connessione.getConnection();
-				 //controlla l'esistenza di lotti liberi
-				 String sql1 = "SELECT ID_Lotto FROM Lotto WHERE Codice_FiscalePr IS NULL LIMIT 1";
+				 
+				 String sql1 = "SELECT ID_Lotto FROM Lotto WHERE Codice_FiscalePr IS NULL LIMIT 1"; //controlla l'esistenza di lotti liberi
 				 stmt = conn.prepareStatement(sql1);
 				 risultato = stmt.executeQuery();
 		
 				  if (risultato.next()) {
-				      // quando trovo un lotto libero, ricavo l'id
-				      int idLottoLibero = risultato.getInt("ID_Lotto");
+				      int idLottoLibero = risultato.getInt("ID_Lotto"); // quando trovo un lotto libero, ricavo l'id
 				            
-				      // aggiungo il lotto al proprietario usando il suo codice fiscale
-				      String sql2 = "UPDATE Lotto SET Codice_FiscalePr = ? WHERE ID_Lotto = ?";
+				      String sql2 = "UPDATE Lotto SET Codice_FiscalePr = ? WHERE ID_Lotto = ?"; // aggiungo il lotto al proprietario usando il suo codice fiscale
 				      stmt = conn.prepareStatement(sql2);
 				      stmt.setString(1, proprietario.getCodiceFiscale());
 				      stmt.setInt(2, idLottoLibero);
@@ -142,7 +143,8 @@ public class ProprietarioDAO {
 				   try { if (conn != null) conn.close(); } catch (Exception e) {}
 				 }
 			   }
-			public static ArrayList<String> popolaComboProprietari() { // popola la combobox dei proprietari
+		
+			public ArrayList<String> popolaComboProprietari() { // popola la combobox dei proprietari
 			     ArrayList<String> usernames = new ArrayList<>();
 			     Connection conn = null;
 			     PreparedStatement stmt = null;
@@ -176,7 +178,7 @@ public class ProprietarioDAO {
 		
 	//____________________   CREAZIONE NOTIFICA     ____________________________________
 			
-			public static String getDestinatariUsernamesByProprietario(ProprietarioDTO proprietario) {
+			public String getDestinatariUsernamesByProprietario(ProprietarioDTO proprietario) {
 			    Connection conn = null;
 			    PreparedStatement stmt = null;
 			    ResultSet risultato = null;
@@ -191,6 +193,7 @@ public class ProprietarioDAO {
 			        stmt = conn.prepareStatement(sql);
 			        stmt.setString(1, proprietario.getUsername());
 			        risultato = stmt.executeQuery();
+			        
 			        if (risultato.next()) {
 			            String s = risultato.getString(1);
 			            return s != null ? s : "";
@@ -205,7 +208,8 @@ public class ProprietarioDAO {
 			        try { if (conn != null) conn.close(); } catch (Exception e) {}
 			    }
 			}		
-			public static ArrayList<String> getColtivatoriByProprietario(ProprietarioDTO proprietario) { 
+			
+			public ArrayList<String> getColtivatoriByProprietario(ProprietarioDTO proprietario) { 
 				ArrayList<String> coltivatori = new ArrayList<>();
 			    Connection conn = null;
 			    PreparedStatement stmt = null;
@@ -240,8 +244,7 @@ public class ProprietarioDAO {
 			
 	//____________________   CREAZIONE PROGETTO COLTIVAZIONE     ____________________________________	
 			
-			//recupera i lotti di un proprietario (utile per popolare ComboLotti)
-			public List<String> getLottiByProprietario(ProprietarioDTO proprietario) {
+			public List<String> getLottiByProprietario(ProprietarioDTO proprietario) { //recupera i lotti di un proprietario (utile per popolare ComboLotti)
 			    List<String> lista = new ArrayList<>(); // Lista vuota per ID lotti
 			    Connection conn = null;
 			    PreparedStatement stmt = null;
@@ -256,11 +259,11 @@ public class ProprietarioDAO {
 			                    "ORDER BY l.posizione"; 
 
 			        stmt = conn.prepareStatement(sql);   
-			        stmt.setString(1, proprietario.getUsername());         // Inserisce l'username del proprietario
+			        stmt.setString(1, proprietario.getUsername());  // Inserisce l'username del proprietario
 			        risultato = stmt.executeQuery();
 
 			        while (risultato.next()) {
-			            int idLotto = risultato.getInt("ID_Lotto"); // Legge solo ID
+			            int idLotto = risultato.getInt("ID_Lotto"); // Legge solo l'ID
 		                String idStr = String.valueOf(idLotto); 
 		                lista.add(idStr); // Aggiunge alla lista
 			        }
@@ -275,8 +278,7 @@ public class ProprietarioDAO {
 			}		
 	//____________________   CREAZIONE PROGETTO COLTIVAZIONE     ____________________________________
 			
-			
-			
+
 //          _________________ VISUALIZZA PROGETTI _________________
 			
 		    public List<String> getProgettiByProprietario(ProprietarioDTO proprietario) { //seleziono tutti i progetti del proprietario dato il suo username (utile per ComboProgetto)
@@ -289,11 +291,11 @@ public class ProprietarioDAO {
 		            conn = Connessione.getConnection(); 
 
 			        String sql = "SELECT pc.titolo " +
-			        		  "FROM Progetto_Coltivazione pc " +
-			        		  "JOIN Lotto l ON l.ID_Lotto = pc.ID_Lotto " +
-			        		  "JOIN Proprietario p ON l.Codice_FiscalePr = p.Codice_Fiscale " +
-			        		  "WHERE p.username = ? " +
-			        		  "ORDER BY pc.ID_Progetto ";
+				        		  "FROM Progetto_Coltivazione pc " +
+				        		  "JOIN Lotto l ON l.ID_Lotto = pc.ID_Lotto " +
+				        		  "JOIN Proprietario p ON l.Codice_FiscalePr = p.Codice_Fiscale " +
+				        		  "WHERE p.username = ? " +
+				        		  "ORDER BY pc.ID_Progetto ";
 		            
 		            stmt = conn.prepareStatement(sql);   
 		            stmt.setString(1, proprietario.getUsername());
@@ -312,9 +314,6 @@ public class ProprietarioDAO {
 		        }
 		        return lista;
 		    }
-		    
-		  
-			
 		    
 		    
 //          _________________ VISUALIZZA PROGETTI _________________

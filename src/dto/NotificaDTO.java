@@ -2,9 +2,6 @@ package dto;
 
 import java.sql.Date;
 
-
-import dao.NotificaDAO;
-
 public class NotificaDTO {
 	private String titolo;
 	private String descrizione;

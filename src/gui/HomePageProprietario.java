@@ -17,9 +17,7 @@ import javax.swing.JTextArea;
 import javax.swing.JButton;
 import java.awt.Font;
 
-
 public class HomePageProprietario extends JFrame {
-
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private VisualizzaProgetti visualizza;
@@ -29,15 +27,10 @@ public class HomePageProprietario extends JFrame {
 	private ProprietarioDTO proprietario;//AGGIUNTO
 
 	public HomePageProprietario() {
-
-
-		//proprietario = new  ProprietarioDTO(username, psw);//recupera il il Proprietario loggato
-		
-		
 		proprietario= method.getProprietarioLoggato();
 		
 		method.setProprietarioLoggato(proprietario);
-		//AGGIUNTO
+		
 		setTitle("HomePageProprietario");
 	    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	    setBounds(100, 100, 843, 564);
@@ -57,7 +50,6 @@ public class HomePageProprietario extends JFrame {
 	    JLabel LabelBenvenuto = new JLabel("Benvenuto! Sei un Proprietario");
 	    LabelBenvenuto.setFont(new Font("Tahoma", Font.BOLD, 17));
 	    contentPane.add(LabelBenvenuto, "cell 0 0,alignx center");
-	    
 	    
 	    JTextArea TxtScelta = new JTextArea();
 	    TxtScelta.setFont(new Font("Monospaced", Font.BOLD, 13));
@@ -93,21 +85,18 @@ public class HomePageProprietario extends JFrame {
 	    ButtonAggiungiL.setPreferredSize(new Dimension(150, 20));
 	    contentPane.add(ButtonAggiungiL, "cell 5 9,alignx center");	
 	    
-	    //bottone crea notifica
-	    ButtonCreaN.addActionListener(new ActionListener() {
+	    ButtonCreaN.addActionListener(new ActionListener() { //bottone crea notifica
 			public void actionPerformed(ActionEvent e) {
 				setVisible(false);
 				creanotifica.setVisible(true);
 			}
 		});	  
-	    //bottone aggiungi lotto
+	    
 	    ButtonAggiungiL.addActionListener(new ActionListener() { //aggiunge il primo lotto disponibile al proprietario
 	        public void actionPerformed(ActionEvent e) {
 	            boolean aggiuntaLotto = controller.aggiungiL(proprietario);
-	            
 	            if (aggiuntaLotto==true) {
 	            	creaprogetto.popolaComboLotto(proprietario);
-	                //aggiunta lotto
 	                JOptionPane.showMessageDialog(HomePageProprietario.this, 
 	                    "Lotto aggiunto con successo!", "Successo", 
 	                    JOptionPane.INFORMATION_MESSAGE);

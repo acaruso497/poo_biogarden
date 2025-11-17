@@ -6,10 +6,7 @@ import java.sql.*;
 
 public class RaccoltaDAO {
 				//	_________________ HOMEPAGE COLTIVATORE  _________________
-
-	// da vedeere se serve progetto coltivazione dto da chiedere 
-	
-	public static boolean sommaRaccolto(int raccolto,  ColturaDTO coltura, ProgettoColtivazioneDTO progetto) {
+	public boolean sommaRaccolto(int raccolto,  ColturaDTO coltura, ProgettoColtivazioneDTO progetto) {
 	    Connection conn = null;
 	    PreparedStatement ps = null;
 	    try {
@@ -55,7 +52,7 @@ public class RaccoltaDAO {
 	
 			//	_________________ VISUALIZZA PROGETTI _________________
 	
-	public static void popolaRaccolta(ProgettoColtivazioneDTO progetto, RaccoltaDTO raccolta) { //popola il text field di giorno inizio, giorno fine e il radio button dello stato dell'attività
+	public void popolaRaccolta(ProgettoColtivazioneDTO progetto, RaccoltaDTO raccolta) { //popola il text field di giorno inizio, giorno fine e il radio button dello stato dell'attività
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -66,19 +63,19 @@ public class RaccoltaDAO {
 
 				if (raccolta != null) {
 						sql = """
-						SELECT r.id_attivita, r.stato, r.giorno_inizio, r.giorno_fine
-						FROM progetto_coltivazione pc
-						JOIN attivita a   ON a.id_progetto = pc.id_progetto
-						JOIN raccolta r   ON r.id_attivita = a.id_attivita
-						WHERE pc.titolo = ?
-						AND (
-						r.giorno_inizio BETWEEN pc.data_inizio AND pc.data_fine
-						OR r.giorno_fine   BETWEEN pc.data_inizio AND pc.data_fine
-						OR pc.data_inizio  BETWEEN r.giorno_inizio AND r.giorno_fine
-						)
-						ORDER BY r.giorno_inizio DESC, r.giorno_fine DESC
-						LIMIT 1
-						""";
+							SELECT r.id_attivita, r.stato, r.giorno_inizio, r.giorno_fine
+							FROM progetto_coltivazione pc
+							JOIN attivita a   ON a.id_progetto = pc.id_progetto
+							JOIN raccolta r   ON r.id_attivita = a.id_attivita
+							WHERE pc.titolo = ?
+							AND (
+							r.giorno_inizio BETWEEN pc.data_inizio AND pc.data_fine
+							OR r.giorno_fine   BETWEEN pc.data_inizio AND pc.data_fine
+							OR pc.data_inizio  BETWEEN r.giorno_inizio AND r.giorno_fine
+							)
+							ORDER BY r.giorno_inizio DESC, r.giorno_fine DESC
+							LIMIT 1
+							""";
 						stmt = conn.prepareStatement(sql);
 						stmt.setString(1, progetto.getTitolo());
 						

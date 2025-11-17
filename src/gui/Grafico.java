@@ -4,22 +4,17 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
 import java.util.List;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
-
 import controller.Controller;
-import dto.ProprietarioDTO;
 import net.miginfocom.swing.MigLayout;
 import utils.method;
-
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JComboBox;
@@ -53,8 +48,7 @@ public class Grafico extends JFrame {
 	    contentPane.setLayout(new MigLayout("", "[grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow]", 
 	    										"[grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow]"));
 	    
-	    // Pulsante freccia indietro
-	    BasicArrowButton ButtonIndietro = new BasicArrowButton(7);
+	    BasicArrowButton ButtonIndietro = new BasicArrowButton(7); // Pulsante freccia indietro
 	    ButtonIndietro.addActionListener(new ActionListener() {
 	    	public void actionPerformed(ActionEvent e) {
 	    		Grafico.this.setVisible(false);
@@ -102,12 +96,9 @@ public class Grafico extends JFrame {
 	            }
 	            final String varieta = selColt.toString().trim();
 
-	            
-
 	            double[] stats = controller.getStatistiche(varieta);
 
-	            //se non c'è nessun dato, avvisa
-	            if (stats == null) {
+	            if (stats == null) { //se non c'è nessun dato, avvisa
 	                JOptionPane.showMessageDialog(Grafico.this,
 	                        "Errore nel recupero delle statistiche.");
 	                return;
@@ -119,18 +110,16 @@ public class Grafico extends JFrame {
 	                        "Nessuna raccolta per Lotto " + idlotto + " e " + varieta);
 	                return;
 	            }
-
-	            //preparo il dataset per JFreeChart
-	            DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-	            String serie = varieta;                   // riga/serie (legenda)
+   
+	            DefaultCategoryDataset dataset = new DefaultCategoryDataset(); //preparo il dataset per JFreeChart
+	            String serie = varieta; // riga/serie (legenda)
 	            dataset.addValue(count,     serie, "Totale raccolte");
 	            dataset.addValue(stats[1],  serie, "Media");
 	            dataset.addValue(stats[2],  serie, "Min");
 	            dataset.addValue(stats[3],  serie, "Max");
 
-	            //creo e mostro il grafico
 	            String titolo = "Lotto " + idlotto + " - " + varieta;
-	            JFreeChart chart = ChartFactory.createBarChart(
+	            JFreeChart chart = ChartFactory.createBarChart( //creo e mostro il grafico
 	                    titolo,
 	                    "Statistiche",
 	                    "Quantità",
@@ -153,12 +142,13 @@ public class Grafico extends JFrame {
 	    
 	    popolaComboLotto();
 
-        // Aggiungi listener per aggiornare ComboColtura quando cambia ComboLotto
-        ComboLotto.addActionListener(new ActionListener() {
+        ComboLotto.addActionListener(new ActionListener() { // Aggiungi listener per aggiornare ComboColtura quando cambia ComboLotto
             @Override
             public void actionPerformed(ActionEvent e) {
                 String selectedLotto = (String) ComboLotto.getSelectedItem();
-                popolaComboColtura(selectedLotto);
+                if (selectedLotto == null) {return;}
+                else {
+                popolaComboColtura(selectedLotto);}
             }
         });
 	}
@@ -175,7 +165,7 @@ public class Grafico extends JFrame {
 	private void popolaComboColtura(String idLotto) { //Popolo il combocoltura 
 		int idLottoInterna = Integer.parseInt(idLotto);
         if (idLotto != null) {
-            List<String> colture = Controller.getColturaByLotto(idLottoInterna); 
+            List<String> colture = controller.getColturaByLotto(idLottoInterna); 
             ComboColtura.removeAllItems();;
             for (String coltura : colture) {
                 ComboColtura.addItem(coltura); 

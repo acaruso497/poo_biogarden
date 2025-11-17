@@ -2,67 +2,26 @@ package controller;
 import dto.*;
 import dao.*;
 import utils.SplitUtils;
-import utils.method;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import gui.HomePageColtivatore;
-import gui.HomePageProprietario;
 
 public class Controller {
-private ColtivatoreDTO coltivatore;
-private ProprietarioDTO proprietario;
 private Integer countSemina;
-private Integer countIrrigazione ;
-private Integer countRaccolta ;
-    
+private Integer countIrrigazione;
+private Integer countRaccolta;
+private ColtivatoreDAO ColtivatoreDAO = new ColtivatoreDAO();
+private ColturaDAO ColturaDAO = new ColturaDAO();
+private IrrigazioneDAO IrrigazioneDAO = new IrrigazioneDAO();
+private NotificaDAO NotificaDAO = new NotificaDAO();
+private ProgettoColtivazioneDAO ProgettoColtivazioneDAO = new ProgettoColtivazioneDAO();
+private ProprietarioDAO ProprietarioDAO = new ProprietarioDAO();
+private RaccoltaDAO RaccoltaDAO = new RaccoltaDAO();
+private SeminaDAO SeminaDAO = new SeminaDAO();
+private UtenteDAO UtenteDAO = new UtenteDAO();
+
 	
 //                      _________________ LOGIN _________________
-//	
-//    public boolean login(String username, String password) { //effettua l'autenticazione dell'utente   	
-//        boolean check = false; // [0]=true (user e password)campiOK, [1]=proprietario, [2]=coltivatore
-//
-//        if (username == null || username.trim().isEmpty()
-//            || password == null || password.trim().isEmpty())
-//        {
-//            check = false;            // campi non validi
-//            return check;           
-//        }
-//        
-//        check = true;  // campi ok      
-//        return check;
-//    }   
-//    public boolean creaUtente(boolean check, String username, String password) {
-//    	
-//    	if(check==true) {
-//    		ProprietarioDTO p = new ProprietarioDTO(username,password);
-//            boolean ruolo = ProprietarioDAO.authP(p);
-//            if(ruolo==true) { 
-//            	
-////          	HomePageProprietario homeP = new HomePageProprietario();
-////            	homeP.setVisible(true);
-////            	loginFrame.setVisible(false);
-//            	return true;
-//            	
-//            } 
-//            else if(ruolo==false) {
-//            	ColtivatoreDTO c = new ColtivatoreDTO(username,password);
-//            	boolean ruolo2 =ColtivatoreDAO.authC(c);
-//            	if(ruolo2) { 
-//            		
-////            		HomePageColtivatore homeC = new HomePageColtivatore();
-////            		homeC.setVisible(true);
-////            		loginFrame.setVisible(false);
-//            		return false;
-//            	}
-//            }
-//    	}
-//    	
-//    	return false; //non trova nessun utente
-//          
-//    }
     public ProprietarioDTO getProprietario (ProprietarioDTO proprietario) {
     	return ProprietarioDAO.getProprietario(proprietario);
     }   
@@ -74,9 +33,6 @@ private Integer countRaccolta ;
 		return ProprietarioDAO.authP(proprietario);
 	}
 
-
-//_________________ LOGIN _________________
-
 public int login(String username, String password) { 
 	// Restituisce: 
 	// 0 = campi non validi (vuoti/null)
@@ -87,27 +43,25 @@ public int login(String username, String password) {
 	// Controllo campi vuoti
 	if (username == null || username.trim().isEmpty()
 		|| password == null || password.trim().isEmpty()) {
-		return 0; // campi non validi
+		return 0; 
 	}
 	
 	// Prima verifica se è proprietario
 	ProprietarioDTO p = new ProprietarioDTO(username, password);
 	boolean isProprietario = ProprietarioDAO.authP(p);
 	if (isProprietario) {
-		return 2; // proprietario
+		return 2; 
 	}
 	
 	// Se non è proprietario, verifica se è coltivatore
 	ColtivatoreDTO c = new ColtivatoreDTO(username, password);
 	boolean isColtivatore = ColtivatoreDAO.authC(c);
 	if (isColtivatore) {
-		return 3; // coltivatore
+		return 3; 
 	}
 	
-	return 1; // credenziali errate (campi pieni ma username/password sbagliati)
+	return 1; 
 }   
-
-//ELIMINA il metodo creaUtente - non serve più
 
 
 //                      _________________ LOGIN _________________
@@ -151,36 +105,29 @@ public int login(String username, String password) {
    
 //                       _________________ REGISTRAZIONE UTENTE _________________
     
-    
 //                        _________________ HOMEPAGE PROPRIETARIO _________________
     
    public boolean aggiungiL(ProprietarioDTO proprietario) { //aggiunge il primo lotto disponibile
 		return ProprietarioDAO.aggiungiL(proprietario);
 	}
-
    
 //                        __________________ CREAZIONE NOTIFICA _________________
    
-// !!!!!!!!USA QUELLO DEL CHE STA IN UTILS.METHOD!!!!!!!
 	public boolean dividiUsername(String usernameProprietario, String usernameConcatenati,
-            Date data, String titolo, String descrizione) { // viene chiamato se la spunta "tutti i coltivatori" è disattivata
+            					  Date data, String titolo, String descrizione) { // viene chiamato se la spunta "tutti i coltivatori" è disattivata
 
-		// Split della stringa + conversione in ArrayList (utils)
-		ArrayList<String> usernamesList = SplitUtils.splitByCommaToArrayList(usernameConcatenati);
+		ArrayList<String> usernamesList = SplitUtils.splitByCommaToArrayList(usernameConcatenati); // Split della stringa + conversione in ArrayList (utils)
 
-		// Ottieni i coltivatori del proprietario (versione refactor: DTO/DAO)
 		ProprietarioDTO proprietario = new ProprietarioDTO(usernameProprietario);
-		ArrayList<String> coltivatoriProprietario = ProprietarioDAO.getColtivatoriByProprietario(proprietario);
+		ArrayList<String> coltivatoriProprietario = ProprietarioDAO.getColtivatoriByProprietario(proprietario); // Ottieni i coltivatori del proprietario
 
-		// Verifica se i coltivatori appartengono al proprietario loggato (tuo controllo)
-		for (int i = 0; i < usernamesList.size(); i++) {
+		for (int i = 0; i < usernamesList.size(); i++) { // Verifica se i coltivatori appartengono al proprietario loggato 
 			if (!coltivatoriProprietario.contains(usernamesList.get(i))) {
 				return false;
 			}
 		}
 
-		// Inserimento notifiche (versione refactor: DTO/DAO)
-		for (int i = 0; i < usernamesList.size(); i++) {
+		for (int i = 0; i < usernamesList.size(); i++) { // Inserimento notifiche
 			NotificaDTO notifica = new NotificaDTO(titolo, descrizione, data, usernamesList.get(i));
 			NotificaDAO.Inserisci_NotificaDB(notifica);
 		}
@@ -194,11 +141,9 @@ public int login(String username, String password) {
 		ProprietarioDTO proprietario = new ProprietarioDTO(usernameProprietario);
 		String usernameConcatenati= ProprietarioDAO.getDestinatariUsernamesByProprietario(proprietario);
 		
-		// Split della stringa + conversione in ArrayList
-		ArrayList<String> usernamesList = SplitUtils.splitByCommaToArrayList(usernameConcatenati);
+		ArrayList<String> usernamesList = SplitUtils.splitByCommaToArrayList(usernameConcatenati); // Split della stringa + conversione in ArrayList
 	
-		// Chiamo il dao per ogni utente
-		for(int i = 0; i < usernamesList.size(); i++) {
+		for(int i = 0; i < usernamesList.size(); i++) { // Chiamo il dao per ogni utente
 			NotificaDTO notifica = new NotificaDTO(titolo, descrizione, data, usernamesList.get(i));
 			NotificaDAO.Inserisci_NotificaDB(notifica);
 		}
@@ -209,53 +154,52 @@ public int login(String username, String password) {
 		return ProprietarioDAO.getColtivatoriByProprietario(proprietario);
 	}
 
-
-	//controlla l'esistenza di un username di un coltivatore
-	public boolean controllaUsername(String username) {
+	public boolean controllaUsername(String username) { //controlla l'esistenza di un username di un coltivatore
 		ColtivatoreDTO coltivatore = new ColtivatoreDTO(username);
 		return ColtivatoreDAO.usernameColtivatoreEsiste(coltivatore);
 	}
 	
-	public static  boolean legginotifiche(ColtivatoreDTO coltivatore) {
+	public boolean legginotifiche(ColtivatoreDTO coltivatore) {
         return NotificaDAO.segnaNotificheColtivatoreComeLette(coltivatore);
     }
-	public static boolean checknotifiche(ColtivatoreDTO coltivatore) {
+	
+	public boolean checknotifiche(ColtivatoreDTO coltivatore) {
         return NotificaDAO.ciSonoNotificheNonLette(coltivatore);
     }
-	public static String mostranotifiche(ColtivatoreDTO coltivatore) {
+	
+	public String mostranotifiche(ColtivatoreDTO coltivatore) {
         return NotificaDAO.getNotificheNonLette(coltivatore);
     }
 
    
 //                         _________________ CREAZIONE NOTIFICA _________________
    
-   
 //                          _________________ CREAZIONE PROGETTO _________________
    
-	 //Crea il progetto di coltivazione inserendo i parametri tramite dao 
-//    public boolean creaProgetto(ProgettoColtivazioneDTO progetto, ArrayList<String> coltureString, LottoDTO lotto) {
-//    	
-//    	
-//    	ArrayList<ColturaDTO> coltureDTOList = new ArrayList<>();
-//    	
-//        if (coltureString != null && !coltureString.isEmpty()) {
-//        for (int i = 0; i < coltureString.size(); i++) {
-//            String coltura = coltureString.get(i);
-//            String colturaPulita = coltura.trim();
-//            
-//            ColturaDTO col = new ColturaDTO(colturaPulita);
-//            coltureDTOList.add(col);
-//            
-//        }
-//    }   
-//        boolean ok = ProgettoColtivazioneDAO.registraProgetto(progetto, lotto, coltureDTOList);        
-//        return ok;	    
-//    }
-    
-    public boolean creaAttivita(SeminaDTO semina, IrrigazioneDTO irrigazione, RaccoltaDTO raccolta, LottoDTO lotto, ProgettoColtivazioneDTO progetto) {
+	public boolean creaProgetto(ProgettoColtivazioneDTO progetto, ArrayList<String> coltureString, LottoDTO lotto) { //crea il progetto di coltivazione
+    	
+    	ProgettoColtivazioneDAO dao = new ProgettoColtivazioneDAO();
+    	ArrayList<ColturaDTO> coltureDTOList = new ArrayList<>();
+    	
+        if (coltureString != null && !coltureString.isEmpty()) {
+        for (int i = 0; i < coltureString.size(); i++) {
+            String coltura = coltureString.get(i);
+            String colturaPulita = coltura.trim();
+            
+            ColturaDTO col = new ColturaDTO(colturaPulita);
+            coltureDTOList.add(col);
+            
+        }
+    }   
+        boolean ok = dao.registraProgetto(progetto, lotto, coltureDTOList);        
+        return ok;	    
+    }
+	
+	
+    public boolean creaAttivita(SeminaDTO semina, IrrigazioneDTO irrigazione, RaccoltaDTO raccolta, LottoDTO lotto, ProgettoColtivazioneDTO progetto) { //crea l'attività
        	boolean insertAttivita = ProgettoColtivazioneDAO.insertAttivita(semina, irrigazione, raccolta, lotto, progetto);
       	return insertAttivita;
-        }
+    }
     
     public List<String> getLottiByProprietario(ProprietarioDTO proprietario){ //popola la combobox dei lotti
     	ProprietarioDAO dao = new ProprietarioDAO();
@@ -279,11 +223,8 @@ public int login(String username, String password) {
     }
     
     public boolean controlloProgettoChiuso(LottoDTO lotto) { //controlla se il progetto è completato
-    	ProgettoColtivazioneDAO dao = new ProgettoColtivazioneDAO();
-    	return dao.controlloProgettoChiuso(lotto);
-    	
+    	return ProgettoColtivazioneDAO.controlloProgettoChiuso(lotto);
     }
-    
     
 //      _________________ CREAZIONE PROGETTO _________________
 
@@ -296,57 +237,52 @@ public int login(String username, String password) {
     public List<String> popolaPrComboBox(ColtivatoreDTO coltivatore) {
         return ColtivatoreDAO.popolaProgettiCB(coltivatore);
     }
-    // probabilmente da qui in giu si sposta tutto il dao nel dao progetto   ____INIZIO
-
-
-public List<String> getTipiAttivita(ColtivatoreDTO coltivatore, String progetto) {
-    return ColtivatoreDAO.getTipiAttivitaColtivatore(coltivatore, progetto);
-}
-// si ma no id affianco al nome 
-public List<String> getIdAttivita(ColtivatoreDTO coltivatore, String progetto) {
-    return ColtivatoreDAO.getIdAttivitaColtivatore(coltivatore, progetto);
-}
-
+    
+	public List<String> getTipiAttivita(ColtivatoreDTO coltivatore, String progetto) {
+	    return ColtivatoreDAO.getTipiAttivitaColtivatore(coltivatore, progetto);
+	}
+	public List<String> getIdAttivita(ColtivatoreDTO coltivatore, String progetto) {
+	    return ColtivatoreDAO.getIdAttivitaColtivatore(coltivatore, progetto);
+	}
+		
+	public String[] getDateByAttivitaId(String idAttivita, String tipoAttivita) {
+	    return ColtivatoreDAO.getDateByAttivitaId(idAttivita, tipoAttivita);
+	}
 	
-public String[] getDateByAttivitaId(String idAttivita, String tipoAttivita) {
-    return ColtivatoreDAO.getDateByAttivitaId(idAttivita, tipoAttivita);
-}
-
-public String getLottoEPosizioneByProgetto(String progetto, ColtivatoreDTO coltivatore) {
-    return ColtivatoreDAO.getLottoEPosizione(progetto, coltivatore);
-}
-
-public String getStimaRaccolto(ColtivatoreDTO coltivatore, String progetto) {
-    return ColtivatoreDAO.getStimaRaccolto(coltivatore, progetto);
-}
-
-public String getIrrigazione(ColtivatoreDTO coltivatore, String progetto) {
-    return ColtivatoreDAO.getIrrigazione(coltivatore, progetto);
-} 
-
-public String getTipoSemina(String idSemina) {
-    return ColtivatoreDAO.getTipoSemina(idSemina);
-}
-
-//public boolean sommaRaccolto(String raccolto, String coltura, String progetto) {
-//    return ColtivatoreDAO.sommaRaccolto(raccolto, coltura, progetto);
-//}
-
-public List<String> getColtura(ColtivatoreDTO coltivatore, String progetto) {
-    return ColtivatoreDAO.getColtura(coltivatore, progetto);
-}
-
-public boolean sommaRaccolto(int raccolto, ColturaDTO coltura, ProgettoColtivazioneDTO progetto) {
-    return RaccoltaDAO.sommaRaccolto(raccolto, coltura, progetto);
-}
+	public String getLottoEPosizioneByProgetto(String progetto, ColtivatoreDTO coltivatore) {
+	    return ColtivatoreDAO.getLottoEPosizione(progetto, coltivatore);
+	}
+	
+	public String getStimaRaccolto(ColtivatoreDTO coltivatore, String progetto) {
+	    return ColtivatoreDAO.getStimaRaccolto(coltivatore, progetto);
+	}
+	
+	public String getIrrigazione(ColtivatoreDTO coltivatore, String progetto) {
+	    return ColtivatoreDAO.getIrrigazione(coltivatore, progetto);
+	} 
+	
+	public String getTipoSemina(String idSemina) {
+	    return ColtivatoreDAO.getTipoSemina(idSemina);
+	}
+	
+	public List<String> getColtura(ColtivatoreDTO coltivatore, String progetto) {
+	    return ColtivatoreDAO.getColtura(coltivatore, progetto);
+	}
+	
+	public boolean sommaRaccolto(int raccolto, ColturaDTO coltura, ProgettoColtivazioneDTO progetto) {
+	    return RaccoltaDAO.sommaRaccolto(raccolto, coltura, progetto);
+	}
+	
+	public List<String> DateInizioFineP(String titolo_progetto, ColtivatoreDTO coltivatore) {
+		ProgettoColtivazioneDAO dao = new ProgettoColtivazioneDAO();
+	    return dao.dateI_FProgCB(titolo_progetto, coltivatore);
+	}
 
 
 //  	_________________ HomePagecoltivatore _________________
     
 //                           _________________ VISUALIZZA PROGETTI _________________
    
-
-	
     public String getRaccoltoProdotto(ProprietarioDTO proprietario, int idLotto, ArrayList<String> coltureList){ //restituisce il raccolto prodotto della coltura
     	ArrayList<ColturaDTO> coltureDTOList = new ArrayList<>();
     	LottoDTO lotto = new LottoDTO(idLotto); 
@@ -366,7 +302,6 @@ public boolean sommaRaccolto(int raccolto, ColturaDTO coltura, ProgettoColtivazi
         return dao.getRaccoltoProdotto(proprietario, lotto, coltureDTOList);
     }
     
-    
     public boolean aggiornaStato(String stato, String tipoAttivita, LottoDTO lotto) { // Aggiorna lo stato delle attività
     	AttivitaDAO dao = new AttivitaDAO();
     	SeminaDTO semina = null;
@@ -384,18 +319,14 @@ public boolean sommaRaccolto(int raccolto, ColturaDTO coltura, ProgettoColtivazi
     	return dao.aggiornaStato(semina, irrigazione, raccolta, lotto);
     }
    
-    
+  
     public ProgettoColtivazioneDTO getProgettoByTitolo(String titolo) {
-
        ProgettoColtivazioneDTO progetto = new ProgettoColtivazioneDTO(titolo);
-
        ProgettoColtivazioneDAO.popolaDatiProgetto(progetto);
-       
        return progetto;
     }
 
-
-    public static void popolaDatiProgetto(ProgettoColtivazioneDTO progetto) {  // Setta il titolo del progetto, i campi di data inizio e data fine
+    public void popolaDatiProgetto(ProgettoColtivazioneDTO progetto) {  // Setta il titolo del progetto, i campi di data inizio e data fine
     	ProgettoColtivazioneDAO.popolaDatiProgetto(progetto);
     } 
     
@@ -404,13 +335,11 @@ public boolean sommaRaccolto(int raccolto, ColturaDTO coltura, ProgettoColtivazi
     	return dao.isCompletata(proprietario, progetto);
     }
     
- 
     public ArrayList<String> getColtureProprietario(ProprietarioDTO proprietario, ProgettoColtivazioneDTO progetto) { //restituisce le colture presenti nel lotto del progetto di coltivazione in riferimento al proprietario
     	ColturaDAO dao = new ColturaDAO();
     	return dao.getColtureProprietario(proprietario, progetto);
 	}
     
- 
     public List<String> getProgettiByProprietario(ProprietarioDTO proprietario) { // Popola ComboProgetto con il titolo del progetto del proprietario
     	ProprietarioDAO dao = new ProprietarioDAO();
         return dao.getProgettiByProprietario(proprietario);  
@@ -421,9 +350,7 @@ public boolean sommaRaccolto(int raccolto, ColturaDTO coltura, ProgettoColtivazi
     	return dao.getLottoProgettoByProprietario(progetto, proprietario);
     }
     
-
 	public boolean terminaProgetto(ProgettoColtivazioneDTO progetto, LottoDTO lotto) { //termina il progetto di coltivazione ;
-		
 		return ProgettoColtivazioneDAO.terminaProgetto(progetto, lotto);
 
 	}
@@ -431,7 +358,6 @@ public boolean sommaRaccolto(int raccolto, ColturaDTO coltura, ProgettoColtivazi
 	public SeminaDTO getSeminaByTitolo(String titolo, Date dataIA, Date dataFA) {
 		ProgettoColtivazioneDTO progetto = new ProgettoColtivazioneDTO(titolo);
 		SeminaDTO semina = new SeminaDTO(dataIA, dataFA);
-		
 		SeminaDAO.popolaSemina(progetto, semina);
 		
 		return semina;
@@ -441,7 +367,6 @@ public boolean sommaRaccolto(int raccolto, ColturaDTO coltura, ProgettoColtivazi
 	public IrrigazioneDTO getIrrigazioneByTitolo(String titolo, Date dataIA, Date dataFA) {
 		ProgettoColtivazioneDTO progetto = new ProgettoColtivazioneDTO(titolo);
 		IrrigazioneDTO irrigazione = new IrrigazioneDTO(dataIA, dataFA);
-		
 		IrrigazioneDAO.popolaIrrigazione(progetto, irrigazione);
 		
 		return irrigazione;
@@ -451,22 +376,21 @@ public boolean sommaRaccolto(int raccolto, ColturaDTO coltura, ProgettoColtivazi
 	public RaccoltaDTO getRaccoltaByTitolo(String titolo, Date dataIA, Date dataFA) {
 		ProgettoColtivazioneDTO progetto = new ProgettoColtivazioneDTO(titolo);
 		RaccoltaDTO raccolta = new RaccoltaDTO(dataIA, dataFA);
-		
 		RaccoltaDAO.popolaRaccolta(progetto, raccolta);
 		
 		return raccolta;
 		
 	}
 	
-	public static void popolaSemina(ProgettoColtivazioneDTO progetto, SeminaDTO semina) {
+	public void popolaSemina(ProgettoColtivazioneDTO progetto, SeminaDTO semina) {
 		SeminaDAO.popolaSemina(progetto, semina);
 	}
 	
-	public static void popolaIrrigazione(ProgettoColtivazioneDTO progetto, IrrigazioneDTO irrigazione) {
+	public void popolaIrrigazione(ProgettoColtivazioneDTO progetto, IrrigazioneDTO irrigazione) {
 		IrrigazioneDAO.popolaIrrigazione(progetto, irrigazione);
 	}
 	
-	public static void popolaRaccolta(ProgettoColtivazioneDTO progetto, RaccoltaDTO raccolta) {
+	public void popolaRaccolta(ProgettoColtivazioneDTO progetto, RaccoltaDTO raccolta) {
 		RaccoltaDAO.popolaRaccolta(progetto, raccolta);
 	}
 	
@@ -476,14 +400,12 @@ public boolean sommaRaccolto(int raccolto, ColturaDTO coltura, ProgettoColtivazi
 	
 //	_________________ Grafici _________________
 	
-	// Popola ComboColtura con l'ID del lotto
-	public static List<String> getColturaByLotto(int idLottoStr) {
+	public List<String> getColturaByLotto(int idLottoStr) { // Popola ComboColtura con l'ID del lotto
 		LottoDTO lotto = new LottoDTO(idLottoStr);
         return ColturaDAO.getColturaByLotto(lotto);
     }
 	
-	// chiama il dao per ottenere le statistiche
-    public static double[] getStatistiche(String varieta) {
+    public double[] getStatistiche(String varieta) { // chiama il dao per ottenere le statistiche
     	ColturaDTO coltura = new ColturaDTO(varieta);
         long   num   = ColturaDAO.getNumeroRaccolte(coltura);
         double media = ColturaDAO.getMediaRaccolto(coltura);
@@ -492,6 +414,6 @@ public boolean sommaRaccolto(int raccolto, ColturaDTO coltura, ProgettoColtivazi
         return new double[]{ num, media, min, max };
     }
     
-   
+//	_________________ Grafici _________________   
 		
 }

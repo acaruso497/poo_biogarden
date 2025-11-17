@@ -10,10 +10,7 @@ import java.util.List;
 public class ProgettoColtivazioneDAO {
 
 	//____________________   CREAZIONE PROGETTO COLTIVAZIONE     ____________________________________	
-	
-	
-		public static boolean registraProgetto(ProgettoColtivazioneDTO progetto, LottoDTO lotto, ArrayList<ColturaDTO> coltureDTOList) { //Registrazione dei dati del progetto
-		    
+		public boolean registraProgetto(ProgettoColtivazioneDTO progetto, LottoDTO lotto, ArrayList<ColturaDTO> coltureDTOList) { //Registrazione dei dati del progetto
 		    Connection conn = null;
 		    PreparedStatement stmt = null;
 		    ResultSet risultato = null;
@@ -21,7 +18,6 @@ public class ProgettoColtivazioneDAO {
 		    try {
 		        conn = Connessione.getConnection();
 		        
-		        	
 		        //inserisce tutte le informazioni dei textfield dentro progetto coltivazione
 		        String sql2 = "INSERT INTO Progetto_Coltivazione (titolo, descrizione, stima_raccolto, data_inizio, data_fine, id_lotto) "
 		        		      + "VALUES (?, ?, ?, ?, ?, ?) RETURNING ID_Progetto";
@@ -32,7 +28,6 @@ public class ProgettoColtivazioneDAO {
 		        stmt.setDate(4, progetto.getDataInizio());
 		        stmt.setDate(5, progetto.getDataFine());
 		        stmt.setInt(6, progetto.getIdLotto());
-		        
 		        
 		        risultato = stmt.executeQuery();
 
@@ -46,14 +41,13 @@ public class ProgettoColtivazioneDAO {
 		        risultato.close();
 		        stmt.close();
 		        
-		        //pulisce le colture dalle virgole
-		        if (coltureDTOList != null && coltureDTOList.size() > 0) {
+		       
+		        if (coltureDTOList != null && coltureDTOList.size() > 0) {  //pulisce le colture dalle virgole
 		            for (int i = 0; i < coltureDTOList.size(); i++) {
-		                    // Crea o recupera coltura
-		                    ColturaDTO coltura = getOrCreateColtura(conn, coltureDTOList.get(i));
 		                    
-		                    // Associa coltura al lotto
-		                    associaColturaALotto(conn, lotto, coltura, progetto);
+		                    ColturaDTO coltura = getOrCreateColtura(conn, coltureDTOList.get(i)); // Crea o recupera coltura
+		                    
+		                    associaColturaALotto(conn, lotto, coltura, progetto); // Associa coltura al lotto
 		            }
 		        }
 					return true;
@@ -67,7 +61,7 @@ public class ProgettoColtivazioneDAO {
 		    }
 		}
 		
-		public static boolean insertAttivita(SeminaDTO semina, IrrigazioneDTO irrigazione, RaccoltaDTO raccolta, LottoDTO lotto, ProgettoColtivazioneDTO progetto) {
+		public boolean insertAttivita(SeminaDTO semina, IrrigazioneDTO irrigazione, RaccoltaDTO raccolta, LottoDTO lotto, ProgettoColtivazioneDTO progetto) {
 			Connection conn = null;
 		    PreparedStatement stmt = null;
 		    ResultSet risultato = null;
@@ -83,8 +77,7 @@ public class ProgettoColtivazioneDAO {
 					return false;
 				}
 			
-				// per ogni coltivatore, viene assegnata un'attività
-				for (ColtivatoreDTO coltivatore : coltivatori) {
+				for (ColtivatoreDTO coltivatore : coltivatori) { // per ogni coltivatore, viene assegnata un'attività
 						AttivitaDTO attivita = new AttivitaDTO();
 						String sqlAttivita = "INSERT INTO Attivita (ID_Lotto, Codice_FiscaleCol, giorno_assegnazione, stato, id_progetto) VALUES (?, ?, CURRENT_DATE, 'pianificata', ?) RETURNING ID_Attivita";
 						stmt = conn.prepareStatement(sqlAttivita);
@@ -100,8 +93,8 @@ public class ProgettoColtivazioneDAO {
 						risultato.close();
 						stmt.close();
 						
+						// inserisce la specifica attività ai coltivatori
 						if(raccolta!=null) {
-							// inserisce la specifica attività ai coltivatori
 							sql3 = "INSERT INTO Raccolta (giorno_inizio, giorno_fine, raccolto_effettivo, id_attivita, stato) VALUES (?, ?, 0, ?, 'pianificata')";
 							stmt = conn.prepareStatement(sql3);
 							stmt.setDate(1, raccolta.getGiornoInizio());
@@ -131,8 +124,6 @@ public class ProgettoColtivazioneDAO {
 							stmt.setInt(4, attivita.getID_Attivita());
 							stmt.executeUpdate();
 						}
-						
-		    	
 				}
 				return true;
 		    	
@@ -148,22 +139,7 @@ public class ProgettoColtivazioneDAO {
 			
 		}
 		
-		private static ColturaDTO getOrCreateColtura(Connection conn, ColturaDTO coltura) throws SQLException { // crea la coltura dalla varietà
-//		    String selectSql = "SELECT id_coltura FROM Coltura WHERE varietà = ?";
-//		    PreparedStatement stmt = conn.prepareStatement(selectSql);
-//		    stmt.setString(1, coltura.getVarieta());
-//		    ResultSet rs = stmt.executeQuery();
-//		    
-//		    if (rs.next()) {
-//		    	coltura.setID_Coltura(rs.getInt("id_coltura"));
-//		        rs.close();
-//		        stmt.close();
-//		        return coltura;
-//		    }
-//		    rs.close();
-//		    stmt.close();
-		    
-		    
+		private ColturaDTO getOrCreateColtura(Connection conn, ColturaDTO coltura) throws SQLException { // crea la coltura dalla varietà
 		    String insertSql = "INSERT INTO Coltura (varietà) VALUES (?) RETURNING ID_Coltura";
 		    PreparedStatement stmt = conn.prepareStatement(insertSql);
 		    stmt.setString(1, coltura.getVarieta());
@@ -180,8 +156,7 @@ public class ProgettoColtivazioneDAO {
 		}
 		
 		
-		private static void associaColturaALotto(Connection conn, LottoDTO lotto, ColturaDTO coltura, ProgettoColtivazioneDTO progetto) throws SQLException { // associa la coltura al lotto
-			
+		private void associaColturaALotto(Connection conn, LottoDTO lotto, ColturaDTO coltura, ProgettoColtivazioneDTO progetto) throws SQLException { // associa la coltura al lotto
 			String checkSql = "SELECT 1 FROM Progetto_Coltura WHERE id_progetto = ? AND id_coltura = ?";
 		    PreparedStatement checkStmt = conn.prepareStatement(checkSql);
 		    checkStmt.setInt(1, progetto.getID_Progetto());
@@ -202,7 +177,7 @@ public class ProgettoColtivazioneDAO {
 			
 		}
 		
-		private static ArrayList<ColtivatoreDTO> getColtivatoriLotto(LottoDTO lotto) { //Recupera il coltivatore dal lotto
+		private ArrayList<ColtivatoreDTO> getColtivatoriLotto(LottoDTO lotto) { //Recupera il coltivatore dal lotto
 			Connection conn = null;
 			PreparedStatement stmt = null;
 			ResultSet rs = null;
@@ -210,7 +185,7 @@ public class ProgettoColtivazioneDAO {
 			
 			try {
 				conn = Connessione.getConnection();
-				//String sql = "SELECT DISTINCT a.Codice_FiscaleCol FROM Attivita a WHERE a.ID_Lotto = ? ";
+				
 				String sql = "SELECT c.Codice_Fiscale " +
 			             "FROM Coltivatore c " +
 			             "JOIN Lotto l ON c.username_proprietario = " +
@@ -240,15 +215,12 @@ public class ProgettoColtivazioneDAO {
 			}
 		}	
 		
-		
 		public boolean controlloProgettoChiuso(LottoDTO lotto) { //controlla se il progetto è completato
-		    
 		    Connection conn = null;
 		    PreparedStatement stmt = null;
 		    ResultSet risultato = null;
 
 		    try {
-		    	
 		    	conn = Connessione.getConnection();
 		    	
 		    	String sql = "SELECT done FROM Progetto_Coltivazione WHERE id_lotto = ?";
@@ -280,7 +252,8 @@ public class ProgettoColtivazioneDAO {
 		    }
 		    
 			}
-		public static ArrayList<String> dateI_FProgCB(String titolo_progetto, ColtivatoreDTO coltivatore) {		
+		
+		public ArrayList<String> dateI_FProgCB(String titolo_progetto, ColtivatoreDTO coltivatore) {		
 		    ArrayList<String> date = new ArrayList<>();
 		    Connection conn = null;
 		    PreparedStatement stmt = null;
@@ -326,7 +299,7 @@ public class ProgettoColtivazioneDAO {
 		
 			//      _________________ VISUALIZZA PROGETTI _________________
 		
-		public static boolean terminaProgetto(ProgettoColtivazioneDTO progetto, LottoDTO lotto) { //Libera un lotto da un progetto di coltivazione e tutti i suoi riferimenti
+		public boolean terminaProgetto(ProgettoColtivazioneDTO progetto, LottoDTO lotto) { //Libera un lotto da un progetto di coltivazione e tutti i suoi riferimenti
 			Connection conn = null;
 			PreparedStatement stmt = null;
 			ResultSet risultato = null;
@@ -351,7 +324,6 @@ public class ProgettoColtivazioneDAO {
 			        rows = stmt.executeUpdate();
 			        stmt.close();
 					
-					
 					//ricavo l'id dell'attività in modo da collegare le 3 attività
 			        String sqlAttivita = "SELECT id_attivita FROM Attivita WHERE id_lotto = ? ";
 			        stmt = conn.prepareStatement(sqlAttivita);
@@ -366,24 +338,21 @@ public class ProgettoColtivazioneDAO {
 			        risultato.close();
 			        stmt.close();
 			        
-			        //per ogni id dell'attività, segna ogni attività come completata
-			        for (int idAttivita : idAttivitaList) {
-			            // Segna semina come completata
-			            String sql3 = "UPDATE Semina SET stato = 'completata' WHERE id_attivita = ?";
+			        
+			        for (int idAttivita : idAttivitaList) { //per ogni id dell'attività, segna ogni attività come completata
+			            String sql3 = "UPDATE Semina SET stato = 'completata' WHERE id_attivita = ?"; // Segna semina come completata
 			            stmt = conn.prepareStatement(sql3);
 			            stmt.setInt(1, idAttivita);
 			            stmt.executeUpdate();
 			            stmt.close();
 			            
-			            // Segna irrigazione come completata
-			            String sql4 = "UPDATE Irrigazione SET stato = 'completata' WHERE id_attivita = ?";
+			            String sql4 = "UPDATE Irrigazione SET stato = 'completata' WHERE id_attivita = ?"; 	// Segna irrigazione come completata
 			            stmt = conn.prepareStatement(sql4);
 			            stmt.setInt(1, idAttivita);
 			            stmt.executeUpdate();
 			            stmt.close();
 			            
-			            // Segna raccolta come completata
-			            String sql5 = "UPDATE Raccolta SET stato = 'completata' WHERE id_attivita = ?";
+			            String sql5 = "UPDATE Raccolta SET stato = 'completata' WHERE id_attivita = ?"; // Segna raccolta come completata
 			            stmt = conn.prepareStatement(sql5);
 			            stmt.setInt(1, idAttivita);
 			            stmt.executeUpdate();
@@ -402,18 +371,15 @@ public class ProgettoColtivazioneDAO {
 		}
 		
 		
-		
-		
-		
-		public static void popolaDatiProgetto(ProgettoColtivazioneDTO progetto) { //popola la combobox del progetto, il text field di data inizio, data fine, stima raccolto
+		public void popolaDatiProgetto(ProgettoColtivazioneDTO progetto) { //popola la combobox del progetto, il text field di data inizio, data fine, stima raccolto
 				Connection conn = null;
 				PreparedStatement stmt = null;
 				ResultSet risultato = null;
 				
 				try {
 				conn = Connessione.getConnection(); 
-				//recupera tutti i dati del progetto tramite la view
-				String sql = "SELECT stima_raccolto, data_inizio, data_fine FROM view_raccolto WHERE titolo = ?"; 
+				
+				String sql = "SELECT stima_raccolto, data_inizio, data_fine FROM view_raccolto WHERE titolo = ?";  //recupera tutti i dati del progetto tramite la view
 				
 				stmt = conn.prepareStatement(sql);   
 				stmt.setString(1, progetto.getTitolo());
@@ -438,9 +404,7 @@ public class ProgettoColtivazioneDAO {
 				}
 		}
 		
-		
-		
-	    public boolean isCompletata(ProprietarioDTO proprietario, ProgettoColtivazioneDTO progetto) { 		 //controlla se il progetto è completato
+	    public boolean isCompletata(ProprietarioDTO proprietario, ProgettoColtivazioneDTO progetto) {  //controlla se il progetto è completato
 	    	Connection conn = null;
 	        PreparedStatement stmt = null;
 	        ResultSet risultato = null;
@@ -476,8 +440,5 @@ public class ProgettoColtivazioneDAO {
 	        try { if (conn != null) conn.close(); } catch (Exception ignored) {}
 	    }
 	 }   
-		
-		
 			//      _________________ VISUALIZZA PROGETTI _________________
-	
 }

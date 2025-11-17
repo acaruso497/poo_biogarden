@@ -7,11 +7,9 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-
 import controller.Controller;
 import dto.ColturaDTO;
 import dto.IrrigazioneDTO;
@@ -31,7 +29,6 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-
 public class Attivita extends JFrame {
 
 	private static final long serialVersionUID = 1L;
@@ -42,18 +39,15 @@ public class Attivita extends JFrame {
 	private JTextField FieldLotto;
 	private JTextField FieldDataIA;
 	private JTextField FieldDataFA;
- 
 	private JTextField FieldTipoSemina;
 	private JTextField FieldTipologia;
 	private JTextField FieldProfondita;
 	private JTextField FieldStimaRaccolto;
 	private JButton ButtonHomePage;
 	private JButton ButtonSalva;
-	//aggiunto
   	private boolean seminaSalvata = false;
   	private boolean irrigazioneSalvata = false;
   	private boolean raccoltaSalvata = false;
-  	//aggiunto
 	private HomePageProprietario home; 
 	private boolean progettoCreato = false; // Flag per tracciare se il progetto è stato creato
 	Controller controller = new Controller(); 
@@ -69,7 +63,6 @@ public class Attivita extends JFrame {
 	    contentPane = new BackgroundPanel(imageUrl);
 	    contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 	    setContentPane(contentPane);
-
 
 	    contentPane.setLayout(new MigLayout("", "[grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][][grow][grow][grow][grow]", 
 	    										"[grow][grow][grow][][grow][][grow][grow][][][grow][][][][grow][grow][][grow][grow][grow][grow][grow][grow][grow]"));
@@ -109,7 +102,6 @@ public class Attivita extends JFrame {
 	    
 	    JLabel LabelAttivita = new JLabel("Attività");
 	    contentPane.add(LabelAttivita, "flowx,cell 8 1,alignx trailing,aligny bottom");
-	    
 	    
 	    JComboBox<String> ComboAttivita = new JComboBox<>(); 			//Tipo di attività selezionabile
 		ComboAttivita.setModel(new DefaultComboBoxModel<>(
@@ -166,31 +158,26 @@ public class Attivita extends JFrame {
 	    contentPane.add(FieldTipoSemina, "cell 9 6,growx");
 	    FieldTipoSemina.setEnabled(false); 
 	    
-	    
 	    ComboAttivita.addActionListener(new ActionListener() {
 	    	public void actionPerformed(ActionEvent e) {
 	            String selectedAttivita = (String) ComboAttivita.getSelectedItem();
 	            
-	            // se non viene selezionata l'attività, blocca i field relativi alle attività
-	            if (selectedAttivita == null || selectedAttivita.equals("-- Seleziona --")) {
+	            if (selectedAttivita == null || selectedAttivita.equals("-- Seleziona --")) { // se non viene selezionata l'attività, blocca i field relativi alle attività
 	                ComboTipoIrr.setEnabled(false);
 	                FieldTipoSemina.setEnabled(false);
 	                FieldTipoSemina.setEditable(false);
 	                ComboTipoIrr.setSelectedIndex(0);
-	                FieldTipoSemina.setText("");
-	            // se viene selezionata l'attività Irrigazione, attiva la combobox relativa al tipo di irrigazione    
-	            } else if (selectedAttivita.equals("Irrigazione")) {
+	                FieldTipoSemina.setText("");    
+	            } else if (selectedAttivita.equals("Irrigazione")) {  // se viene selezionata l'attività Irrigazione, attiva la combobox relativa al tipo di irrigazione
 	                ComboTipoIrr.setEnabled(true);
 	                FieldTipoSemina.setEnabled(false);
 	                FieldTipoSemina.setText("");
-	             // se viene selezionata l'attività Semina, attiva il textfield relativo al tipo di semina 
-	            } else if (selectedAttivita.equals("Semina")) {
+	            } else if (selectedAttivita.equals("Semina")) {  // se viene selezionata l'attività Semina, attiva il textfield relativo al tipo di semina 
 	                ComboTipoIrr.setEnabled(false);
 	                FieldTipoSemina.setEnabled(true);
 	                FieldTipoSemina.setEditable(true);
 	                ComboTipoIrr.setSelectedIndex(0);
-	             // se viene selezionata l'attività Raccolta, blocca i field relativi alle altre attività
-	            } else if (selectedAttivita.equals("Raccolta")) {
+	            } else if (selectedAttivita.equals("Raccolta")) { // se viene selezionata l'attività Raccolta, blocca i field relativi alle altre attività
 	                ComboTipoIrr.setEnabled(false);
 	                FieldTipoSemina.setEnabled(false);
 	                ComboTipoIrr.setSelectedIndex(0);
@@ -207,8 +194,7 @@ public class Attivita extends JFrame {
                 if (controller != null) {
                     controller.resetContatori(); 			// Reset dei contatori per il nuovo ciclo di attività
                     Attivita.this.setVisible(false);
-                    home.setVisible(true);
-                    
+                    home.setVisible(true); 
               }
         	}
         });
@@ -217,7 +203,6 @@ public class Attivita extends JFrame {
         contentPane.add(ButtonSalva, "cell 9 20, growx");
         ButtonSalva.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		
                      String attivita = (String) ComboAttivita.getSelectedItem();
                      String dataInizioA = FieldDataIA.getText();
                      String dataFineA = FieldDataFA.getText();
@@ -249,8 +234,7 @@ public class Attivita extends JFrame {
                          JOptionPane.showMessageDialog(Attivita.this, "Seleziona un'attività!", "Errore", JOptionPane.ERROR_MESSAGE);
                          return;
                      }
-                     
-                     
+                        
                      try {
                          
                          LocalDate dataInseritaIA = LocalDate.parse(dataInizioA, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
@@ -301,9 +285,7 @@ public class Attivita extends JFrame {
                              FieldDataFA.setBackground(Color.RED);
                              return;
                          }
-                         
-                         
-                         
+   
                      } catch (DateTimeParseException ex) {
                          JOptionPane.showMessageDialog(Attivita.this, "Inserisci una data valida con formato: 'GG/MM/AAAA'");
                          return;
@@ -319,8 +301,7 @@ public class Attivita extends JFrame {
                      SeminaDTO semina = null;
                      IrrigazioneDTO irrigazione = null;
                      RaccoltaDTO raccolta = null;
-
-                     
+ 
                      if (attivita.equals("Semina")) {
                          semina = new SeminaDTO(dataIA, dataFA, tipoSemina);
                      } else if (attivita.equals("Irrigazione")) {
@@ -330,11 +311,10 @@ public class Attivita extends JFrame {
                          raccolta = new RaccoltaDTO(dataIA, dataFA);
                      }
                      
-                    //colture 
-                 	ArrayList<String> creaArr = SplitUtils.splitByCommaToArrayList(FieldTipologia.getText());
-                     // Crea il progetto solo la prima volta
-                     if (!progettoCreato) {
-                    	 progettoCreato = ProgettoColtivazioneDTO.creaProgetto(progetto, creaArr, lotto);
+                 	ArrayList<String> creaArr = SplitUtils.splitByCommaToArrayList(FieldTipologia.getText()); //Crea un ArrayList di colture splittate dalle virgole 
+                     
+                     if (!progettoCreato) { // Crea il progetto solo la prima volta
+                    	 progettoCreato = controller.creaProgetto(progetto, creaArr, lotto); //sostituire
                          
                          if (!progettoCreato) {
                              JOptionPane.showMessageDialog(Attivita.this, 
@@ -346,8 +326,7 @@ public class Attivita extends JFrame {
                          progettoCreato = true;
                      }
                      
-                     // Crea l'attività
-                     boolean creaAttivita = controller.creaAttivita(semina, irrigazione, raccolta, lotto, progetto);
+                     boolean creaAttivita = controller.creaAttivita(semina, irrigazione, raccolta, lotto, progetto); // Crea l'attività
 
                      if (creaAttivita) {
                          JOptionPane.showMessageDialog(Attivita.this, "Attività salvata con successo!");
@@ -379,11 +358,10 @@ public class Attivita extends JFrame {
                              "Errore durante il salvataggio dell'attività!", 
                              "Errore", 
                              JOptionPane.ERROR_MESSAGE);
-                     }// else 
+                     }
                  }		        	 
         });
 	
-		   
         JLabel LabelStimaRaccolto = new JLabel("Stima Raccolto");
         contentPane.add(LabelStimaRaccolto, "cell 0 14");
         
@@ -437,11 +415,7 @@ public class Attivita extends JFrame {
         if (progetto.getDataFine() != null) {
             FieldDataFP.setText(progetto.getDataFine().toString());
         }
+        
         }
         }
          
-        
-	
-
-
-

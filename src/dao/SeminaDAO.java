@@ -8,7 +8,7 @@ import java.sql.*;
 public class SeminaDAO {
 						//	_________________ VISUALIZZA PROGETTI _________________
 	
-	public static void popolaSemina(ProgettoColtivazioneDTO progetto, SeminaDTO semina) { //popola il text field di giorno inizio, giorno fine e il radio button dello stato dell'attività
+	public void popolaSemina(ProgettoColtivazioneDTO progetto, SeminaDTO semina) { //popola il text field di giorno inizio, giorno fine e il radio button dello stato dell'attività
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -54,6 +54,4 @@ public class SeminaDAO {
 		}
 	
 			//	_________________ VISUALIZZA PROGETTI _________________
-	
-	
 }

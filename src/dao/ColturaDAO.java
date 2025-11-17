@@ -37,7 +37,7 @@ public class ColturaDAO {
 	        if (risultato.next()) {
 	            raccolto = risultato.getString("raccoltoProdotto");
 	            if (raccolto != null) {
-	                raccolto += " kg"; // Aggiungi l'unità per uniformità
+	                raccolto += " kg"; // Aggiunge l'unità per uniformità
 	            }
 	        }
 	     }
@@ -50,8 +50,6 @@ public class ColturaDAO {
 	    }
 	    return raccolto.isEmpty() ? "nessun dato!!!" : raccolto; // Restituisci "0 kg" se non trovato
 	}
-	
-	
 	
 		public ArrayList<String> getColtureProprietario(ProprietarioDTO proprietario, ProgettoColtivazioneDTO progetto) { //restituisce le colture presenti nel lotto del progetto di coltivazione in riferimento al proprietario (utile per la dropdown)
 		    ArrayList<String> listaC = new ArrayList<>();
@@ -87,15 +85,11 @@ public class ColturaDAO {
 		    return listaC;
 		}
 	
-	
 //	_________________ VISUALIZZA PROGETTI _________________
-		
-		
 		
 //  _________________ GRAFICO _________________
 		
-		//recupera la varietà della coltura (utile per popolare ComboColtura)
-		public static List<String> getColturaByLotto(LottoDTO lotto) {
+		public List<String> getColturaByLotto(LottoDTO lotto) { //recupera la varietà della coltura (utile per popolare ComboColtura)
 				    List<String> lista = new ArrayList<>(); 
 				    Connection conn = null;
 				    PreparedStatement stmt = null;
@@ -127,28 +121,28 @@ public class ColturaDAO {
 		
 		// === Letture dagli aggregati già salvati in Coltura ===
 
-		public static long getNumeroRaccolte(ColturaDTO coltura) {
+		public long getNumeroRaccolte(ColturaDTO coltura) {
 		    Number n = queryColturaVal("counter", coltura.getVarieta());
 		    return n != null ? n.longValue() : 0L;
 		}
 
-		public static double getMediaRaccolto(ColturaDTO coltura) {
+		public double getMediaRaccolto(ColturaDTO coltura) {
 		    Number n = queryColturaVal("avg", coltura.getVarieta());
 		    return n != null ? n.doubleValue() : 0.0;
 		}
 
-		public static double getMinRaccolto(ColturaDTO coltura) {
+		public double getMinRaccolto(ColturaDTO coltura) {
 		    Number n = queryColturaVal("min", coltura.getVarieta());
 		    return n != null ? n.doubleValue() : 0.0;
 		}
 
-		public static double getMaxRaccolto(ColturaDTO coltura) {
+		public double getMaxRaccolto(ColturaDTO coltura) {
 		    Number n = queryColturaVal("max", coltura.getVarieta());
 		    return n != null ? n.doubleValue() : 0.0;
 		}
 
 		// ===== Helper unico per leggere una colonna dalla tabella Coltura =====
-		private static Number queryColturaVal(String column, String varieta) {
+		private Number queryColturaVal(String column, String varieta) {
 		    Connection conn = null;
 		    PreparedStatement stmt = null;
 		    ResultSet rs = null;
@@ -183,6 +177,5 @@ public class ColturaDAO {
 		}
 		
 //  _________________ GRAFICO _________________
-	
 	
 }

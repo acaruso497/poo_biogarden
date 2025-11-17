@@ -7,9 +7,7 @@ import java.sql.*;
 public class AttivitaDAO {
 
 //	_________________ VISUALIZZA PROGETTI _________________
-	
-	// Aggiorna lo stato di ciascuna attività
-		public boolean aggiornaStato(SeminaDTO semina, IrrigazioneDTO irrigazione, RaccoltaDTO raccolta, LottoDTO lotto) {
+		public boolean aggiornaStato(SeminaDTO semina, IrrigazioneDTO irrigazione, RaccoltaDTO raccolta, LottoDTO lotto) { // Aggiorna lo stato di ciascuna attività
 		    Connection conn = null;
 		    PreparedStatement stmt = null;
 		    ResultSet risultato = null;
@@ -23,7 +21,6 @@ public class AttivitaDAO {
 		    try {
 		        conn = Connessione.getConnection();
 		        
-		        // seleziona l'ID attività più recente per il lotto e tipo di attività
 		        if (raccolta!=null) {
 		            sql1 = "SELECT r.id_attivita " +
 		                   "FROM Raccolta r " +
@@ -110,13 +107,6 @@ public class AttivitaDAO {
 		        try { if (stmt != null) stmt.close(); } catch (Exception e) {}
 		        try { if (conn != null) conn.close(); } catch (Exception e) {}
 		    }
-		}
-	
-		
-		
-	
-//	_________________ VISUALIZZA PROGETTI _________________
-		
-		
-	
+		}	
+//	_________________ VISUALIZZA PROGETTI _________________	
 }

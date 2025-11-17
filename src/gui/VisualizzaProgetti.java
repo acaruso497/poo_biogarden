@@ -29,7 +29,6 @@ import javax.swing.JButton;
 import javax.swing.JRadioButton;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
-
 import java.awt.Font;
 import javax.swing.JTextField;
 import java.awt.Color;
@@ -68,7 +67,6 @@ public class VisualizzaProgetti extends JFrame {
     private IrrigazioneDTO irrigazione;
     private RaccoltaDTO raccolta;
     
-	// attivita , progetto , lotto, coltura, semina irrigazione e raccolta
 	public VisualizzaProgetti(HomePageProprietario home) {
 		this.home = home;
 	
@@ -106,8 +104,7 @@ public class VisualizzaProgetti extends JFrame {
 	        ButtonTermina = new JButton("Termina");
 	        ButtonTermina.setEnabled(false);
 	        
-	        // Pulsante freccia indietro
-	        BasicArrowButton ButtonIndietro = new BasicArrowButton(BasicArrowButton.WEST);
+	        BasicArrowButton ButtonIndietro = new BasicArrowButton(BasicArrowButton.WEST); // Pulsante freccia indietro
 	        ButtonIndietro.setPreferredSize(new Dimension(40, 40));
 	        contentPane.add(ButtonIndietro, "cell 5 0,alignx right,aligny center");
 	        ButtonIndietro.addActionListener(new ActionListener() {
@@ -134,7 +131,6 @@ public class VisualizzaProgetti extends JFrame {
 	    
 	    contentPane.add(ButtonTermina, "cell 2 3,aligny center");
 	    
-	    
 	    popolaComboProgetto();
         
         ComboProgetto.addActionListener(new ActionListener() { //popola la combobox del progetto
@@ -159,11 +155,9 @@ public class VisualizzaProgetti extends JFrame {
             	  		    return;
             	  		}
 
-                    
 	                progetto = controller.getProgettoByTitolo(titolo);
 	                
-	                // Popolo i campi GUI dai dati del DTO
-	                if (progetto.getStimaRaccolto() > 0) {
+	                if (progetto.getStimaRaccolto() > 0) { // Popolo i campi GUI dai dati del DTO
 	                    FieldStima.setText(progetto.getStimaRaccolto() + " kg");
 	                }
 	                if (progetto.getDataInizio() != null) {
@@ -217,7 +211,6 @@ public class VisualizzaProgetti extends JFrame {
 	    		ProgettoColtivazioneDTO= new ProgettoColtivazioneDTO((String)ComboProgetto.getSelectedItem());
 	    		String lotto = FieldLotto.getText();
 	    		
-	    		
 	    		if(ProgettoColtivazioneDTO.getTitolo() == null || lotto.isEmpty()) {
 	                JOptionPane.showMessageDialog(VisualizzaProgetti.this, 
 	                							  "Seleziona un progetto valido!");
@@ -229,8 +222,6 @@ public class VisualizzaProgetti extends JFrame {
 	    		//creazione di oggetti DTO
 	    		 lottodto = new LottoDTO(idLotto);
            	 
-	    		//termina=ProgettoColtivazioneDTO.terminaProgetto(ProgettoColtivazioneDTO, lottodto);
-	    		//if(termina)
 	    		if(controller.terminaProgetto(ProgettoColtivazioneDTO, lottodto)) {
 	    			JOptionPane.showMessageDialog(VisualizzaProgetti.this, "Progetto terminato con successo!");
 	    			ButtonTermina.setEnabled(false);
@@ -297,21 +288,17 @@ public class VisualizzaProgetti extends JFrame {
 	    ComboColtureRacc.addActionListener(new ActionListener() { //popola la combobox con le colture presenti
 	        public void actionPerformed(ActionEvent e) {
 	            try {
-	                
-	            	
-	                if (ComboColtureRacc.getSelectedIndex() == -1 || ComboColtureRacc.getSelectedItem() == null) {
-	                    VisualRaccolto.setText("...");
-	                    return;
+		                if (ComboColtureRacc.getSelectedIndex() == -1 || ComboColtureRacc.getSelectedItem() == null) {
+		                    VisualRaccolto.setText("...");
+		                    return;
 	                }
 	                
 	                String selectedItem = (String) ComboColtureRacc.getSelectedItem();
-	                
 	                
 	                if (selectedItem.equals("--Seleziona coltura--")) {
 	                    VisualRaccolto.setText("...");
 	                    return;
 	                }
-	            	
 	            	
 	            	ArrayList<String> selectedColtura = SplitUtils.splitByCommaToArrayList((String) ComboColtureRacc.getSelectedItem());
 	            	
@@ -399,8 +386,6 @@ public class VisualizzaProgetti extends JFrame {
 	    	}
 	    });
         
-
-        
         ComboAttivita.addActionListener(new ActionListener() { //popola la combobox delle attività
             public void actionPerformed(ActionEvent e) {
               try {
@@ -431,7 +416,7 @@ public class VisualizzaProgetti extends JFrame {
                     
                   if(selectedAttivita.equals("Semina")){
                 		semina = controller.getSeminaByTitolo(titolo, dataIA, dataFA);
-                		// Popolo i campi GUI dai dati del DTO
+               
                 		if (semina.getGiornoInizio() != null) {
                 	        FieldDataIA.setText(semina.getGiornoInizio().toLocalDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
                 	    } 
@@ -452,7 +437,7 @@ public class VisualizzaProgetti extends JFrame {
                   
                   if(selectedAttivita.equals("Irrigazione")){
               		irrigazione = controller.getIrrigazioneByTitolo(titolo, dataIA, dataFA);
-              		// Popolo i campi GUI dai dati del DTO
+              		
               		if (irrigazione.getGiornoInizio() != null) {
               	        FieldDataIA.setText(irrigazione.getGiornoInizio().toLocalDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
               	    } 
@@ -472,7 +457,7 @@ public class VisualizzaProgetti extends JFrame {
                   
                   if(selectedAttivita.equals("Raccolta")){
                 		raccolta = controller.getRaccoltaByTitolo(titolo, dataIA, dataFA);
-                		// Popolo i campi GUI dai dati del DTO
+                		
                 		if (raccolta.getGiornoInizio() != null) {
                 	        FieldDataIA.setText(raccolta.getGiornoInizio().toLocalDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
                 	    } 
@@ -490,7 +475,6 @@ public class VisualizzaProgetti extends JFrame {
                 	    }
                    } 
                   
-                    
                 	}catch (NullPointerException ex) {
                 		JOptionPane.showMessageDialog(VisualizzaProgetti.this, 
                 									  "Seleziona un'attività valida", "Errore", JOptionPane.ERROR_MESSAGE);
@@ -511,22 +495,20 @@ public class VisualizzaProgetti extends JFrame {
     }
 
     private void popolaFieldLotto() {  //Popola il field del lotto
-//        String selectedProgetto = (String) ComboProgetto.getSelectedItem(); //mi prendo il progetto selezionato
          ProgettoColtivazioneDTO progetto = new ProgettoColtivazioneDTO( (String) ComboProgetto.getSelectedItem());
-        // se non trovo il progetto resetta i campi
-        if (progetto.getTitolo() == null ||progetto.getTitolo().isEmpty()) {
+        
+        if (progetto.getTitolo() == null ||progetto.getTitolo().isEmpty()) { // se non trovo il progetto resetta i campi
             FieldLotto.setText("");
             FieldLotto.setEnabled(false);
             return;
         }
         
        
-        
         try {
              idLotto = controller.getLottoProgettoByProprietario(progetto, proprietario); 
             
-            //controlla l'esistenza di un lotto
-            if (idLotto != null) { 
+            
+            if (idLotto != null) {  //controlla l'esistenza di un lotto
                 FieldLotto.setText(String.valueOf(idLotto)); //imposto l'id del lotto nel field
                 FieldLotto.setEnabled(true);
             } else {

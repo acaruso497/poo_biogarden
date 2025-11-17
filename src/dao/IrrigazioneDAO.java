@@ -6,8 +6,8 @@ import java.sql.*;
 
 public class IrrigazioneDAO {
 
-					//	_________________ VISUALIZZA PROGETTI _________________
-	public static void popolaIrrigazione(ProgettoColtivazioneDTO progetto, IrrigazioneDTO irrigazione) { //popola il text field di giorno inizio, giorno fine e il radio button dello stato dell'attività
+	//	_________________ VISUALIZZA PROGETTI _________________
+	public void popolaIrrigazione(ProgettoColtivazioneDTO progetto, IrrigazioneDTO irrigazione) { //popola il text field di giorno inizio, giorno fine e il radio button dello stato dell'attività
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -16,7 +16,6 @@ public class IrrigazioneDAO {
 		try {
 			  conn = Connessione.getConnection();
 
-				
 				if (irrigazione != null) {
 						sql = """
 						SELECT i.id_attivita, i.stato, i.giorno_inizio, i.giorno_fine

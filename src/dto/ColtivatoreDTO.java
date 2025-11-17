@@ -1,7 +1,5 @@
 package dto;
 
-import dao.ColtivatoreDAO;
-
 public class ColtivatoreDTO extends UtenteDTO{
 	private String nome;
 	private String cognome;

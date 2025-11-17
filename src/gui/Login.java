@@ -19,6 +19,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import javax.swing.JButton;
+
 public class Login extends JFrame {
 
 	private static final long serialVersionUID = 1L;
@@ -55,7 +56,7 @@ public class Login extends JFrame {
 		    setContentPane(contentPane);
 
 		    contentPane.setLayout(new MigLayout("", "[grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow]",
-		    		"[grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow]"));		    
+		    					  "[grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow]"));		    
 		    ImageIcon originalIcon = new ImageIcon(getClass().getResource("/img/logo.png"));
 		    Image scaledImage = originalIcon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
 		    Logo = new JLabel(new ImageIcon(scaledImage));
@@ -93,42 +94,29 @@ public class Login extends JFrame {
 			public void actionPerformed(ActionEvent e) {	
 				String username = FieldUsername.getText();
 				String psw = FieldPassword.getText();
-				//tramite questa variabile troveremo il codice fiscale da passare al metodo getLottiByProprietario 
 				method.setUsernameGlobale(username); 
 				method.setPsw(psw);
-				
-	
 				
 				int risultatologin = controller.login(username, psw);
 
 				if(risultatologin == 0) {
-				    // Campi non validi
-				    JOptionPane.showMessageDialog(Login.this, "Inserisci username e password!");
-				    
+				    JOptionPane.showMessageDialog(Login.this, "Inserisci username e password!"); // Campi non validi
 				} else if(risultatologin == 1) {
-				    // Credenziali errate
-				    JOptionPane.showMessageDialog(Login.this, "Credenziali errate!");
-				    
+				    JOptionPane.showMessageDialog(Login.this, "Credenziali errate!"); // Credenziali errate
 				} else if(risultatologin == 2) {
-				    // Proprietario - login corretto
-				    // Recupera i dati completi del proprietario
-				    ProprietarioDTO proprietarioAutenticato = controller.getProprietario(new ProprietarioDTO(username, psw));
+				    ProprietarioDTO proprietarioAutenticato = controller.getProprietario(new ProprietarioDTO(username, psw)); // Proprietario - login corretto, recupera i dati completi del proprietario
 				    method.setProprietarioLoggato(proprietarioAutenticato);
 				    HomePageProprietario homeP = new HomePageProprietario();
 				    homeP.setVisible(true);
-				    Login.this.setVisible(false);
-				    
+				    Login.this.setVisible(false);   
 				} else if(risultatologin == 3) {
-				    // Coltivatore - login corretto
-				    ColtivatoreDTO coltivatoreAutenticato = controller.getColtivatore(new ColtivatoreDTO(username, psw));
+				    ColtivatoreDTO coltivatoreAutenticato = controller.getColtivatore(new ColtivatoreDTO(username, psw)); // Coltivatore - login corretto
 				    method.setColtivatoreLoggato(coltivatoreAutenticato);
 				    HomePageColtivatore homeC = new HomePageColtivatore();
 				    homeC.setVisible(true);
 				    Login.this.setVisible(false);
 				}
-				
 			}
-				
 		   }); 	    
 	}
 }

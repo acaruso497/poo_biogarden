@@ -7,14 +7,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
 import java.sql.Date;
-
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.basic.BasicArrowButton;
-
 import controller.Controller;
 import dto.ColturaDTO;
 import dto.LottoDTO;
@@ -26,7 +24,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
-
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
 import javax.swing.JTextArea;
@@ -41,13 +38,11 @@ public class CreaProgetto extends JFrame {
 	private JTextField FieldTitolo;
 	HomePageProprietario home;
 	Attivita attivita;
-	
     private JComboBox<String> ComboLotto;  //La JComboBox è un array di stringhe per contenere i lotti
     Controller controller = new Controller();  
     private JTextField FieldStimaRaccolto;
     private JTextField FieldTipologiaColtura;
 
-	
 	public CreaProgetto(HomePageProprietario home) {
 		this.home = home;
 		setTitle("Crea Progetto");
@@ -97,50 +92,49 @@ public class CreaProgetto extends JFrame {
 	    contentPane.add(LabelLotto, "cell 0 2,alignx right");	    
 	    contentPane.add(ComboLotto, "cell 1 2,growx");
 	    popolaComboLotto(method.getProprietarioLoggato());  
-	     JLabel LabelStima = new JLabel("Stima Raccolto");
-	     contentPane.add(LabelStima, "cell 0 4,alignx trailing");
+	    JLabel LabelStima = new JLabel("Stima Raccolto");
+	    contentPane.add(LabelStima, "cell 0 4,alignx trailing");
 	     
-	     FieldStimaRaccolto = new JTextField();
-	     FieldStimaRaccolto.setColumns(10);
-	     contentPane.add(FieldStimaRaccolto, "cell 1 4,growx");
+	    FieldStimaRaccolto = new JTextField();
+	    FieldStimaRaccolto.setColumns(10);
+	    contentPane.add(FieldStimaRaccolto, "cell 1 4,growx");
 	     
-	     JLabel kg = new JLabel("KG");
-	     contentPane.add(kg, "cell 2 4");
+	    JLabel kg = new JLabel("KG");
+	    contentPane.add(kg, "cell 2 4");
 	     
-	     JLabel lblTipologiaColtura = new JLabel("Tipologia Coltura");
-	     contentPane.add(lblTipologiaColtura, "cell 0 6,alignx trailing");
+	    JLabel lblTipologiaColtura = new JLabel("Tipologia Coltura");
+	    contentPane.add(lblTipologiaColtura, "cell 0 6,alignx trailing");
 	     
-	     FieldTipologiaColtura = new JTextField();
-	     FieldTipologiaColtura.setColumns(10);
-	     contentPane.add(FieldTipologiaColtura, "cell 1 6,growx");
+	    FieldTipologiaColtura = new JTextField();
+	    FieldTipologiaColtura.setColumns(10);
+	    contentPane.add(FieldTipologiaColtura, "cell 1 6,growx");
 	     
-	     JLabel indicazioneUtente = new JLabel("coltura1,coltura2,coltura3...");
-	     contentPane.add(indicazioneUtente, "cell 2 6,alignx left");
+	    JLabel indicazioneUtente = new JLabel("coltura1,coltura2,coltura3...");
+	    contentPane.add(indicazioneUtente, "cell 2 6,alignx left");
 	     
-	     JLabel date = new JLabel("GG/MM/AAAA");
-	     contentPane.add(date, "cell 1 8,alignx center,aligny center");
+	    JLabel date = new JLabel("GG/MM/AAAA");
+	    contentPane.add(date, "cell 1 8,alignx center,aligny center");
 	     
-	     JLabel date_1 = new JLabel("GG/MM/AAAA");
-	     contentPane.add(date_1, "cell 5 8,alignx center");
+	    JLabel date_1 = new JLabel("GG/MM/AAAA");
+	    contentPane.add(date_1, "cell 5 8,alignx center");
 	     
-	     JLabel LabelDataIP = new JLabel("Data Di Inizio");
-	     contentPane.add(LabelDataIP, "flowx,cell 0 9,alignx trailing");
+	    JLabel LabelDataIP = new JLabel("Data Di Inizio");
+	    contentPane.add(LabelDataIP, "flowx,cell 0 9,alignx trailing");
 	     
-	     FieldDataIP = new JTextField();
-	     contentPane.add(FieldDataIP, "cell 1 9,growx");
-	     FieldDataIP.setColumns(10);
+	    FieldDataIP = new JTextField();
+	    contentPane.add(FieldDataIP, "cell 1 9,growx");
+	    FieldDataIP.setColumns(10);
 	     
-	     JLabel LabelDataFP = new JLabel("Data Di Fine");
-	     contentPane.add(LabelDataFP, "cell 4 9,alignx trailing");
+	    JLabel LabelDataFP = new JLabel("Data Di Fine");
+	    contentPane.add(LabelDataFP, "cell 4 9,alignx trailing");
 	     
-	     FieldDataFP = new JTextField();
-	     contentPane.add(FieldDataFP, "cell 5 9,growx");
-	     FieldDataFP.setColumns(10);
+	    FieldDataFP = new JTextField();
+	    contentPane.add(FieldDataFP, "cell 5 9,growx");
+	    FieldDataFP.setColumns(10);
 	    	    
-	     JLabel LabelDescrizione = new JLabel("Descrizione");
-	     contentPane.add(LabelDescrizione, "cell 0 10");
-	    
-	    	    
+	    JLabel LabelDescrizione = new JLabel("Descrizione");
+	    contentPane.add(LabelDescrizione, "cell 0 10");
+	        
 	    contentPane.add(textArea, "cell 0 11 9 4,grow");
 	    
 	    JButton ButtonAvanti = new JButton("Avanti");
@@ -151,7 +145,6 @@ public class CreaProgetto extends JFrame {
 	    contentPane.add(ButtonSalva, "cell 1 15,alignx center");
 	    ButtonSalva.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
 				String titolo = FieldTitolo.getText();
 				String tipoColtura = FieldTipologiaColtura.getText().trim().replaceAll("\\s*,\\s*", ",");
 				String lotto = (String) ComboLotto.getSelectedItem();
@@ -203,7 +196,6 @@ public class CreaProgetto extends JFrame {
 		                JOptionPane.showMessageDialog(CreaProgetto.this, "La data non può essere minore di oggi!");
 		                FieldDataIP.setBackground(Color.RED);
 		                ButtonIndietro.setEnabled(true);
-		                
 		                return;
 		            }
 		            
@@ -235,14 +227,10 @@ public class CreaProgetto extends JFrame {
 		            return;
 				}
 
-				
 				int idLotto = Integer.parseInt(lotto);
 				LottoDTO lottoDTO = new LottoDTO(idLotto);
-				//vado a controllare se il progetto è completato nel lotto
-				boolean progettoCompletato = controller.controlloProgettoChiuso(lottoDTO);
-					
 				
-		 
+				boolean progettoCompletato = controller.controlloProgettoChiuso(lottoDTO); //vado a controllare se il progetto è completato nel lotto	
 				
 				if (progettoCompletato==false) { //se il progetto non è segnato come completato, blocca la creazione
 			        JOptionPane.showMessageDialog(CreaProgetto.this, 
@@ -255,7 +243,6 @@ public class CreaProgetto extends JFrame {
 			}
    	
 		});
-	    
 	    
 	    ButtonAvanti.addActionListener(new ActionListener() { 	//Prima di passare alla prossima GUI, effettua dei controlli
 	    	public void actionPerformed(ActionEvent e) {
@@ -273,7 +260,6 @@ public class CreaProgetto extends JFrame {
 	                							  "COMPILA TUTTI I CAMPI PRIMA DI PROCEDERE!", "Errore", JOptionPane.ERROR_MESSAGE);
 	                return;
 	            }
-	            
 	            
 	            try { 	// Converte le date dell'attività ed effettua controlli
 					LocalDate dataInseritaIP = LocalDate.parse(dataInizioP, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
@@ -313,8 +299,7 @@ public class CreaProgetto extends JFrame {
 					
 				}
 	            
-	            //converte i tipi dei field per creare gli oggetti DTO
-	            double stima = Double.parseDouble(stimaRaccolto);
+	            double stima = Double.parseDouble(stimaRaccolto); //converte i tipi dei field per creare gli oggetti DTO
 	            
 	            LocalDate localDataInizio = LocalDate.parse(dataInizioP, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 	            Date dataInizio = Date.valueOf(localDataInizio);
@@ -323,14 +308,11 @@ public class CreaProgetto extends JFrame {
 	            Date dataFine = Date.valueOf(localDataFine);
 	            int idLotto = Integer.parseInt(lotto);
 	            
-	            //creazione di oggetti DTO
-	            ProgettoColtivazioneDTO progetto = new ProgettoColtivazioneDTO(titolo, descrizione, stima, dataInizio, dataFine, idLotto);
+	            ProgettoColtivazioneDTO progetto = new ProgettoColtivazioneDTO(titolo, descrizione, stima, dataInizio, dataFine, idLotto); //creazione di oggetti DTO
 	            ColturaDTO coltura = new ColturaDTO(tipoColtura);
 	            LottoDTO lottoDTO = new LottoDTO(idLotto);
 	            
-	            // Passa i field già popolati alla GUI attività salvati nelle variabili locali
-	            //Attivita attivita = new Attivita(titolo, lotto, stimaRaccolto, tipoColtura, dataInizioP, dataFineP, descrizione, idProgetto);
-	            Attivita attivita = new Attivita(progetto, coltura, lottoDTO);
+	            Attivita attivita = new Attivita(progetto, coltura, lottoDTO); // Passa i field già popolati alla GUI attività salvati nelle variabili locali
 	            
 	            CreaProgetto.this.setVisible(false);
 	            attivita.setVisible(true);
@@ -339,6 +321,7 @@ public class CreaProgetto extends JFrame {
 
        
 	}
+	
 	public void popolaComboLotto(ProprietarioDTO proprietario) {
 		List<String> lotti = controller.getLottiByProprietario(method.getProprietarioLoggato());
 		ComboLotto.removeAllItems();

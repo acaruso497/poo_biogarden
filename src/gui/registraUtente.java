@@ -54,7 +54,6 @@ public class registraUtente extends JFrame {
 		    contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		    setContentPane(contentPane);
 
-
 		    contentPane.setLayout(new MigLayout("", "[grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow]", 
 		    									"[grow][grow][grow][grow][grow][][grow][grow][grow][grow][grow][][grow][grow][grow][grow]"));
 		    
@@ -68,8 +67,7 @@ public class registraUtente extends JFrame {
 		    name.setColumns(10);
 		    contentPane.add(name, "cell 7 2,growx");
 		    
-		    //Pulsante freccia indietro
-		    btnback = new JButton("◀");
+		    btnback = new JButton("◀"); //Pulsante freccia indietro
 		    btnback.addActionListener(new ActionListener() {
 		    	public void actionPerformed(ActionEvent e) {
 		    		Login login = new Login();
@@ -101,17 +99,16 @@ public class registraUtente extends JFrame {
 		    
 		    ComboProprietari.setEnabled(false);
 		    
-		    
 		    comboBox.addActionListener(new ActionListener() { 	// Popola ComboProprietari usando il controller
 		        public void actionPerformed(ActionEvent e) {
 		        	String ruoloSelezionato = (String) comboBox.getSelectedItem();
 		            if ("Coltivatore".equals(ruoloSelezionato)) {
-		                ComboProprietari.setEnabled(true); // Abilita la ComboProprietari
-		                ArrayList<String> proprietari = controller.popolaComboProprietari(); // Cattura il risultato
-		                ComboProprietari.removeAllItems(); // Pulisci la combo
+		                ComboProprietari.setEnabled(true); 
+		                ArrayList<String> proprietari = controller.popolaComboProprietari(); 
+		                ComboProprietari.removeAllItems(); 
 		                ComboProprietari.addItem("--Seleziona--");
 		                for (String username : proprietari) {
-		                    ComboProprietari.addItem(username); // Aggiungi ogni username
+		                    ComboProprietari.addItem(username); 
 		                }
 		            }
 		            else {
@@ -187,8 +184,6 @@ public class registraUtente extends JFrame {
 		                JOptionPane.showMessageDialog(registraUtente.this, 
 		                                                  "Il codice fiscale deve essere al massimo 16 caratteri alfanumerici", 
 		                                                  "Errore", JOptionPane.ERROR_MESSAGE);
-		             
-		                
 		            } else {
 		               if (RUOLO.equals("Coltivatore")) {
 		            	   value = controller.registra(nome, cognome, user, pass, cf, RUOLO.toString(), usernameProprietario);
@@ -197,8 +192,7 @@ public class registraUtente extends JFrame {
 		            	   value = controller.registra(nome, cognome, user, pass, cf, RUOLO.toString(), usernameProprietario);
 		                }
 		            
-		            // Messaggi di avviso stato registrazione
-		            try {
+		            try { // Messaggi di avviso stato registrazione
 		                if (value[0] == false && value[1] == false && value[2] == false && value[3] == true) {
 		                    JOptionPane.showMessageDialog(registraUtente.this, 
 		                    							  "USERNAME ESISTENTE ", "Errore", JOptionPane.ERROR_MESSAGE);
@@ -222,11 +216,8 @@ public class registraUtente extends JFrame {
 		            } catch (Exception ex) {
 		                ex.printStackTrace();		            		        
 		            }
-		       }//chisura else
+		       }
 		    }
 		    });
 		    }
 		    } 
-	
-	
-	
