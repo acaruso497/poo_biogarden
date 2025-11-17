@@ -2,7 +2,7 @@ package dto;
 
 public abstract class UtenteDTO {
 
-	private String username;
+	protected String username;
     private String password;
     
     public UtenteDTO(String username, String password) {
@@ -14,7 +14,7 @@ public abstract class UtenteDTO {
         this.username = username;
     }
     
-    public abstract boolean autentica();
+    //public abstract boolean autentica();
     
     // Getter e Setter
     public String getUsername() { return username; }

@@ -36,16 +36,4 @@ public class NotificaDTO {
 
 	public String getUtentiTag() { return utentiTag; }
 	public void setUtentiTag(String utentiTag) { this.utentiTag = utentiTag; }
-	
-
-	public static  boolean legginotifiche(ColtivatoreDTO coltivatore) {
-        return NotificaDAO.segnaNotificheColtivatoreComeLette(coltivatore);
-    }
-	public static boolean checknotifiche(ColtivatoreDTO coltivatore) {
-        return NotificaDAO.ciSonoNotificheNonLette(coltivatore);
-    }
-	public static String mostranotifiche(ColtivatoreDTO coltivatore) {
-        return NotificaDAO.getNotificheNonLette(coltivatore);
-    }
-	
 }

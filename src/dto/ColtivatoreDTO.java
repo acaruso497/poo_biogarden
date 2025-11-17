@@ -36,10 +36,7 @@ public class ColtivatoreDTO extends UtenteDTO{
 	public ColtivatoreDTO() {
 		super(null);
 	}	
-	@Override
-	public boolean autentica() {
-		return ColtivatoreDAO.authC(this);
-	}	
+	
 	//Getter e Setter
 	public String getEsperienza() { return esperienza; }
 	public String getNome() { return nome; }

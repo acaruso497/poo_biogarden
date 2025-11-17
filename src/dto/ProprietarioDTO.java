@@ -1,6 +1,6 @@
 package dto;
 
-import dao.ProprietarioDAO;
+
 
 public class ProprietarioDTO extends UtenteDTO{
 	private String nome;
@@ -22,10 +22,8 @@ public class ProprietarioDTO extends UtenteDTO{
 		super(username, password);
 	}
 
-	@Override
-	public boolean autentica() {
-		return ProprietarioDAO.authP(this);
-	}
+
+
 	
 	//Getter e Setter
 	public String getNome() { return nome; }
@@ -36,5 +34,8 @@ public class ProprietarioDTO extends UtenteDTO{
 
 	public String getCodiceFiscale() { return codiceFiscale; }
 	public void setCodiceFiscale(String codiceFiscale) { this.codiceFiscale = codiceFiscale; }
+	
+	@Override
+    public String getUsername() { return username; }
 	
 }

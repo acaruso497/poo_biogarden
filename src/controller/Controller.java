@@ -12,61 +12,104 @@ import gui.HomePageColtivatore;
 import gui.HomePageProprietario;
 
 public class Controller {
-	private int countSemina = 0;
-    private int countIrrigazione = 0;
-    private int countRaccolta = 0;
+private ColtivatoreDTO coltivatore;
+private ProprietarioDTO proprietario;
+private Integer countSemina;
+private Integer countIrrigazione ;
+private Integer countRaccolta ;
     
 	
 //                      _________________ LOGIN _________________
-	
-    public boolean login(String username, String password) { //effettua l'autenticazione dell'utente   	
-        boolean check = false; // [0]=true (user e password)campiOK, [1]=proprietario, [2]=coltivatore
-
-        if (username == null || username.trim().isEmpty()
-            || password == null || password.trim().isEmpty())
-        {
-            check = false;            // campi non validi
-            return check;           
-        }
-        
-        check = true;  // campi ok      
-        return check;
-    }   
-    public boolean creaUtente(boolean check, JFrame loginFrame) {
-    	
-    	if(check==true) {
-    		ProprietarioDTO p = new ProprietarioDTO(method.getUsernameGlobale(), method.getPsw());
-            boolean ruolo = p.autentica();
-            if(ruolo==true) { 
-            	method.setProprietarioLoggato(p); 
-            	System.out.println(method.getUsernameGlobale() + p.getNome() + p.getCognome()); 
-            	HomePageProprietario homeP = new HomePageProprietario();
-            	homeP.setVisible(true);
-            	loginFrame.setVisible(false);
-            	return true;
-            	
-            } 
-            else if(ruolo==false) {
-            	ColtivatoreDTO c = new ColtivatoreDTO(method.getUsernameGlobale(), method.getPsw());
-            	boolean ruolo2 = c.autentica();
-            	if(ruolo2) { 
-            		method.setColtivatoreLoggato(c); 
-            		System.out.println(method.getUsernameGlobale() + c.getNome() + c.getCognome()); 
-            		HomePageColtivatore homeC = new HomePageColtivatore();
-            		homeC.setVisible(true);
-            		loginFrame.setVisible(false);
-            		return true;
-            	}
-            }
-    	}
-    	
-    	return false; //non trova nessun utente
-          
-    }
+//	
+//    public boolean login(String username, String password) { //effettua l'autenticazione dell'utente   	
+//        boolean check = false; // [0]=true (user e password)campiOK, [1]=proprietario, [2]=coltivatore
+//
+//        if (username == null || username.trim().isEmpty()
+//            || password == null || password.trim().isEmpty())
+//        {
+//            check = false;            // campi non validi
+//            return check;           
+//        }
+//        
+//        check = true;  // campi ok      
+//        return check;
+//    }   
+//    public boolean creaUtente(boolean check, String username, String password) {
+//    	
+//    	if(check==true) {
+//    		ProprietarioDTO p = new ProprietarioDTO(username,password);
+//            boolean ruolo = ProprietarioDAO.authP(p);
+//            if(ruolo==true) { 
+//            	
+////          	HomePageProprietario homeP = new HomePageProprietario();
+////            	homeP.setVisible(true);
+////            	loginFrame.setVisible(false);
+//            	return true;
+//            	
+//            } 
+//            else if(ruolo==false) {
+//            	ColtivatoreDTO c = new ColtivatoreDTO(username,password);
+//            	boolean ruolo2 =ColtivatoreDAO.authC(c);
+//            	if(ruolo2) { 
+//            		
+////            		HomePageColtivatore homeC = new HomePageColtivatore();
+////            		homeC.setVisible(true);
+////            		loginFrame.setVisible(false);
+//            		return false;
+//            	}
+//            }
+//    	}
+//    	
+//    	return false; //non trova nessun utente
+//          
+//    }
     public ProprietarioDTO getProprietario (ProprietarioDTO proprietario) {
     	return ProprietarioDAO.getProprietario(proprietario);
     }   
-    
+
+	public boolean autentica(ColtivatoreDTO coltivatore) {
+		return ColtivatoreDAO.authC(coltivatore);
+	}
+	public boolean autentica(ProprietarioDTO proprietario) {
+		return ProprietarioDAO.authP(proprietario);
+	}
+
+
+//_________________ LOGIN _________________
+
+public int login(String username, String password) { 
+	// Restituisce: 
+	// 0 = campi non validi (vuoti/null)
+	// 1= credenziali errate (username/password sbagliati)
+	// 2 = proprietario
+	// 3= coltivatore
+	
+	// Controllo campi vuoti
+	if (username == null || username.trim().isEmpty()
+		|| password == null || password.trim().isEmpty()) {
+		return 0; // campi non validi
+	}
+	
+	// Prima verifica se è proprietario
+	ProprietarioDTO p = new ProprietarioDTO(username, password);
+	boolean isProprietario = ProprietarioDAO.authP(p);
+	if (isProprietario) {
+		return 2; // proprietario
+	}
+	
+	// Se non è proprietario, verifica se è coltivatore
+	ColtivatoreDTO c = new ColtivatoreDTO(username, password);
+	boolean isColtivatore = ColtivatoreDAO.authC(c);
+	if (isColtivatore) {
+		return 3; // coltivatore
+	}
+	
+	return 1; // credenziali errate (campi pieni ma username/password sbagliati)
+}   
+
+//ELIMINA il metodo creaUtente - non serve più
+
+
 //                      _________________ LOGIN _________________
     
 //                     _________________ REGISTRAZIONE UTENTE _________________
@@ -172,6 +215,16 @@ public class Controller {
 		ColtivatoreDTO coltivatore = new ColtivatoreDTO(username);
 		return ColtivatoreDAO.usernameColtivatoreEsiste(coltivatore);
 	}
+	
+	public static  boolean legginotifiche(ColtivatoreDTO coltivatore) {
+        return NotificaDAO.segnaNotificheColtivatoreComeLette(coltivatore);
+    }
+	public static boolean checknotifiche(ColtivatoreDTO coltivatore) {
+        return NotificaDAO.ciSonoNotificheNonLette(coltivatore);
+    }
+	public static String mostranotifiche(ColtivatoreDTO coltivatore) {
+        return NotificaDAO.getNotificheNonLette(coltivatore);
+    }
 
    
 //                         _________________ CREAZIONE NOTIFICA _________________

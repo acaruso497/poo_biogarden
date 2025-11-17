@@ -27,11 +27,15 @@ public class HomePageProprietario extends JFrame {
 	private CreaProgetto creaprogetto;
 	private Controller controller = new Controller();	
 	private ProprietarioDTO proprietario;//AGGIUNTO
-	public HomePageProprietario() {
-		//AGGIUNTO
 
-		proprietario = new  ProprietarioDTO(method.getUsernameGlobale(), method.getPsw());//recupera il il Proprietario loggato
-		proprietario=controller.getProprietario(proprietario);
+	public HomePageProprietario() {
+
+
+		//proprietario = new  ProprietarioDTO(username, psw);//recupera il il Proprietario loggato
+		
+		
+		proprietario= method.getProprietarioLoggato();
+		
 		method.setProprietarioLoggato(proprietario);
 		//AGGIUNTO
 		setTitle("HomePageProprietario");

@@ -138,15 +138,5 @@ public class NotificaDAO {
 	        try { if (conn != null) conn.close(); } catch (Exception e) {}
 	    }
 	}
-
-
 	//____________________   CREAZIONE NOTIFICA     ____________________________________
-	
-	
-	
-
-	
-	
-	
-	
 }

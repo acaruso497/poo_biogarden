@@ -49,7 +49,7 @@ public class VisualizzaProgetti extends JFrame {
 	private ProgettoColtivazioneDTO ProgettoColtivazioneDTO;
 	Controller controller = new Controller();
     private ButtonGroup gruppoStato;
-    ProprietarioDTO proprietario = method.getProprietarioLoggato();
+    ProprietarioDTO proprietario ;
     static String idLotto = null;
     JComboBox<String> ComboAttivita = new JComboBox<>();
     JComboBox<String> ComboProgetto = new JComboBox<>();
@@ -71,7 +71,8 @@ public class VisualizzaProgetti extends JFrame {
 	// attivita , progetto , lotto, coltura, semina irrigazione e raccolta
 	public VisualizzaProgetti(HomePageProprietario home) {
 		this.home = home;
-		
+	
+		proprietario =method.getProprietarioLoggato(); 
 		ComboAttivita.setModel(new DefaultComboBoxModel<>( //Tipo di attività selezionabile
 	    	    new String[] { "-- Seleziona --",
 	    	    				"Semina", 
@@ -81,7 +82,6 @@ public class VisualizzaProgetti extends JFrame {
 		setTitle("Visualizza Progetti");
 	    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	    setBounds(100, 100, 950, 553);
-	    
 	    URL imageUrl = getClass().getResource("/img/sfondoschede.PNG");
 	    contentPane = new BackgroundPanel(imageUrl);
 	    contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -399,9 +399,7 @@ public class VisualizzaProgetti extends JFrame {
 	    	}
 	    });
         
-        // qui ogni volta che viene selezionata un attivita ti serve ginizio , gfine , stato 
-       // chiami dal controller un metodo che in base al tipo di attivita selezionato va a pescare questi dati 
-       // crea l'ogetto e poi accedi ai suoi campi per visualizzarli 
+
         
         ComboAttivita.addActionListener(new ActionListener() { //popola la combobox delle attività
             public void actionPerformed(ActionEvent e) {
@@ -511,7 +509,6 @@ public class VisualizzaProgetti extends JFrame {
         }
         ComboProgetto.setSelectedIndex(-1);
     }
-
 
     private void popolaFieldLotto() {  //Popola il field del lotto
 //        String selectedProgetto = (String) ComboProgetto.getSelectedItem(); //mi prendo il progetto selezionato
