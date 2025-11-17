@@ -57,10 +57,6 @@ public class LottoDAO {
 
 	    } catch (SQLException ex) {
 	    	ex.printStackTrace();
-	    } finally {
-	        try { if (risultato != null) risultato.close(); } catch (Exception ignored) {}
-	        try { if (stmt != null) stmt.close(); } catch (Exception ignored) {}
-	        try { if (conn != null) conn.close(); } catch (Exception ignored) {}
 	    }
 	    return idLotto;
 	}

@@ -31,11 +31,7 @@ public class ColtivatoreDAO {
 		   } catch(SQLException ex) {
 			   ex.printStackTrace();
 			   return false;
-		   } finally {
-			   try { if (risultato != null) risultato.close(); } catch (Exception e) {}
-		        try { if (stmt != null) stmt.close(); } catch (Exception e) {}
-		        try { if (conn != null) conn.close(); } catch (Exception e) {}
-		   }
+		   } 
 	}
 	
 	//____________________   LOGIN     ____________________________________
@@ -69,10 +65,7 @@ public class ColtivatoreDAO {
 			    } catch (SQLException ex) {
 			        ex.printStackTrace();
 			        return false;
-			    } finally {
-			        try { if (stmt != null) stmt.close(); } catch (Exception e) {}
-			        try { if (conn != null) conn.close(); } catch (Exception e) {}
-			    }
+			    } 
 			}
 	//____________________   REGISTRAZIONE     ____________________________________
 	
@@ -112,11 +105,7 @@ public class ColtivatoreDAO {
 	    } catch (SQLException ex) {
 	        ex.printStackTrace();
 	        return null;
-	    } finally {
-	        try { if (risultato != null) risultato.close(); } catch (Exception e) {}
-	        try { if (stmt != null) stmt.close(); } catch (Exception e) {}
-	        try { if (conn != null) conn.close(); } catch (Exception e) {}
-	    }
+	    } 
 	}
 
 public List<String> popolaProgettiCB(ColtivatoreDTO coltivatore) {
@@ -205,11 +194,7 @@ public List<String> popolaProgettiCB(ColtivatoreDTO coltivatore) {
 //
 //    } catch (SQLException ex) {
 //        ex.printStackTrace();
-//    } finally {
-//        try { if (rs != null) rs.close(); } catch (SQLException ignored) {}
-//        try { if (stmt != null) stmt.close(); } catch (SQLException ignored) {}
-//        try { if (conn != null) conn.close(); } catch (SQLException ignored) {}
-//    }
+//    } 
 //
 //    return tipi;
 //}
@@ -310,11 +295,7 @@ public String[] getDateByAttivitaId(String idAttivita, String tipoAttivita) {
         ex.printStackTrace();
     } catch (NumberFormatException e) {
         System.err.println("ID attivita non valido: " + idAttivita);
-    } finally {
-        try { if (rs != null) rs.close(); } catch (SQLException ignored) {}
-        try { if (stmt != null) stmt.close(); } catch (SQLException ignored) {}
-        try { if (conn != null) conn.close(); } catch (SQLException ignored) {}
-    }
+    } 
     
     return date;
 }
@@ -432,11 +413,7 @@ public List<String> getColtura(ColtivatoreDTO coltivatore, String progetto) {
 	  
 	} catch (SQLException ex) {
 	  ex.printStackTrace();
-	} finally {
-	    try { if (risultato != null) risultato.close(); } catch (Exception ignored) {}
-	    try { if (stmt != null) stmt.close(); } catch (Exception ignored) {}
-	    try { if (conn != null) conn.close(); } catch (Exception ignored) {}
-	}
+	} 
 	return lista;
 }
 
@@ -462,11 +439,7 @@ public boolean usernameColtivatoreEsiste(ColtivatoreDTO coltivatore) { //control
     } catch (SQLException ex) {
         ex.printStackTrace();
         return false; // In caso di errore, assumiamo che lo username non esista
-    } finally {
-        try { if (rs != null) rs.close(); } catch (Exception e) {}
-        try { if (stmt != null) stmt.close(); } catch (Exception e) {}
-        try { if (conn != null) conn.close(); } catch (Exception e) {}
-    }
+    } 
 }
 }
 

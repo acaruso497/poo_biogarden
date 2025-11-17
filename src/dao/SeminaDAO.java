@@ -46,11 +46,7 @@ public class SeminaDAO {
 					     }
 				} catch (SQLException ex) {
 					ex.printStackTrace();
-					} finally {
-					  try { if (rs != null) rs.close(); } catch (Exception ignored) {}
-					  try { if (stmt != null) stmt.close(); } catch (Exception ignored) {}
-					  try { if (conn != null) conn.close(); } catch (Exception ignored) {}
-				}
+				} 
 		}
 	
 			//	_________________ VISUALIZZA PROGETTI _________________

@@ -54,11 +54,7 @@ public class ProgettoColtivazioneDAO {
 		    } catch(SQLException | NumberFormatException ex) {
 		        ex.printStackTrace();
 		        return false;
-		    } finally {
-		        try { if (risultato != null) risultato.close(); } catch (Exception e) {}
-		        try { if (stmt != null) stmt.close(); } catch (Exception e) {}
-		        try { if (conn != null) conn.close(); } catch (Exception e) {}
-		    }
+		    } 
 		}
 		
 		public boolean insertAttivita(SeminaDTO semina, IrrigazioneDTO irrigazione, RaccoltaDTO raccolta, LottoDTO lotto, ProgettoColtivazioneDTO progetto) {
@@ -130,11 +126,7 @@ public class ProgettoColtivazioneDAO {
 		    } catch(SQLException | NumberFormatException ex) {
 		        ex.printStackTrace();
 		        return false;
-		    } finally {
-		        try { if (risultato != null) risultato.close(); } catch (Exception e) {}
-		        try { if (stmt != null) stmt.close(); } catch (Exception e) {}
-		        try { if (conn != null) conn.close(); } catch (Exception e) {}
-		    }
+		    } 
 			
 			
 		}
@@ -208,11 +200,7 @@ public class ProgettoColtivazioneDAO {
 			} catch (SQLException ex) {
 				ex.printStackTrace();
 				return null;
-			} finally {
-				try { if (rs != null) rs.close(); } catch (Exception e) {}
-				try { if (stmt != null) stmt.close(); } catch (Exception e) {}
-				try { if (conn != null) conn.close(); } catch (Exception e) {}
-			}
+			} 
 		}	
 		
 		public boolean controlloProgettoChiuso(LottoDTO lotto) { //controlla se il progetto è completato
@@ -245,12 +233,7 @@ public class ProgettoColtivazioneDAO {
 		    } catch(SQLException | NumberFormatException ex) {
 		        ex.printStackTrace();
 		        return false;
-		    } finally {
-		        try { if (risultato != null) risultato.close(); } catch (Exception e) {}
-		        try { if (stmt != null) stmt.close(); } catch (Exception e) {}
-		        try { if (conn != null) conn.close(); } catch (Exception e) {}
-		    }
-		    
+		    } 
 			}
 		
 		public ArrayList<String> dateI_FProgCB(String titolo_progetto, ColtivatoreDTO coltivatore) {		
@@ -286,11 +269,7 @@ public class ProgettoColtivazioneDAO {
 
 		    } catch (SQLException ex) {
 		        ex.printStackTrace();
-		    } finally {
-		        try { if (rs != null) rs.close(); } catch (Exception ignored) {}
-		        try { if (stmt != null) stmt.close(); } catch (Exception ignored) {}
-		        try { if (conn != null) conn.close(); } catch (Exception ignored) {}
-		    }
+		    } 
 
 		    return date;
 		}
@@ -363,11 +342,7 @@ public class ProgettoColtivazioneDAO {
 			}  catch (SQLException | NumberFormatException ex) {
 				ex.printStackTrace();
 				return false;
-			} finally {
-				try { if (risultato != null) risultato.close(); } catch (Exception ignored) {}
-				try { if (stmt != null) stmt.close(); } catch (Exception ignored) {}
-				try { if (conn != null) conn.close(); } catch (Exception ignored) {}
-			}		
+			} 
 		}
 		
 		
@@ -397,11 +372,7 @@ public class ProgettoColtivazioneDAO {
 				
 				} catch (SQLException | NumberFormatException ex) {
 					ex.printStackTrace();
-				} finally {
-					try { if (risultato != null) risultato.close(); } catch (Exception ignored) {}
-					try { if (stmt != null) stmt.close(); } catch (Exception ignored) {}
-					try { if (conn != null) conn.close(); } catch (Exception ignored) {}
-				}
+				} 
 		}
 		
 	    public boolean isCompletata(ProprietarioDTO proprietario, ProgettoColtivazioneDTO progetto) {  //controlla se il progetto è completato
@@ -434,11 +405,7 @@ public class ProgettoColtivazioneDAO {
 	    } catch (SQLException ex) {
 	    	ex.printStackTrace();
 	    	return false;
-	    } finally {
-	        try { if (risultato != null) risultato.close(); } catch (Exception ignored) {}
-	        try { if (stmt != null) stmt.close(); } catch (Exception ignored) {}
-	        try { if (conn != null) conn.close(); } catch (Exception ignored) {}
-	    }
+	    } 
 	 }   
 			//      _________________ VISUALIZZA PROGETTI _________________
 }

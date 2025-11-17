@@ -32,11 +32,7 @@ public class UtenteDAO {
 	    } catch (SQLException ex) {
 	        ex.printStackTrace();
 	        return false; // In caso di errore, assumiamo che lo username non esista
-	    } finally {
-	        try { if (rs != null) rs.close(); } catch (Exception e) {}
-	        try { if (stmt != null) stmt.close(); } catch (Exception e) {}
-	        try { if (conn != null) conn.close(); } catch (Exception e) {}
-	    }
+	    } 
 	}
 	
 	//____________________   REGISTRAZIONE     ____________________________________

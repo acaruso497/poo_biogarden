@@ -102,11 +102,7 @@ public class AttivitaDAO {
 		    } catch (SQLException ex) {
 		        ex.printStackTrace();
 		        return false; 
-		    } finally {
-		        try { if (risultato != null) risultato.close(); } catch (Exception e) {}
-		        try { if (stmt != null) stmt.close(); } catch (Exception e) {}
-		        try { if (conn != null) conn.close(); } catch (Exception e) {}
-		    }
+		    } 
 		}	
 //	_________________ VISUALIZZA PROGETTI _________________	
 }

@@ -32,12 +32,7 @@ public class ProprietarioDAO {
 		   } catch(SQLException ex) {
 			   ex.printStackTrace();
 			   return false;
-		   } finally {
-			   try { if (risultato != null) risultato.close(); } catch (Exception e) {}
-		        try { if (stmt != null) stmt.close(); } catch (Exception e) {}
-		        try { if (conn != null) conn.close(); } catch (Exception e) {}
-		   }
-		
+		   } 
 	}
 	
 	public ProprietarioDTO getProprietario(ProprietarioDTO credenziali) {
@@ -71,11 +66,7 @@ public class ProprietarioDAO {
 	    } catch (SQLException ex) {
 	        ex.printStackTrace();
 	        return null;
-	    } finally {
-	        try { if (risultato != null) risultato.close(); } catch (Exception e) {}
-	        try { if (stmt != null) stmt.close(); } catch (Exception e) {}
-	        try { if (conn != null) conn.close(); } catch (Exception e) {}
-	    }
+	    } 
 	}
 	//____________________   LOGIN     ____________________________________
 	
@@ -102,10 +93,7 @@ public class ProprietarioDAO {
 			    } catch (SQLException ex) {
 				   ex.printStackTrace();
 				   return false;
-				} finally {
-				  try { if (stmt != null) stmt.close(); } catch (Exception e) {}
-				  try { if (conn != null) conn.close(); } catch (Exception e) {}
-			    }
+				} 
 		  }		
 		
 		public boolean aggiungiL(ProprietarioDTO proprietario) { //Aggiunge il primo lotto disponibile al proprietario
@@ -137,11 +125,7 @@ public class ProprietarioDAO {
 				 } catch (SQLException ex) {
 				     ex.printStackTrace();
 				     return false;
-				} finally {
-				   try { if (risultato != null) risultato.close(); } catch (Exception e) {}
-				   try { if (stmt != null) stmt.close(); } catch (Exception e) {}
-				   try { if (conn != null) conn.close(); } catch (Exception e) {}
-				 }
+				} 
 			   }
 		
 			public ArrayList<String> popolaComboProprietari() { // popola la combobox dei proprietari
@@ -164,12 +148,7 @@ public class ProprietarioDAO {
 			        } catch (SQLException ex) {
 			            ex.printStackTrace(); 
 			            System.out.println("Errore durante l'esecuzione della query: " + ex.getMessage());
-			        } finally {
-			            // Chiudi tutte le risorse nel blocco finally
-			            try { if (rs != null) rs.close(); } catch (Exception e) {}
-			            try { if (stmt != null) stmt.close(); } catch (Exception e) {}
-			            try { if (conn != null) conn.close(); } catch (Exception e) {}
-			        }
+			        } 
 
 			        return usernames; // Restituisce l'ArrayList con gli username
 			    }						
@@ -202,11 +181,7 @@ public class ProprietarioDAO {
 			    } catch (SQLException ex) {
 			        ex.printStackTrace();
 			        return "";
-			    } finally {
-			        try { if (risultato != null) risultato.close(); } catch (Exception e) {}
-			        try { if (stmt != null) stmt.close(); } catch (Exception e) {}
-			        try { if (conn != null) conn.close(); } catch (Exception e) {}
-			    }
+			    } 
 			}		
 			
 			public ArrayList<String> getColtivatoriByProprietario(ProprietarioDTO proprietario) { 
@@ -232,11 +207,7 @@ public class ProprietarioDAO {
 			        return coltivatori;
 			    } catch (SQLException ex) {
 			        ex.printStackTrace();
-			    } finally {
-			        try { if (risultato != null) risultato.close(); } catch (Exception e) {}
-			        try { if (stmt != null) stmt.close(); } catch (Exception e) {}
-			        try { if (conn != null) conn.close(); } catch (Exception e) {}
-			    }
+			    } 
 			    return coltivatori;
 			}
 			
@@ -269,11 +240,7 @@ public class ProprietarioDAO {
 			        }
 			    } catch (SQLException e) {
 			        System.err.println("Errore SELECT: " + e.getMessage());
-			    } finally {
-			        try { if (risultato != null) risultato.close(); } catch (Exception ignored) {}
-			        try { if (stmt != null) stmt.close(); } catch (Exception ignored) {}
-			        try { if (conn != null) conn.close(); } catch (Exception ignored) {}
-			    }
+			    } 
 			    return lista;
 			}		
 	//____________________   CREAZIONE PROGETTO COLTIVAZIONE     ____________________________________
@@ -307,11 +274,7 @@ public class ProprietarioDAO {
 		            }  
 		        } catch (SQLException ex) {
 		        	ex.printStackTrace();
-		        } finally {
-		            try { if (risultato != null) risultato.close(); } catch (Exception ignored) {}
-		            try { if (stmt != null) stmt.close(); } catch (Exception ignored) {}
-		            try { if (conn != null) conn.close(); } catch (Exception ignored) {}
-		        }
+		        } 
 		        return lista;
 		    }
 		    

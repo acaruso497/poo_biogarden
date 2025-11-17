@@ -31,11 +31,7 @@ public class NotificaDAO {
 		  ex.printStackTrace();
 		  return false;
 	    }
-    finally {
-		try { if (risultato != null) risultato.close(); } catch (Exception e) {}
-		try { if (stmt != null) stmt.close(); } catch (Exception e) {}
-		try { if (conn != null) conn.close(); } catch (Exception e) {}
-   }	
+    
  }
 	
 	public boolean ciSonoNotificheNonLette(ColtivatoreDTO coltivatore) {
@@ -64,11 +60,7 @@ public class NotificaDAO {
 	    } catch (SQLException ex) {
 	        ex.printStackTrace();
 	        return false;
-	    } finally {
-	        try { if (rs != null) rs.close(); } catch (Exception e) {}
-	        try { if (stmt != null) stmt.close(); } catch (Exception e) {}
-	        try { if (conn != null) conn.close(); } catch (Exception e) {}
-	    }
+	    } 
 	}
 	
 	public boolean segnaNotificheColtivatoreComeLette(ColtivatoreDTO coltivatore) {
@@ -92,10 +84,7 @@ public class NotificaDAO {
 	    } catch (SQLException ex) {
 	        ex.printStackTrace();
 	        return false;
-	    } finally {
-	        try { if (stmt != null) stmt.close(); } catch (Exception e) {}
-	        try { if (conn != null) conn.close(); } catch (Exception e) {}
-	    }
+	    } 
 	}
 	
 	public String getNotificheNonLette(ColtivatoreDTO coltivatore){
@@ -130,11 +119,7 @@ public class NotificaDAO {
 	    } catch (SQLException ex) {
 	        ex.printStackTrace();
 	        return "";
-	    } finally {
-	        try { if (rs != null) rs.close(); } catch (Exception e) {}
-	        try { if (stmt != null) stmt.close(); } catch (Exception e) {}
-	        try { if (conn != null) conn.close(); } catch (Exception e) {}
-	    }
+	    } 
 	}
 	//____________________   CREAZIONE NOTIFICA     ____________________________________
 }

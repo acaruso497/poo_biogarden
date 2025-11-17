@@ -41,11 +41,7 @@ public class RaccoltaDAO {
 	        try { if (conn != null) conn.rollback(); } catch (Exception ignore) {}
 	        e.printStackTrace();
 	        return false;
-	    } finally {
-	        try { if (ps != null) ps.close(); } catch (Exception ignore) {}
-	        try { if (conn != null) conn.setAutoCommit(true); } catch (Exception ignore) {}
-	        try { if (conn != null) conn.close(); } catch (Exception ignore) {}
-	    }
+	    } 
 	}
 	
 			//	_________________ HOMEPAGE COLTIVATORE  _________________
@@ -90,11 +86,7 @@ public class RaccoltaDAO {
 					     }
 				} catch (SQLException ex) {
 					ex.printStackTrace();
-					} finally {
-					  try { if (rs != null) rs.close(); } catch (Exception ignored) {}
-					  try { if (stmt != null) stmt.close(); } catch (Exception ignored) {}
-					  try { if (conn != null) conn.close(); } catch (Exception ignored) {}
-				}
+					}
 		}
 	
 			//	_________________ VISUALIZZA PROGETTI _________________

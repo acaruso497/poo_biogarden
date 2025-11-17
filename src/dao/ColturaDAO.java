@@ -43,10 +43,6 @@ public class ColturaDAO {
 	     }
 	    } catch (SQLException ex) {
 	        ex.printStackTrace();
-	    } finally {
-	        try { if (risultato != null) risultato.close(); } catch (Exception ignored) {}
-	        try { if (stmt != null) stmt.close(); } catch (Exception ignored) {}
-	        try { if (conn != null) conn.close(); } catch (Exception ignored) {}
 	    }
 	    return raccolto.isEmpty() ? "nessun dato!!!" : raccolto; // Restituisci "0 kg" se non trovato
 	}
@@ -77,11 +73,7 @@ public class ColturaDAO {
 		        }
 		    } catch (SQLException ex) {
 		        ex.printStackTrace();
-		    } finally {
-		        try { if (risultato != null) risultato.close(); } catch (Exception ignored) {}
-		        try { if (stmt != null) stmt.close(); } catch (Exception ignored) {}
-		        try { if (conn != null) conn.close(); } catch (Exception ignored) {}
-		    }
+		    } 
 		    return listaC;
 		}
 	
@@ -111,11 +103,7 @@ public class ColturaDAO {
 
 				    } catch (SQLException ex) {
 				    	ex.printStackTrace();
-				    } finally {
-				        try { if (risultato != null) risultato.close(); } catch (Exception ignored) {}
-				        try { if (stmt != null) stmt.close(); } catch (Exception ignored) {}
-				        try { if (conn != null) conn.close(); } catch (Exception ignored) {}
-				    }
+				    } 
 				    return lista;
 		}		
 		
@@ -169,11 +157,7 @@ public class ColturaDAO {
 		    } catch (SQLException ex) {
 		        ex.printStackTrace();
 		        return 0;
-		    } finally {
-		        try { if (rs != null) rs.close(); } catch (Exception ignore) {}
-		        try { if (stmt != null) stmt.close(); } catch (Exception ignore) {}
-		        try { if (conn != null) conn.close(); } catch (Exception ignore) {}
-		    }
+		    } 
 		}
 		
 //  _________________ GRAFICO _________________
