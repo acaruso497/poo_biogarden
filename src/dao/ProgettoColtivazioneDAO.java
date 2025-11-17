@@ -149,25 +149,25 @@ public class ProgettoColtivazioneDAO {
 		}
 		
 		private static ColturaDTO getOrCreateColtura(Connection conn, ColturaDTO coltura) throws SQLException { // crea la coltura dalla varietà
-		    String selectSql = "SELECT id_coltura FROM Coltura WHERE varietà = ?";
-		    PreparedStatement stmt = conn.prepareStatement(selectSql);
-		    stmt.setString(1, coltura.getVarieta());
-		    ResultSet rs = stmt.executeQuery();
-		    
-		    if (rs.next()) {
-		    	coltura.setID_Coltura(rs.getInt("id_coltura"));
-		        rs.close();
-		        stmt.close();
-		        return coltura;
-		    }
-		    rs.close();
-		    stmt.close();
+//		    String selectSql = "SELECT id_coltura FROM Coltura WHERE varietà = ?";
+//		    PreparedStatement stmt = conn.prepareStatement(selectSql);
+//		    stmt.setString(1, coltura.getVarieta());
+//		    ResultSet rs = stmt.executeQuery();
+//		    
+//		    if (rs.next()) {
+//		    	coltura.setID_Coltura(rs.getInt("id_coltura"));
+//		        rs.close();
+//		        stmt.close();
+//		        return coltura;
+//		    }
+//		    rs.close();
+//		    stmt.close();
 		    
 		    
 		    String insertSql = "INSERT INTO Coltura (varietà) VALUES (?) RETURNING ID_Coltura";
-		    stmt = conn.prepareStatement(insertSql);
+		    PreparedStatement stmt = conn.prepareStatement(insertSql);
 		    stmt.setString(1, coltura.getVarieta());
-		    rs = stmt.executeQuery();
+		    ResultSet rs = stmt.executeQuery();
 		    
 		    if (rs.next()) {
 		        coltura.setID_Coltura(rs.getInt("ID_Coltura"));

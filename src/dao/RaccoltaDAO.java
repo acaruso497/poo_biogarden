@@ -9,11 +9,11 @@ public class RaccoltaDAO {
 
 	// da vedeere se serve progetto coltivazione dto da chiedere 
 	
-	public static boolean sommaRaccolto(String raccolto,  ColturaDTO coltura, ProgettoColtivazioneDTO progetto) {
+	public static boolean sommaRaccolto(int raccolto,  ColturaDTO coltura, ProgettoColtivazioneDTO progetto) {
 	    Connection conn = null;
 	    PreparedStatement ps = null;
 	    try {
-	        int nuovo = Integer.parseInt(raccolto);
+	        int nuovo =  raccolto;
 
 	        conn = Connessione.getConnection();
 	        conn.setAutoCommit(false);

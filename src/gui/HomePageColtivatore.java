@@ -260,19 +260,19 @@ public class HomePageColtivatore extends JFrame {
 	    	public void actionPerformed(ActionEvent e) {
 	    		try {
 	    		//	ControllerColtivatore controller = new ControllerColtivatore();
+	    			int raccolto = Integer.parseInt(FieldRaccoltoColture.getText());
 	    			progetto = new ProgettoColtivazioneDTO((String) ComboProgetti.getSelectedItem());
 		    		ColturaDTO selectedColtura = new ColturaDTO((String) ComboTipologia.getSelectedItem());
-		    		RaccoltaDTO.sommaRaccolto( (String) FieldRaccoltoColture.getText(),selectedColtura , progetto);
+		    		//controller.sommaRaccolto(raccolto,selectedColtura , progetto);
 		    		
 		    		// ---CONTROLLI SUI FIELDS---
-	    			if (selectedColtura.getVarieta() == null || selectedColtura.getVarieta().isEmpty() || RaccoltaDTO.getRaccolto() == null || RaccoltaDTO.getRaccolto().isEmpty()) {
+	    			if (selectedColtura.getVarieta() == null || selectedColtura.getVarieta().isEmpty() ||  FieldRaccoltoColture.getText() == null || FieldRaccoltoColture.getText().isEmpty()) {
 					    JOptionPane.showMessageDialog(HomePageColtivatore.this, 
 					    							  "COMPILA TUTTI I CAMPI !!", "Errore", JOptionPane.ERROR_MESSAGE);
 					    return; 
 		    		}
 	    			
 	    			
-	    			int raccolto = Integer.parseInt(RaccoltaDTO.getRaccolto() );
 	    			if (raccolto <= 0) { //controlla se è stato inserito un raccolto minore o pari a 0
 		    			JOptionPane.showMessageDialog(HomePageColtivatore.this, 
 		    					"Il raccolto deve essere maggiore di 0!", "Errore", 
@@ -280,7 +280,7 @@ public class HomePageColtivatore extends JFrame {
 		    			FieldRaccoltoColture.setBackground(Color.RED);
 		    			return;
 	    			}else {
-	    				boolean sommaRaccolto = RaccoltaDTO.sommaRaccolto(RaccoltaDTO.getRaccolto() , selectedColtura, progetto);
+	    				boolean sommaRaccolto = controller.sommaRaccolto(raccolto , selectedColtura, progetto);
 	    				JOptionPane.showMessageDialog(HomePageColtivatore.this, 
 	    											  "Il raccolto è stato aggiornato con successo!");
 	    			}

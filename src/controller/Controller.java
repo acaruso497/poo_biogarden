@@ -336,6 +336,10 @@ public List<String> getColtura(ColtivatoreDTO coltivatore, String progetto) {
     return ColtivatoreDAO.getColtura(coltivatore, progetto);
 }
 
+public boolean sommaRaccolto(int raccolto, ColturaDTO coltura, ProgettoColtivazioneDTO progetto) {
+    return RaccoltaDAO.sommaRaccolto(raccolto, coltura, progetto);
+}
+
 
 //  	_________________ HomePagecoltivatore _________________
     

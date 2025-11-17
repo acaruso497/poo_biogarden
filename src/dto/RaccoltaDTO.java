@@ -2,19 +2,10 @@ package dto;
 
 import java.sql.Date;
 
-import dao.*;
+
 
 public class RaccoltaDTO extends AttivitaDTO{
-	private String Raccolto;
-
-	public String getRaccolto() {
-		return Raccolto;
-	}
-
-	public void setRaccolto(String raccolto) {
-		Raccolto = raccolto;
-	}
-
+	
 	public RaccoltaDTO() {
 		super();
 	}
@@ -35,10 +26,7 @@ public class RaccoltaDTO extends AttivitaDTO{
 	    }
 	
 	
-	public boolean sommaRaccolto(String raccolto, ColturaDTO coltura, ProgettoColtivazioneDTO progetto) {
-		this.Raccolto = raccolto;
-	    return RaccoltaDAO.sommaRaccolto(Raccolto, coltura, progetto);
-	}
+	
 	
 	
 	
