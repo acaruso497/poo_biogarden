@@ -6,7 +6,7 @@ import database.Connessione;
 import dto.*;
 import java.sql.*;
 
-public class ColtivatoreDAO {
+public class ColtivatoreDAO implements IColtivatoreDAO{
 	public static ArrayList<String> idList = new ArrayList<>();
 	//____________________   LOGIN     ____________________________________
 	

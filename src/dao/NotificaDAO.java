@@ -4,7 +4,7 @@ import database.Connessione;
 import dto.*;
 import java.sql.*;
 
-public class NotificaDAO {
+public class NotificaDAO implements INotificaDAO{
 
 	//____________________   CREAZIONE NOTIFICA     ____________________________________
 	

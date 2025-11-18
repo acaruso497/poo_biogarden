@@ -4,7 +4,7 @@ import database.Connessione;
 import dto.*;
 import java.sql.*;
 
-public class IrrigazioneDAO {
+public class IrrigazioneDAO implements IIrrigazioneDAO{
 
 	//	_________________ VISUALIZZA PROGETTI _________________
 	public void popolaIrrigazione(ProgettoColtivazioneDTO progetto, IrrigazioneDTO irrigazione) { //popola il text field di giorno inizio, giorno fine e il radio button dello stato dell'attività

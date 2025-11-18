@@ -6,7 +6,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ColturaDAO {
+public class ColturaDAO implements IColturaDAO{
 
 //  				_________________ VISUALIZZA PROGETTI _________________
 	

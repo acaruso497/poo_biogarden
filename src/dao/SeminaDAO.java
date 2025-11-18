@@ -5,7 +5,7 @@ import dto.*;
 import java.sql.*;
 
 
-public class SeminaDAO {
+public class SeminaDAO implements ISeminaDAO{ 
 						//	_________________ VISUALIZZA PROGETTI _________________
 	
 	public void popolaSemina(ProgettoColtivazioneDTO progetto, SeminaDTO semina) { //popola il text field di giorno inizio, giorno fine e il radio button dello stato dell'attività

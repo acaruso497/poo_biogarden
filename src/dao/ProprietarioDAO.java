@@ -6,7 +6,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProprietarioDAO {
+public class ProprietarioDAO implements IProprietarioDAO {
 	
 	//____________________   LOGIN     ____________________________________
 	

@@ -7,7 +7,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProgettoColtivazioneDAO {
+public class ProgettoColtivazioneDAO implements IProgettoColtivazioneDAO {
 
 	//____________________   CREAZIONE PROGETTO COLTIVAZIONE     ____________________________________	
 		public boolean registraProgetto(ProgettoColtivazioneDTO progetto, LottoDTO lotto, ArrayList<ColturaDTO> coltureDTOList) { //Registrazione dei dati del progetto

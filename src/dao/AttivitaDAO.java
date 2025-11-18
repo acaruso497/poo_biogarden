@@ -4,7 +4,7 @@ import database.Connessione;
 import dto.*;
 import java.sql.*;
 
-public class AttivitaDAO {
+public class AttivitaDAO implements IAttivitaDAO{
 
 //	_________________ VISUALIZZA PROGETTI _________________
 		public boolean aggiornaStato(SeminaDTO semina, IrrigazioneDTO irrigazione, RaccoltaDTO raccolta, LottoDTO lotto) { // Aggiorna lo stato di ciascuna attività

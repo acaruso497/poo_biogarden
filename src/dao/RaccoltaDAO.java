@@ -4,7 +4,7 @@ import database.Connessione;
 import dto.*;
 import java.sql.*;
 
-public class RaccoltaDAO {
+public class RaccoltaDAO implements IRaccoltaDAO{
 				//	_________________ HOMEPAGE COLTIVATORE  _________________
 	public boolean sommaRaccolto(int raccolto,  ColturaDTO coltura, ProgettoColtivazioneDTO progetto) {
 	    Connection conn = null;
