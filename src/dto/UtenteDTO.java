@@ -14,8 +14,6 @@ public abstract class UtenteDTO {
         this.username = username;
     }
     
-    //public abstract boolean autentica();
-    
     // Getter e Setter
     public String getUsername() { return username; }
     public void setUsername(String username) { this.username = username; }

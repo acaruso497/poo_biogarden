@@ -330,7 +330,7 @@ public class HomePageColtivatore extends JFrame {
 	}  
 
 	@SuppressWarnings("unused")
-	private void popolaAttivita() { 	//popola i campi relativi alle attività
+	private void popolaAttivita() { 	// popola i campi relativi alle attività
 	    String progettoSelezionato = (String) ComboProgetti.getSelectedItem();
 	    ComboAttivita.removeAllItems();
 	    ComboAttivita.addItem("--seleziona--");
@@ -339,24 +339,29 @@ public class HomePageColtivatore extends JFrame {
 	    FieldDataIA.setText("");
 	    FieldDataFA.setText("");
 	    tipoSeminaField.setText("");
-	    idAttivita = null;
-	    tipiAttivita = null;
+
+	    // reset liste
+	    tipiAttivita = new ArrayList<>();
+	    idAttivita   = new ArrayList<>();
 	    
 	    if (progettoSelezionato == null || progettoSelezionato.equals("--seleziona--")) {
 	        return;
 	    }
- 
-	    tipiAttivita = controller.getTipiAttivita(coltivatore, progettoSelezionato);
 
 	    List<String> rawAttivita = controller.getIdAttivita(coltivatore, progettoSelezionato);
-	    idAttivita = new ArrayList<>();
-
 	    if (rawAttivita != null) {
 	        for (String voce : rawAttivita) {
+	            if (voce == null || voce.isEmpty()) continue;
+
 	            String[] parts = voce.split("-");
-	            String nome = parts[0];
-	            String id   = (parts.length > 1) ? parts[1] : ""; 
-	            ComboAttivita.addItem(nome);
+	            if (parts.length < 2) continue; 
+
+	            String tipo = parts[0].trim();
+	            String id   = parts[1].trim(); 
+
+	            ComboAttivita.addItem(tipo);
+
+	            tipiAttivita.add(tipo);
 	            idAttivita.add(id);
 	        }
 	    }
@@ -373,27 +378,25 @@ public class HomePageColtivatore extends JFrame {
 	        aggiornaDateAttivita();  
 	        
 	    	String selectedAttivita = (String) ComboAttivita.getSelectedItem();
-	    	int selectedIndex = ComboAttivita.getSelectedIndex() - 1; // perché c'è "--seleziona--" come primo
+	    	int selectedIndex = ComboAttivita.getSelectedIndex() - 1;
 	    	
 	        if (selectedAttivita == null || selectedAttivita.equals("--seleziona--") || selectedIndex < 0) {
-	            // se non viene selezionata l'attività, blocca i field relativi alle attività
 	            FieldRaccoltoColture.setEnabled(false); 
 	            FieldRaccoltoColture.setEditable(false);
 	            FieldRaccoltoColture.setText("");
 	            ComboTipologia.setEnabled(false);
 	            ButtonSalva.setEnabled(false);  
 	        } else {
-	        	// tipo attività associato (Semina, Irrigazione, Raccolta, ...)
 	        	String tipo = (tipiAttivita != null && selectedIndex < tipiAttivita.size())
 	        			? tipiAttivita.get(selectedIndex)
 	        			: "";
 
-	        	if ("Raccolta".equals(tipo)) {  // se l'attività è di tipo Raccolta
+	        	if ("Raccolta".equals(tipo)) {  
 		            FieldRaccoltoColture.setEnabled(true); 
 		            FieldRaccoltoColture.setEditable(true);
 		            ButtonSalva.setEnabled(true); 
 		            ComboTipologia.setEnabled(true);
-	        	} else { //se vengono selezionate attività diverse da raccolta, vengono bloccati i campi relativi
+	        	} else { 
 	        		FieldRaccoltoColture.setEnabled(false);
 		            FieldRaccoltoColture.setEditable(false);
 		            FieldRaccoltoColture.setText("");
@@ -403,6 +406,7 @@ public class HomePageColtivatore extends JFrame {
 	        }
 	    });
 	}
+
 	
 	private void aggiornaDateAttivita() { 	//imposta i campi delle date delle diverse attività
 	    String attivitaSelezionata = (String) ComboAttivita.getSelectedItem();
@@ -416,7 +420,7 @@ public class HomePageColtivatore extends JFrame {
 	            selectedIndex < idAttivita.size()) {
 	            
 	            String tipo = tipiAttivita.get(selectedIndex);
-	            String id   = idAttivita.get(selectedIndex);  
+	            String id   = idAttivita.get(selectedIndex);
 
 	            try {
 	                String[] date = controller.getDateByAttivitaId(id, tipo);
@@ -450,6 +454,7 @@ public class HomePageColtivatore extends JFrame {
 	        tipoSeminaField.setText("");
 	    }
 	}
+
 	
 	private void aggiornaLottoEPosizione() { 	//lotto e posizione in base al progetto selezionato
 	    String progettoSelezionato = (String) ComboProgetti.getSelectedItem();

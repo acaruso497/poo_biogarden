@@ -26,8 +26,7 @@ public class AttivitaDAO implements IAttivitaDAO{
 		                   "FROM Raccolta r " +
 		                   "JOIN Attivita a ON r.id_attivita = a.id_attivita " +
 		                   "WHERE a.id_lotto = ? " +
-		                   "ORDER BY r.giorno_inizio DESC, r.giorno_fine DESC " +
-		                   "LIMIT 1";
+		                   "ORDER BY r.giorno_inizio DESC, r.giorno_fine DESC ";
 		            
 		            stmt = conn.prepareStatement(sql1);
 		            stmt.setInt(1, lotto.getID_Lotto());
@@ -52,8 +51,7 @@ public class AttivitaDAO implements IAttivitaDAO{
 		                   "FROM Irrigazione i " +
 		                   "JOIN Attivita a ON i.id_attivita = a.id_attivita " +
 		                   "WHERE a.id_lotto = ? " +
-		                   "ORDER BY i.giorno_inizio DESC, i.giorno_fine DESC " +
-		                   "LIMIT 1";
+		                   "ORDER BY i.giorno_inizio DESC, i.giorno_fine DESC ";
 		            
 		            stmt = conn.prepareStatement(sql3);
 		            stmt.setInt(1, lotto.getID_Lotto());
@@ -77,8 +75,7 @@ public class AttivitaDAO implements IAttivitaDAO{
 		                   "FROM Semina s " +
 		                   "JOIN Attivita a ON s.id_attivita = a.id_attivita " +
 		                   "WHERE a.id_lotto = ? " +
-		                   "ORDER BY s.giorno_inizio DESC, s.giorno_fine DESC " +
-		                   "LIMIT 1";
+		                   "ORDER BY s.giorno_inizio DESC, s.giorno_fine DESC ";
 		            
 		            stmt = conn.prepareStatement(sql5);
 		            stmt.setInt(1, lotto.getID_Lotto());

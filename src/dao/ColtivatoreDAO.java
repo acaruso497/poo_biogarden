@@ -144,61 +144,6 @@ public List<String> popolaProgettiCB(ColtivatoreDTO coltivatore) {
 	    return lista;
 	}
 
-
-//public ArrayList<String> getAttivitaByPr(String titolo_progetto, String usernameColtivatore) {
-//    ArrayList<String> tipi = new ArrayList<>();
-//    idList.clear();
-//    Connection conn = null;
-//    PreparedStatement stmt = null;
-//    ResultSet rs = null;
-//
-//    try {
-//        conn = Connessione.getConnection();
-//
-//        String sql = """
-//            SELECT 
-//                a.id_attivita,
-//                CASE 
-//                    WHEN s.id_semina IS NOT NULL THEN 'Semina'
-//                    WHEN i.id_irrigazione IS NOT NULL THEN 'Irrigazione'
-//                    WHEN r.id_raccolta IS NOT NULL THEN 'Raccolta'
-//                END AS tipo_attivita
-//            FROM coltivatore c
-//            JOIN proprietario p         ON p.username = c.username_proprietario
-//            JOIN lotto l                ON l.codice_fiscalepr = p.codice_fiscale
-//            JOIN progetto_coltivazione pc ON pc.id_lotto = l.id_lotto
-//            JOIN attivita a             ON a.id_progetto = pc.id_progetto
-//            LEFT JOIN semina s          ON s.id_attivita = a.id_attivita
-//            LEFT JOIN irrigazione i     ON i.id_attivita = a.id_attivita
-//            LEFT JOIN raccolta r        ON r.id_attivita = a.id_attivita
-//            WHERE c.username = ?
-//              AND pc.titolo = ?
-//              AND pc.done = false
-//            ORDER BY a.giorno_inizio
-//        """;
-//
-//        stmt = conn.prepareStatement(sql);
-//        stmt.setString(1, usernameColtivatore);
-//        stmt.setString(2, titolo_progetto);
-//        rs = stmt.executeQuery();
-//
-//        while (rs.next()) {
-//            String tipo = rs.getString("tipo_attivita");
-//            String id = rs.getString("id_attivita");
-//
-//            if (tipo != null && id != null) {
-//                tipi.add(tipo);
-//                idList.add(id);
-//            }
-//        }
-//
-//    } catch (SQLException ex) {
-//        ex.printStackTrace();
-//    } 
-//
-//    return tipi;
-//}
-
 public List<String> getTipiAttivitaColtivatore(ColtivatoreDTO coltivatore, String progetto) {
     List<String> tipoList = new ArrayList<>();
 
