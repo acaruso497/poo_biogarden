@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
 import java.util.List;
+import java.util.ArrayList; // <--- IMPORT AGGIUNTO
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -42,9 +43,10 @@ public class HomePageColtivatore extends JFrame {
 	private JComboBox<String> ComboProgetti;	
     private JComboBox<String> ComboAttivita;
     private List<String> tipiAttivita;
+    private List<String> idAttivita;
     private JComboBox<String> ComboTipologia;
     Controller controller = new Controller();
-	private ColtivatoreDTO coltivatore;//AGGIUNTO
+	private ColtivatoreDTO coltivatore;
 	private ProgettoColtivazioneDTO progetto;
 	
 	@SuppressWarnings("unused")
@@ -61,7 +63,6 @@ public class HomePageColtivatore extends JFrame {
 	    contentPane = new BackgroundPanel(imageUrl);
 	    contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 	    setContentPane(contentPane);
-
 
 	    contentPane.setLayout(new MigLayout("", "[grow][grow][grow][grow][grow][grow][][][grow][][][][][][][][grow][grow][grow][grow][grow][grow][grow][][][][]", 
 	    									"[grow][grow][grow][grow][grow][grow][grow][][][][][grow][grow][][][grow][grow][grow][grow][grow][grow][grow]"));
@@ -327,24 +328,37 @@ public class HomePageColtivatore extends JFrame {
 	        FieldIrrigazione.setText("");
 	    }
 	}  
+
 	@SuppressWarnings("unused")
 	private void popolaAttivita() { 	//popola i campi relativi alle attività
 	    String progettoSelezionato = (String) ComboProgetti.getSelectedItem();
 	    ComboAttivita.removeAllItems();
 	    ComboAttivita.addItem("--seleziona--");
 	    
+	    // pulizia campi attività
+	    FieldDataIA.setText("");
+	    FieldDataFA.setText("");
+	    tipoSeminaField.setText("");
+	    idAttivita = null;
+	    tipiAttivita = null;
+	    
 	    if (progettoSelezionato == null || progettoSelezionato.equals("--seleziona--")) {
-	        // PULISCI I CAMPI QUANDO NON C'È PROGETTO
-	        FieldDataIA.setText("");
-	        FieldDataFA.setText("");
-	        tipoSeminaField.setText("");
 	        return;
 	    }
  
 	    tipiAttivita = controller.getTipiAttivita(coltivatore, progettoSelezionato);
-	    
-	    for (String idSpecifico : controller.getIdAttivita(coltivatore, progettoSelezionato)) {
-	        ComboAttivita.addItem(idSpecifico);
+
+	    List<String> rawAttivita = controller.getIdAttivita(coltivatore, progettoSelezionato);
+	    idAttivita = new ArrayList<>();
+
+	    if (rawAttivita != null) {
+	        for (String voce : rawAttivita) {
+	            String[] parts = voce.split("-");
+	            String nome = parts[0];
+	            String id   = (parts.length > 1) ? parts[1] : ""; 
+	            ComboAttivita.addItem(nome);
+	            idAttivita.add(id);
+	        }
 	    }
 	    
 	    ComboAttivita.setSelectedItem("--seleziona--");
@@ -359,26 +373,34 @@ public class HomePageColtivatore extends JFrame {
 	        aggiornaDateAttivita();  
 	        
 	    	String selectedAttivita = (String) ComboAttivita.getSelectedItem();
+	    	int selectedIndex = ComboAttivita.getSelectedIndex() - 1; // perché c'è "--seleziona--" come primo
 	    	
-	        if (selectedAttivita == null || selectedAttivita.equals("-- Seleziona --")) { // se non viene selezionata l'attività, blocca i field relativi alle attività
+	        if (selectedAttivita == null || selectedAttivita.equals("--seleziona--") || selectedIndex < 0) {
+	            // se non viene selezionata l'attività, blocca i field relativi alle attività
 	            FieldRaccoltoColture.setEnabled(false); 
 	            FieldRaccoltoColture.setEditable(false);
 	            FieldRaccoltoColture.setText("");
 	            ComboTipologia.setEnabled(false);
 	            ButtonSalva.setEnabled(false);  
-	        } else if (selectedAttivita.startsWith("Raccolta-")) {  //controlla se l'attività selezionata inizia per Raccolta-
-	            FieldRaccoltoColture.setEnabled(true); 
-	            FieldRaccoltoColture.setEditable(true);
-	            ButtonSalva.setEnabled(true); 
-	            ComboTipologia.setEnabled(true);
-	        }else { //se vengono selezionate attività diverse da raccolta, vengono bloccati i campi relativi
-	        	FieldRaccoltoColture.setEnabled(false);
-	            FieldRaccoltoColture.setEditable(false);
-	            FieldRaccoltoColture.setText("");
-	            ButtonSalva.setEnabled(false);
-	            ComboTipologia.setEnabled(false);
+	        } else {
+	        	// tipo attività associato (Semina, Irrigazione, Raccolta, ...)
+	        	String tipo = (tipiAttivita != null && selectedIndex < tipiAttivita.size())
+	        			? tipiAttivita.get(selectedIndex)
+	        			: "";
+
+	        	if ("Raccolta".equals(tipo)) {  // se l'attività è di tipo Raccolta
+		            FieldRaccoltoColture.setEnabled(true); 
+		            FieldRaccoltoColture.setEditable(true);
+		            ButtonSalva.setEnabled(true); 
+		            ComboTipologia.setEnabled(true);
+	        	} else { //se vengono selezionate attività diverse da raccolta, vengono bloccati i campi relativi
+	        		FieldRaccoltoColture.setEnabled(false);
+		            FieldRaccoltoColture.setEditable(false);
+		            FieldRaccoltoColture.setText("");
+		            ButtonSalva.setEnabled(false);
+		            ComboTipologia.setEnabled(false);
+	        	}
 	        }
-	        
 	    });
 	}
 	
@@ -387,35 +409,39 @@ public class HomePageColtivatore extends JFrame {
 	    
 	    if (attivitaSelezionata != null && !attivitaSelezionata.equals("--seleziona--")) {
 	        int selectedIndex = ComboAttivita.getSelectedIndex() - 1;
-	        if (tipiAttivita != null && tipiAttivita.size() > selectedIndex && selectedIndex >= 0) {
-	            String tipo = tipiAttivita.get(selectedIndex); // "Semina", "Irrigazione", "Raccolta"
-	            String[] parts = attivitaSelezionata.split("-");
-	            if (parts.length >= 2) {
-	                String id = parts[1];
-	                try {
-	                    String[] date = controller.getDateByAttivitaId(id, tipo);
-	                    if (date != null && date[0] != null) {
-	                        FieldDataIA.setText(date[0]);
-	                        FieldDataFA.setText(date[1]);
-	                    } else {
-	                        FieldDataIA.setText("");
-	                        FieldDataFA.setText("");
-	                    }
-	                    
-	                    // Gestione tipo semina 
-	                    if (tipo.equals("Semina")) {
-	                        String tipoSemina = controller.getTipoSemina(id);
-	                        tipoSeminaField.setText(tipoSemina);
-	                    } else {
-	                        tipoSeminaField.setText("");
-	                    }
-	                    
-	                } catch (NumberFormatException e) { 	//controllo del formato numerico
-	                    System.err.println("ID non valido: " + id);
+	        
+	        if (tipiAttivita != null && idAttivita != null &&
+	            selectedIndex >= 0 &&
+	            selectedIndex < tipiAttivita.size() &&
+	            selectedIndex < idAttivita.size()) {
+	            
+	            String tipo = tipiAttivita.get(selectedIndex);
+	            String id   = idAttivita.get(selectedIndex);  
+
+	            try {
+	                String[] date = controller.getDateByAttivitaId(id, tipo);
+	                
+	                if (date != null && date[0] != null) {
+	                    FieldDataIA.setText(date[0]);
+	                    FieldDataFA.setText(date[1]);
+	                } else {
 	                    FieldDataIA.setText("");
 	                    FieldDataFA.setText("");
+	                }
+	                
+	                // Gestione tipo semina 
+	                if ("Semina".equals(tipo)) {
+	                    String tipoSemina = controller.getTipoSemina(id);
+	                    tipoSeminaField.setText(tipoSemina);
+	                } else {
 	                    tipoSeminaField.setText("");
 	                }
+	                
+	            } catch (NumberFormatException e) { 	//controllo del formato numerico
+	                System.err.println("ID non valido: " + id);
+	                FieldDataIA.setText("");
+	                FieldDataFA.setText("");
+	                tipoSeminaField.setText("");
 	            }
 	        }
 	    } else {
@@ -425,26 +451,26 @@ public class HomePageColtivatore extends JFrame {
 	    }
 	}
 	
-		private void aggiornaLottoEPosizione() { 	//lotto e posizione in base al progetto selezionato
-		    String progettoSelezionato = (String) ComboProgetti.getSelectedItem();
-		    if (progettoSelezionato != null && !progettoSelezionato.equals("--seleziona--")) {
-		        String lottoEPosizione = controller.getLottoEPosizioneByProgetto(progettoSelezionato,coltivatore);
-		        if (lottoEPosizione != null && !lottoEPosizione.isEmpty()) { //  ESTRAI LOTTO E POSIZIONE SEPARATAMENTE
-		            String[] parti = lottoEPosizione.split(", ");
-		            if (parti.length >= 2) {
-		                String lotto = parti[0].replace("Lotto: ", "Lotto ");
-		                String posizione = parti[1].replace("Posizione: ", "");
-		                
-		                lottovisualizza.setText(lotto);       
-		                FieldPosizione.setText(posizione);   
-		            }
-		        } else {
-		            lottovisualizza.setText("");
-		            FieldPosizione.setText("");
-		        }
-		    } else {
-		        lottovisualizza.setText("");
-		        FieldPosizione.setText("");
-		    }
-		}
+	private void aggiornaLottoEPosizione() { 	//lotto e posizione in base al progetto selezionato
+	    String progettoSelezionato = (String) ComboProgetti.getSelectedItem();
+	    if (progettoSelezionato != null && !progettoSelezionato.equals("--seleziona--")) {
+	        String lottoEPosizione = controller.getLottoEPosizioneByProgetto(progettoSelezionato,coltivatore);
+	        if (lottoEPosizione != null && !lottoEPosizione.isEmpty()) { //  ESTRAI LOTTO E POSIZIONE SEPARATAMENTE
+	            String[] parti = lottoEPosizione.split(", ");
+	            if (parti.length >= 2) {
+	                String lotto = parti[0].replace("Lotto: ", "Lotto ");
+	                String posizione = parti[1].replace("Posizione: ", "");
+	                
+	                lottovisualizza.setText(lotto);       
+	                FieldPosizione.setText(posizione);   
+	            }
+	        } else {
+	            lottovisualizza.setText("");
+	            FieldPosizione.setText("");
+	        }
+	    } else {
+	        lottovisualizza.setText("");
+	        FieldPosizione.setText("");
+	    }
 	}
+}
