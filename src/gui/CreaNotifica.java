@@ -92,7 +92,7 @@ public class CreaNotifica extends JFrame {
 					FieldUsernameC.setEditable(true);
 					FieldUsernameC.setBackground(Color.WHITE);
 					tutti = false;
-					ComboColtivatori.setEnabled(false);
+					ComboColtivatori.setEnabled(true);
 				}
 				}
 		    });
