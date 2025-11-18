@@ -12,11 +12,9 @@ public class AttivitaDAO implements IAttivitaDAO{
 		    PreparedStatement stmt = null;
 		    ResultSet risultato = null;
 		    String sql1 = null;
-		    String sql2 = null;
 		    String sql3 = null;
-		    String sql4 = null;
 		    String sql5 = null;
-		    String sql6=null;
+		    boolean aggiornata = false;
 		    
 		    try {
 		        conn = Connessione.getConnection();
@@ -31,22 +29,29 @@ public class AttivitaDAO implements IAttivitaDAO{
 		            stmt = conn.prepareStatement(sql1);
 		            stmt.setInt(1, lotto.getID_Lotto());
 		            risultato = stmt.executeQuery();
-
-		            if (risultato.next()) {
-		                raccolta.setID_Attivita(risultato.getInt("id_attivita"));
-		            } else return false;
+		            
+		            aggiornata = false;
+		            
+		            while (risultato.next()) { // MODIFICA: while per tutte le righe
+		                int idAtt = risultato.getInt("id_attivita");
+		                
+		                String sqlUpdate = "UPDATE Raccolta SET stato = ? WHERE id_attivita = ?";
+		                PreparedStatement stmtUpd = conn.prepareStatement(sqlUpdate);
+		                stmtUpd.setString(1, raccolta.getStato());
+		                stmtUpd.setInt(2, idAtt);
+		                if (stmtUpd.executeUpdate() > 0) aggiornata = true; // MODIFICA: aggiorna flag
+		                stmtUpd.close();
+		            }
+		            
 
 		            risultato.close();
 		            stmt.close();
-
-		            sql2 = "UPDATE Raccolta SET stato = ? WHERE id_attivita = ?";
-		            stmt = conn.prepareStatement(sql2);
-		            stmt.setString(1, raccolta.getStato());
-		            stmt.setInt(2, raccolta.getID_Attivita());
-		            return stmt.executeUpdate() > 0;
 		            
-		            
-		        } else if (irrigazione!=null) {
+		            if (!aggiornata) return false;
+		        } 
+		        
+		        
+		        if (irrigazione!=null) {
 		            sql3 = "SELECT i.id_attivita " +
 		                   "FROM Irrigazione i " +
 		                   "JOIN Attivita a ON i.id_attivita = a.id_attivita " +
@@ -56,21 +61,29 @@ public class AttivitaDAO implements IAttivitaDAO{
 		            stmt = conn.prepareStatement(sql3);
 		            stmt.setInt(1, lotto.getID_Lotto());
 		            risultato = stmt.executeQuery();
+		            
+		            aggiornata = false;
 
-		            if (risultato.next()) {
-		                irrigazione.setID_Attivita(risultato.getInt("id_attivita"));
-		            } else return false;
+		            while (risultato.next()) {
+		                int idAtt = risultato.getInt("id_attivita");
+
+		                String sqlUpdate = "UPDATE Irrigazione SET stato = ? WHERE id_attivita = ?";
+		                PreparedStatement stmtUpd = conn.prepareStatement(sqlUpdate);
+		                stmtUpd.setString(1, irrigazione.getStato());
+		                stmtUpd.setInt(2, idAtt);
+		                if (stmtUpd.executeUpdate() > 0) aggiornata = true;
+		                stmtUpd.close();
+		            }
+		            
 
 		            risultato.close();
 		            stmt.close();
-
-		            sql4 = "UPDATE Irrigazione SET stato = ? WHERE id_attivita = ?";
-		            stmt = conn.prepareStatement(sql4);
-		            stmt.setString(1, irrigazione.getStato());
-		            stmt.setInt(2, irrigazione.getID_Attivita());
-		            return stmt.executeUpdate() > 0;
 		            
-		        } else if (semina!=null) {
+		            if (!aggiornata) return false;
+		            
+		        } 
+		        
+		        if (semina!=null) {
 		            sql5 = "SELECT s.id_attivita " +
 		                   "FROM Semina s " +
 		                   "JOIN Attivita a ON s.id_attivita = a.id_attivita " +
@@ -80,21 +93,28 @@ public class AttivitaDAO implements IAttivitaDAO{
 		            stmt = conn.prepareStatement(sql5);
 		            stmt.setInt(1, lotto.getID_Lotto());
 		            risultato = stmt.executeQuery();
+		            
+		            aggiornata = false;
 
-		            if (risultato.next()) {
-		                semina.setID_Attivita(risultato.getInt("id_attivita"));
-		            } else return false;
+		            while (risultato.next()) {
+		                int idAtt = risultato.getInt("id_attivita");
+
+		                String sqlUpdate = "UPDATE Semina SET stato = ? WHERE id_attivita = ?";
+		                PreparedStatement stmtUpd = conn.prepareStatement(sqlUpdate);
+		                stmtUpd.setString(1, semina.getStato());
+		                stmtUpd.setInt(2, idAtt);
+		                if (stmtUpd.executeUpdate() > 0) aggiornata = true;
+		                stmtUpd.close();
+		            }
+		            
 
 		            risultato.close();
 		            stmt.close();
+		            
+		            if (!aggiornata) return false;
 
-		            sql6 = "UPDATE Semina SET stato = ? WHERE id_attivita = ?";
-		            stmt = conn.prepareStatement(sql6);
-		            stmt.setString(1, semina.getStato());
-		            stmt.setInt(2, semina.getID_Attivita());
-		            return stmt.executeUpdate() > 0;
 		        }
-		       return false;
+		       return true;
 		        
 		    } catch (SQLException ex) {
 		        ex.printStackTrace();
